@@ -29,7 +29,7 @@ public class Ticket extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "id: " + this.id + ">Ticket{" + "title=" + title + ", ticketTypeId="
+        return "id: " + this.id + "> Ticket{" + "title=" + title + ", ticketTypeId="
                 + ticketTypeId + ", message=" + message + ", handlerId=" + handlerId
                 + ", creationDate=" + creationDate + '}';
     }

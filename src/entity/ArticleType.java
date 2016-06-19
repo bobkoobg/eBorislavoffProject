@@ -14,6 +14,6 @@ public class ArticleType extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "id: " + this.id + ">ArticleType{" + "name=" + name + '}';
+        return "id: " + this.id + "> ArticleType{" + "name=" + name + '}';
     }
 }

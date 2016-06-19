@@ -36,47 +36,62 @@ public class Tester {
 //        boolean result = controller.updateAbstract( "users", usersToUpdate );
 //        System.out.println( "The result form the insert is : " + result );
         //SELECT ALL
-        List<User> users = controller.getAllAbstract( "users" );
+        List<User> users = controller.getAbstract( "users", 0 );
 
         for ( int i = 0; i < users.size(); i++ ) {
             System.out.println( users.get( i ).toString() );
         }
-        List<Article> articles = controller.getAllAbstract( "articles" );
+        List<Article> articles = controller.getAbstract( "articles", 0 );
 
         for ( int i = 0; i < articles.size(); i++ ) {
             System.out.println( articles.get( i ).toString() );
         }
-        List<ArticleType> articletypes = controller.getAllAbstract( "articletypes" );
+        List<ArticleType> articletypes = controller.getAbstract( "articletypes", 0 );
 
         for ( int i = 0; i < articletypes.size(); i++ ) {
             System.out.println( articletypes.get( i ).toString() );
         }
-        List<Gallery> gallery = controller.getAllAbstract( "gallery" );
+        List<Gallery> gallery = controller.getAbstract( "gallery", 0 );
 
         for ( int i = 0; i < gallery.size(); i++ ) {
             System.out.println( gallery.get( i ).toString() );
         }
-        List<Guestbook> guestbook = controller.getAllAbstract( "guestbook" );
+        List<Guestbook> guestbook = controller.getAbstract( "guestbook", 0 );
 
         for ( int i = 0; i < guestbook.size(); i++ ) {
             System.out.println( guestbook.get( i ).toString() );
         }
-        List<Ticket> ticket = controller.getAllAbstract( "tickets" );
+        List<Ticket> ticket = controller.getAbstract( "tickets", 0 );
 
         for ( int i = 0; i < ticket.size(); i++ ) {
             System.out.println( ticket.get( i ).toString() );
         }
-        List<TicketType> tickettypes = controller.getAllAbstract( "tickettypes" );
+        List<TicketType> tickettypes = controller.getAbstract( "tickettypes", 0 );
 
         for ( int i = 0; i < tickettypes.size(); i++ ) {
             System.out.println( tickettypes.get( i ).toString() );
         }
-//        System.out.println( "End" );
-//        List<User> usersSpecific = controller.getSpecificAbstract( "users", 4 );
-//
-//        for ( int i = 0; i < usersSpecific.size(); i++ ) {
-//            System.out.println( usersSpecific.get( i ).toString() );
-//        }
+        System.out.println( "End" );
+        List<User> usersSpecific = controller.getAbstract( "users", 2 );
+        System.out.println( usersSpecific.get( 0 ).toString() );
+
+        List<Article> articleSpecific = controller.getAbstract( "articles", 2 );
+        System.out.println( articleSpecific.get( 0 ).toString() );
+
+        List<ArticleType> articleTypeSpecific = controller.getAbstract( "articletypes", 2 );
+        System.out.println( articleTypeSpecific.get( 0 ).toString() );
+
+        List<Gallery> gallerySpecific = controller.getAbstract( "gallery", 2 );
+        System.out.println( gallerySpecific.get( 0 ).toString() );
+
+        List<Guestbook> guestbookSpecific = controller.getAbstract( "guestbook", 2 );
+        System.out.println( guestbookSpecific.get( 0 ).toString() );
+
+        List<Ticket> ticketSpecific = controller.getAbstract( "tickets", 2 );
+        System.out.println( ticketSpecific.get( 0 ).toString() );
+
+        List<TicketType> ticketTypeSpecific = controller.getAbstract( "tickettypes", 2 );
+        System.out.println( ticketTypeSpecific.get( 0 ).toString() );
 
         //Insert
 //        ArrayList<Article> articleToadd = new ArrayList();
@@ -93,7 +108,7 @@ public class Tester {
 //        boolean result = controller.updateAbstract( "articles", articlesToUpdate );
 //        System.out.println( "The result form the insert is : " + result );
         //SELECT ALL
-//        List<Article> articles = controller.getAllAbstract( "articles" );
+//        List<Article> articles = controller.getAbstract( "articles" );
 //
 //        for ( int i = 0; i < articles.size(); i++ ) {
 //            System.out.println( articles.get( i ).toString() );

@@ -43,7 +43,7 @@ public class Controller {
 
     }
 
-    public <T> List<T> getAllAbstract( String type ) {
+    public <T> List<T> getAbstract( String type, int entryId ) {
 
         String tN = "";
         Class c = null;
@@ -87,29 +87,12 @@ public class Controller {
         }
 
         if ( !tN.isEmpty() && c != null && f != null ) {
-            return facade.getAllAbstract( tN, c, f, logger );
-        }
-        return null;
-    }
+            if ( entryId == 0 ) {
+                return facade.getAllAbstract( tN, c, f, logger );
+            } else {
+                return facade.getSpecificAbstract( tN, c, f, entryId, logger );
+            }
 
-    public <T> List<T> getSpecificAbstract( String type, int entryId ) {
-
-        String tN = "";
-        Class c = null;
-        List<Field> f = null;
-
-        if ( "users".equals( type ) ) {
-            tN = getTableName( type );
-            c = User.class;
-            f = entityClassExplorer.retrieveFieldsFromEntity( c );
-        } else if ( "articles".equals( type ) ) {
-            tN = getTableName( type );
-            c = Article.class;
-            f = entityClassExplorer.retrieveFieldsFromEntity( c );
-        }
-
-        if ( !tN.isEmpty() && c != null && f != null ) {
-            return facade.getSpecificAbstract( tN, c, f, entryId, logger );
         }
         return null;
     }
@@ -196,9 +179,6 @@ public class Controller {
             case "tickettypes":
                 tableName = "EMKO_TICKETTYPES_TBL";
                 break;
-            default:
-                tableName = "";
-                break;
         }
         return tableName;
     }
@@ -226,9 +206,6 @@ public class Controller {
                 break;
             case "tickettype":
                 sequenceName = "EMKO_TICKETTYPES_ID_SEQ";
-                break;
-            default:
-                sequenceName = "";
                 break;
         }
         return sequenceName;

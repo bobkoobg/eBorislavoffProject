@@ -20,7 +20,7 @@ public class Gallery extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "id: " + this.id + ">Gallery{" + "userId=" + userId + ", imagePath="
+        return "id: " + this.id + "> Gallery{" + "userId=" + userId + ", imagePath="
                 + imagePath + ", creationDate=" + creationDate + '}';
     }
 
