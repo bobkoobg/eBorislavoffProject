@@ -75,26 +75,26 @@ public class Facade {
     //       builder, connect);
     //System.out.println("listOfSQLFieldTypes : " + listOfSQLFieldTypes.toString());
     //***>>>
-    public List<User> getAllUsers( List<Field> fields, Logger logger ) {
+    public <T> List<User> getAllAbstract( String tableName, Class<T> entityType,
+            List<Field> fields, Logger logger ) {
 
-        String tableName = "EMKO_USERS_TBL";
-
-        PreparedStatement statement = statementCreator.generateSQLString( "SELECT *", tableName, connection, logger );
-
-        return abstractMapper.overpoweredAbstractMethod( statement, User.class, fields, connection, logger );
+        PreparedStatement statement = statementCreator
+                .generateSQLString( "SELECT *", tableName, connection, logger );
+        return abstractMapper
+                .overpoweredAbstractMethod( statement, entityType, fields, connection, logger );
     }
 
-    public boolean insertUser( ArrayList<User> users, List<Field> fields, Logger logger ) {
+    public <T> boolean insertAbstract( String tableName, Class<T> entityType,
+            ArrayList<T> toInsert, List<Field> fields, Logger logger ) {
 
-        String tableName = "EMKO_USERS_TBL";
-
-        for ( int i = 0; i < users.size(); i++ ) {
-            users.get( i ).setId( abstractMapper.getNextSequenceID( "EMKO_USERS_ID_SEQ", connection, logger ) );
-        }
-
-        PreparedStatement statement = statementCreator.generateSQLStringInsert( "INSERT", tableName, fields, users, connection, logger );
+        PreparedStatement statement = statementCreator
+                .generateSQLStringInsert( "INSERT", tableName, fields, toInsert, connection, logger );
 
         return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
+    }
+
+    public int getNextSequenceIdAbstract( String sequenceName, Logger logger ) {
+        return abstractMapper.getNextSequenceID( sequenceName, connection, logger );
     }
 
     public boolean deleteUser( int userId, Logger logger ) {
@@ -113,28 +113,6 @@ public class Facade {
         List<String> columnNames = abstractMapper.getColumnNamesByTableName( tableName, connection, logger );
 
         PreparedStatement statement = statementCreator.generateSQLStringUpdate( "UPDATE", tableName, users, fields, columnNames, connection, logger );
-
-        return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
-    }
-
-    public List<Article> getAllArticles( List<Field> fields, Logger logger ) {
-
-        String tableName = "EMKO_ARTICLES_TBL";
-
-        PreparedStatement statement = statementCreator.generateSQLString( "SELECT *", tableName, connection, logger );
-
-        return abstractMapper.overpoweredAbstractMethod( statement, Article.class, fields, connection, logger );
-    }
-
-    public boolean insertArticles( ArrayList<Article> articles, List<Field> fields, Logger logger ) {
-
-        String tableName = "EMKO_ARTICLES_TBL";
-
-        for ( int i = 0; i < articles.size(); i++ ) {
-            articles.get( i ).setId( abstractMapper.getNextSequenceID( "EMKO_ARTICLES_ID_SEQ", connection, logger ) );
-        }
-
-        PreparedStatement statement = statementCreator.generateSQLStringInsert( "INSERT", tableName, fields, articles, connection, logger );
 
         return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
     }

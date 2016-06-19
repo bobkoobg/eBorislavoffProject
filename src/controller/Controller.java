@@ -38,19 +38,88 @@ public class Controller {
 
     }
 
-    //TODO : MAKE THOSE 4 TYPES OF METHODS GENERIC
-    public List<User> getAllUsers() {
-        Class c = User.class;
-        List<Field> fields = entityClassExplorer.retrieveFieldsFromEntity( c );
+    public <T> List<T> getAllAbstract( String type ) {
 
-        return facade.getAllUsers( fields, logger );
+        String tN = "";
+        Class c = null;
+        List<Field> f = null;
+
+        if ( "users".equals( type ) ) {
+            tN = getTableName( type );
+            c = User.class;
+            f = entityClassExplorer.retrieveFieldsFromEntity( c );
+        } else if ( "articles".equals( type ) ) {
+            tN = getTableName( type );
+            c = Article.class;
+            f = entityClassExplorer.retrieveFieldsFromEntity( c );
+        }
+
+        if ( !tN.isEmpty() && c != null && f != null ) {
+            return facade.getAllAbstract( tN, c, f, logger );
+        }
+        return null;
     }
 
-    public boolean insertUsers( ArrayList<User> users ) {
-        Class c = User.class;
-        List<Field> fields = entityClassExplorer.retrieveFieldsFromEntity( c );
+    public <T> boolean insertAbstract( String type, ArrayList<T> toInsert ) {
 
-        return facade.insertUser( users, fields, logger );
+        String tN = "";
+        Class c = null;
+        List<Field> f = null;
+
+        if ( "users".equals( type ) ) {
+            tN = getTableName( type );
+            c = User.class;
+            f = entityClassExplorer.retrieveFieldsFromEntity( c );
+        } else if ( "articles".equals( type ) ) {
+            tN = getTableName( type );
+            c = Article.class;
+            f = entityClassExplorer.retrieveFieldsFromEntity( c );
+        }
+
+        for ( int i = 0; i < toInsert.size(); i++ ) {
+            if ( toInsert.get( i ) instanceof User ) {
+                (( User ) toInsert.get( i )).setId( facade.getNextSequenceIdAbstract( getSequenceName( type ), logger ) );
+            } else if ( toInsert.get( i ) instanceof Article ) {
+                (( Article ) toInsert.get( i )).setId( facade.getNextSequenceIdAbstract( getSequenceName( type ), logger ) );
+            }
+        }
+
+        if ( !tN.isEmpty() && c != null && f != null ) {
+            return facade.insertAbstract( tN, c, toInsert, f, logger );
+        }
+        return false;
+    }
+
+    private String getTableName( String type ) {
+        String tableName = "";
+        switch ( type ) {
+            case "users":
+                tableName = "EMKO_USERS_TBL";
+                break;
+            case "articles":
+                tableName = "EMKO_ARTICLES_TBL";
+                break;
+            default:
+                tableName = "EMKO_ARTICLES_TBL";
+                break;
+        }
+        return tableName;
+    }
+
+    private String getSequenceName( String type ) {
+        String tableName = "";
+        switch ( type ) {
+            case "users":
+                tableName = "EMKO_USERS_ID_SEQ";
+                break;
+            case "articles":
+                tableName = "EMKO_ARTICLES_ID_SEQ";
+                break;
+            default:
+                tableName = "EMKO_ARTICLES_ID_SEQ";
+                break;
+        }
+        return tableName;
     }
 
     public boolean deleteUser( int userId ) {
@@ -62,20 +131,6 @@ public class Controller {
         List<Field> fields = entityClassExplorer.retrieveFieldsFromEntity( c );
 
         return facade.updateUsers( users, fields, logger );
-    }
-
-    public List<Article> getAllArticles() {
-        Class c = Article.class;
-        List<Field> fields = entityClassExplorer.retrieveFieldsFromEntity( c );
-
-        return facade.getAllArticles( fields, logger );
-    }
-
-    public boolean insertArticles( ArrayList<Article> articles ) {
-        Class c = Article.class;
-        List<Field> fields = entityClassExplorer.retrieveFieldsFromEntity( c );
-
-        return facade.insertArticles( articles, fields, logger );
     }
 
     public boolean deleteArticle( int articleId ) {
