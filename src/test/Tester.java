@@ -2,6 +2,11 @@ package test;
 
 import controller.Controller;
 import entity.Article;
+import entity.ArticleType;
+import entity.Gallery;
+import entity.Guestbook;
+import entity.Ticket;
+import entity.TicketType;
 import entity.User;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,11 +36,41 @@ public class Tester {
 //        boolean result = controller.updateAbstract( "users", usersToUpdate );
 //        System.out.println( "The result form the insert is : " + result );
         //SELECT ALL
-//        List<User> users = controller.getAllAbstract( "users" );
-//
-//        for ( int i = 0; i < users.size(); i++ ) {
-//            System.out.println( users.get( i ).toString() );
-//        }
+        List<User> users = controller.getAllAbstract( "users" );
+
+        for ( int i = 0; i < users.size(); i++ ) {
+            System.out.println( users.get( i ).toString() );
+        }
+        List<Article> articles = controller.getAllAbstract( "articles" );
+
+        for ( int i = 0; i < articles.size(); i++ ) {
+            System.out.println( articles.get( i ).toString() );
+        }
+        List<ArticleType> articletypes = controller.getAllAbstract( "articletypes" );
+
+        for ( int i = 0; i < articletypes.size(); i++ ) {
+            System.out.println( articletypes.get( i ).toString() );
+        }
+        List<Gallery> gallery = controller.getAllAbstract( "gallery" );
+
+        for ( int i = 0; i < gallery.size(); i++ ) {
+            System.out.println( gallery.get( i ).toString() );
+        }
+        List<Guestbook> guestbook = controller.getAllAbstract( "guestbook" );
+
+        for ( int i = 0; i < guestbook.size(); i++ ) {
+            System.out.println( guestbook.get( i ).toString() );
+        }
+        List<Ticket> ticket = controller.getAllAbstract( "tickets" );
+
+        for ( int i = 0; i < ticket.size(); i++ ) {
+            System.out.println( ticket.get( i ).toString() );
+        }
+        List<TicketType> tickettypes = controller.getAllAbstract( "tickettypes" );
+
+        for ( int i = 0; i < tickettypes.size(); i++ ) {
+            System.out.println( tickettypes.get( i ).toString() );
+        }
 //        System.out.println( "End" );
 //        List<User> usersSpecific = controller.getSpecificAbstract( "users", 4 );
 //

@@ -2,7 +2,12 @@ package controller;
 
 import facade.Facade;
 import entity.Article;
+import entity.ArticleType;
 import entity.EntityClassExplorer;
+import entity.Gallery;
+import entity.Guestbook;
+import entity.Ticket;
+import entity.TicketType;
 import entity.User;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -44,13 +49,40 @@ public class Controller {
         Class c = null;
         List<Field> f = null;
 
-        if ( "users".equals( type ) ) {
-            tN = getTableName( type );
-            c = User.class;
-            f = entityClassExplorer.retrieveFieldsFromEntity( c );
-        } else if ( "articles".equals( type ) ) {
-            tN = getTableName( type );
-            c = Article.class;
+        if ( null != type ) {
+            switch ( type ) {
+                case "users":
+                    tN = getTableName( type );
+                    c = User.class;
+                    break;
+                case "articles":
+                    tN = getTableName( type );
+                    c = Article.class;
+                    break;
+                case "articletypes":
+                    tN = getTableName( type );
+                    c = ArticleType.class;
+                    break;
+                case "gallery":
+                    tN = getTableName( type );
+                    c = Gallery.class;
+                    break;
+                case "guestbook":
+                    tN = getTableName( type );
+                    c = Guestbook.class;
+                    break;
+                case "tickets":
+                    tN = getTableName( type );
+                    c = Ticket.class;
+                    break;
+                case "tickettypes":
+                    tN = getTableName( type );
+                    c = TicketType.class;
+                    break;
+            }
+        }
+
+        if ( c != null ) {
             f = entityClassExplorer.retrieveFieldsFromEntity( c );
         }
 
@@ -149,27 +181,57 @@ public class Controller {
             case "articles":
                 tableName = "EMKO_ARTICLES_TBL";
                 break;
+            case "articletypes":
+                tableName = "EMKO_ARTICLETYPES_TBL";
+                break;
+            case "gallery":
+                tableName = "EMKO_GALLERY_TBL";
+                break;
+            case "guestbook":
+                tableName = "EMKO_GUESTBOOK_TBL";
+                break;
+            case "tickets":
+                tableName = "EMKO_TICKETS_TBL";
+                break;
+            case "tickettypes":
+                tableName = "EMKO_TICKETTYPES_TBL";
+                break;
             default:
-                tableName = "EMKO_ARTICLES_TBL";
+                tableName = "";
                 break;
         }
         return tableName;
     }
 
     private String getSequenceName( String type ) {
-        String tableName = "";
+        String sequenceName = "";
         switch ( type ) {
             case "users":
-                tableName = "EMKO_USERS_ID_SEQ";
+                sequenceName = "EMKO_USERS_ID_SEQ";
                 break;
             case "articles":
-                tableName = "EMKO_ARTICLES_ID_SEQ";
+                sequenceName = "EMKO_ARTICLES_ID_SEQ";
+                break;
+            case "articletypes":
+                sequenceName = "EMKO_ARTICLETYPES_ID_SEQ";
+                break;
+            case "gallery":
+                sequenceName = "EMKO_GALLERY_ID_SEQ";
+                break;
+            case "guestbook":
+                sequenceName = "EMKO_GUESTBOOK_ID_SEQ";
+                break;
+            case "ticket":
+                sequenceName = "EMKO_TICKETS_ID_SEQ";
+                break;
+            case "tickettype":
+                sequenceName = "EMKO_TICKETTYPES_ID_SEQ";
                 break;
             default:
-                tableName = "EMKO_ARTICLES_ID_SEQ";
+                sequenceName = "";
                 break;
         }
-        return tableName;
+        return sequenceName;
     }
 
 }

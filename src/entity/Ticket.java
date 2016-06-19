@@ -10,6 +10,9 @@ public class Ticket extends AbstractEntity {
     private int handlerId;
     private Date creationDate;
 
+    public Ticket() {
+    }
+
     public Ticket( int ticketId, String title, int ticketTypeId, String message,
             int handlerId, Date creationDate ) {
         this.id = ticketId;
