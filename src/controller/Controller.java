@@ -78,14 +78,42 @@ public class Controller {
 
         for ( int i = 0; i < toInsert.size(); i++ ) {
             if ( toInsert.get( i ) instanceof User ) {
-                (( User ) toInsert.get( i )).setId( facade.getNextSequenceIdAbstract( getSequenceName( type ), logger ) );
+                (( User ) toInsert.get( i )).setId(
+                        facade.getNextSequenceIdAbstract( getSequenceName( type ), logger ) );
             } else if ( toInsert.get( i ) instanceof Article ) {
-                (( Article ) toInsert.get( i )).setId( facade.getNextSequenceIdAbstract( getSequenceName( type ), logger ) );
+                (( Article ) toInsert.get( i )).setId(
+                        facade.getNextSequenceIdAbstract( getSequenceName( type ), logger ) );
             }
         }
 
         if ( !tN.isEmpty() && c != null && f != null ) {
             return facade.insertAbstract( tN, c, toInsert, f, logger );
+        }
+        return false;
+    }
+
+    public boolean deleteAbstract( String type, int entryId ) {
+        return facade.deleteAbstract( getTableName( type ), entryId, logger );
+    }
+
+    public <T> boolean updateAbstract( String type, ArrayList<T> toUpdate ) {
+
+        String tN = "";
+        Class c = null;
+        List<Field> f = null;
+
+        if ( "users".equals( type ) ) {
+            tN = getTableName( type );
+            c = User.class;
+            f = entityClassExplorer.retrieveFieldsFromEntity( c );
+        } else if ( "articles".equals( type ) ) {
+            tN = getTableName( type );
+            c = Article.class;
+            f = entityClassExplorer.retrieveFieldsFromEntity( c );
+        }
+
+        if ( !tN.isEmpty() && c != null && f != null ) {
+            return facade.updateAbstract( tN, toUpdate, f, logger );
         }
         return false;
     }
@@ -120,29 +148,6 @@ public class Controller {
                 break;
         }
         return tableName;
-    }
-
-    public boolean deleteUser( int userId ) {
-        return facade.deleteUser( userId, logger );
-    }
-
-    public boolean updateUsers( ArrayList<User> users ) {
-        Class c = User.class;
-        List<Field> fields = entityClassExplorer.retrieveFieldsFromEntity( c );
-
-        return facade.updateUsers( users, fields, logger );
-    }
-
-    public boolean deleteArticle( int articleId ) {
-
-        return facade.deleteArticle( articleId, logger );
-    }
-
-    public boolean updateArticles( ArrayList<Article> articles ) {
-        Class c = Article.class;
-        List<Field> fields = entityClassExplorer.retrieveFieldsFromEntity( c );
-
-        return facade.updateArticle( articles, fields, logger );
     }
 
 }

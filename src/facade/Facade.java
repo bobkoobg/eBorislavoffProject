@@ -97,42 +97,22 @@ public class Facade {
         return abstractMapper.getNextSequenceID( sequenceName, connection, logger );
     }
 
-    public boolean deleteUser( int userId, Logger logger ) {
-        String tableName = "EMKO_USERS_TBL";
+    public boolean deleteAbstract( String tableName, int entryId, Logger logger ) {
+        List<String> columnNames = abstractMapper
+                .getColumnNamesByTableName( tableName, connection, logger );
 
-        List<String> columnNames = abstractMapper.getColumnNamesByTableName( tableName, connection, logger );
-
-        PreparedStatement statement = statementCreator.generatesQLStringDelete( "DELETE", tableName, userId, columnNames, connection, logger );
-
-        return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
-    }
-
-    public boolean updateUsers( ArrayList<User> users, List<Field> fields, Logger logger ) {
-        String tableName = "EMKO_USERS_TBL";
-
-        List<String> columnNames = abstractMapper.getColumnNamesByTableName( tableName, connection, logger );
-
-        PreparedStatement statement = statementCreator.generateSQLStringUpdate( "UPDATE", tableName, users, fields, columnNames, connection, logger );
+        PreparedStatement statement = statementCreator
+                .generatesQLStringDelete( "DELETE", tableName, entryId, columnNames, connection, logger );
 
         return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
     }
 
-    public boolean deleteArticle( int articleId, Logger logger ) {
-        String tableName = "EMKO_ARTICLES_TBL";
+    public <T> boolean updateAbstract( String tableName, ArrayList<T> toUpdate, List<Field> fields, Logger logger ) {
+        List<String> columnNames = abstractMapper
+                .getColumnNamesByTableName( tableName, connection, logger );
 
-        List<String> columnNames = abstractMapper.getColumnNamesByTableName( tableName, connection, logger );
-
-        PreparedStatement statement = statementCreator.generatesQLStringDelete( "DELETE", tableName, articleId, columnNames, connection, logger );
-
-        return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
-    }
-
-    public boolean updateArticle( ArrayList<Article> articles, List<Field> fields, Logger logger ) {
-        String tableName = "EMKO_ARTICLES_TBL";
-
-        List<String> columnNames = abstractMapper.getColumnNamesByTableName( tableName, connection, logger );
-
-        PreparedStatement statement = statementCreator.generateSQLStringUpdate( "UPDATE", tableName, articles, fields, columnNames, connection, logger );
+        PreparedStatement statement = statementCreator
+                .generateSQLStringUpdate( "UPDATE", tableName, toUpdate, fields, columnNames, connection, logger );
 
         return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
     }
