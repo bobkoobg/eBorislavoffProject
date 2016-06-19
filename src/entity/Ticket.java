@@ -23,6 +23,15 @@ public class Ticket extends AbstractEntity {
         this.creationDate = creationDate;
     }
 
+    public Ticket( int ticketId, String title, int ticketTypeId, String message,
+            Date creationDate ) {
+        this.id = ticketId;
+        this.title = title;
+        this.ticketTypeId = ticketTypeId;
+        this.message = message;
+        this.creationDate = creationDate;
+    }
+
     public void setHandlerId( int handlerId ) {
         this.handlerId = handlerId;
     }

@@ -21,6 +21,14 @@ public class Guestbook extends AbstractEntity {
         this.creationDate = creationDate;
     }
 
+    public Guestbook( int guestbookId, String guestName, String message,
+            Date creationDate ) {
+        this.id = guestbookId;
+        this.guestName = guestName;
+        this.message = message;
+        this.creationDate = creationDate;
+    }
+
     @Override
     public String toString() {
         return "id: " + this.id + "> Guestbook{" + "guestName=" + guestName
