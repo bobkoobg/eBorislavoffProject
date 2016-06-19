@@ -20,7 +20,7 @@ public class Tester {
 
     private void tester() {
 
-        Controller controller = new Controller();
+        Controller controller = Controller.getInstance();
 
         //Insert
 //        ArrayList<User> usersToInsert = new ArrayList();

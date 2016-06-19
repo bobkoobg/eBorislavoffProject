@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.gson.Gson;
 import facade.Facade;
 import entity.Article;
 import entity.ArticleType;
@@ -9,13 +10,20 @@ import entity.Guestbook;
 import entity.Ticket;
 import entity.TicketType;
 import entity.User;
+import entity.web.UserIdentifiers;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 import java.util.logging.Logger;
 import utilities.PerformanceLogger;
+import utilities.SessionIDsGenerator;
 
 public class Controller {
+
+    private static Controller instance = null;
 
     private String loggerName = "chillMaster";
     private String loggerPath = "/MyLogFile.log";
@@ -26,10 +34,11 @@ public class Controller {
 
     private EntityClassExplorer entityClassExplorer;
 
-    //private Gson gson = null;
-    //private List<UserIdentifiers> userIdentifiers;
-    //private SessionIDsGenerator sessionIdsGen = null;
-    public Controller() {
+    private Gson gson = null;
+    private List<UserIdentifiers> userIdentifiers;
+    private SessionIDsGenerator sessionIdsGen = null;
+
+    private Controller() {
         // Exists only to defeat instantiation.
 
         //Logger functionality
@@ -41,7 +50,150 @@ public class Controller {
 
         entityClassExplorer = new EntityClassExplorer();
 
+        userIdentifiers = new ArrayList();
+        sessionIdsGen = new SessionIDsGenerator();
+        gson = new Gson();
+
     }
+
+    public static Controller getInstance() {
+        if ( instance == null ) {
+            instance = new Controller();
+        }
+        return instance;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    //How to approach ? 
+    //1. Start with the database functionality of how to extract a user based on username
+    //  ex SELECT (specific) should have where username = ? (this will be tricky and nice)
+    //2. Decide what you want to send back (User is a bad idea) Maybe WebSession object
+    //  containing username, sessionid (alias, lastlogin, registerdate) anything BUT the hashpw
+    //3. Make it rain!
+    //  GL!
+    /*
+     * User authentication start
+     */
+    public boolean registerUser( String clientReqIP, String jQueryObject ) {
+//        User jsonObject = gson.fromJson( jQueryObject, User.class );
+//
+//        long MAX_DURATION = MILLISECONDS.convert( 1, MINUTES );
+//        Date now = new Date();
+//
+//        String clientSHA256PlusIdsPW = jsonObject.getPassword();
+//
+//        if ( clientSHA256PlusIdsPW.length() != (64 + 2) ) {
+//            return false;
+//        }
+//
+//        //decompose password
+//        for ( int i = 0; i < userIdentifiers.size(); i++ ) {
+//            if ( userIdentifiers.get( i ).getClientReqIP().equals( clientReqIP )
+//                    && "register".equals( userIdentifiers.get( i ).getType() ) ) {
+//                clientSHA256PlusIdsPW = clientSHA256PlusIdsPW.substring( 1, clientSHA256PlusIdsPW.length() - 1 );
+//                jsonObject.setPassword( clientSHA256PlusIdsPW );
+//            }
+//            if ( now.getTime() - userIdentifiers.get( i ).getCurDate().getTime() >= MAX_DURATION ) {
+//                userIdentifiers.remove( i );
+//            }
+//        }
+//
+//        int status = facade.registerUser( logger, jsonObject );
+//
+//        if ( status == 0 ) {
+        return false;
+//        }
+//
+//        return true;
+    }
+
+    public boolean createUserIdentifierObj( String clientReqIP, int curServerID, String type ) {
+        boolean found = false;
+        long MAX_DURATION = MILLISECONDS.convert( 1, MINUTES );
+        Date now = new Date();
+
+        for ( int i = 0; i < userIdentifiers.size(); i++ ) {
+            if ( userIdentifiers.get( i ).getClientReqIP().equals( clientReqIP )
+                    && userIdentifiers.get( i ).getType().equals( type ) ) {
+
+                userIdentifiers.remove( i );
+                userIdentifiers.add( new UserIdentifiers( clientReqIP, curServerID, new Date(), type ) );
+                found = true;
+            }
+            if ( now.getTime() - userIdentifiers.get( i ).getCurDate().getTime() >= MAX_DURATION ) {
+                userIdentifiers.remove( i );
+            }
+        }
+        if ( !found ) {
+            userIdentifiers.add( new UserIdentifiers( clientReqIP, curServerID, new Date(), type ) );
+        }
+        return true;
+    }
+
+    public boolean addClientId( String clientReqIP, int curClientID ) {
+        long MAX_DURATION = MILLISECONDS.convert( 1, MINUTES );
+        Date now = new Date();
+        boolean isFound = false;
+        for ( int i = 0; i < userIdentifiers.size(); i++ ) {
+            if ( userIdentifiers.get( i ).getClientReqIP().equals( clientReqIP ) ) {
+                userIdentifiers.get( i ).setCurClientId( curClientID );
+                isFound = true;
+            }
+            if ( now.getTime() - userIdentifiers.get( i ).getCurDate().getTime() >= MAX_DURATION ) {
+                userIdentifiers.remove( i );
+            }
+        }
+        if ( isFound ) {
+            return true;
+        }
+        return false;
+    }
+
+    public User loginUser( String clientReqIP, String jQueryObject ) {
+        User jsonObject = gson.fromJson( jQueryObject, User.class );
+
+        long MAX_DURATION = MILLISECONDS.convert( 1, MINUTES );
+        Date now = new Date();
+
+        String clientSHA256PlusIdsPW = jsonObject.getHashPass();
+
+        if ( clientSHA256PlusIdsPW.length() != (64 + 2) ) {
+            return null;
+        }
+
+        //decompose password
+        for ( int i = 0; i < userIdentifiers.size(); i++ ) {
+            if ( userIdentifiers.get( i ).getClientReqIP().equals( clientReqIP )
+                    && "login".equals( userIdentifiers.get( i ).getType() ) ) {
+                clientSHA256PlusIdsPW = clientSHA256PlusIdsPW.substring( 1, clientSHA256PlusIdsPW.length() - 1 );
+                jsonObject.setHashPass( clientSHA256PlusIdsPW );
+            }
+            if ( now.getTime() - userIdentifiers.get( i ).getCurDate().getTime() >= MAX_DURATION ) {
+                userIdentifiers.remove( i );
+            }
+        }
+
+//        User currUser = facade.getUser( logger, jsonObject.getUsername(), jsonObject.getPassword() );
+//
+//        if ( currUser != null ) {
+//            currUser.setSessionId( sessionIdsGen.registerSession( clientReqIP, currUser.getUsername() ) );
+//        }
+//
+//        return currUser;
+        return null;
+    }
+
+    public boolean authenticateSession( String address, String sessionId ) {
+        sessionId = sessionId.replaceAll( "^\"|\"$", "" );
+        return sessionIdsGen.checkSession( sessionId, address );
+    }
+
+    /*
+     * User authentication end
+     */
 
     /*
      * This abstract method provides SELECT database functionality on any table

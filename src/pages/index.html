@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>Emilian Borislavoff</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- IE -->
+        <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
+        <!-- other browsers -->
+        <link rel="icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<!--        <script type="text/javascript" src="sha256.js" ></script>-->
+        <script type="text/javascript" src="index.js"></script>
+    </head>
+    <body>
+        <h3>Hello, darling! >.> This is the Main Page ^^</h3>
+        <form id="login-form">
+            <div>
+                <span>Username:</span>
+                <input type="text" name="username" placeholder="Insert your username">
+            </div>
+            <div>
+                <span>Password:</span>
+                <input type="password" name="password" placeholder="Insert your password">
+            </div>
+            <div><input id="login-form-button" type="submit" value="Log in" disabled></div>
+            <span class="login-status"></span>
+        </form>
+        <input type="button" onclick="location.href = '/register';" value="Register">
+    </body>
+</html>
