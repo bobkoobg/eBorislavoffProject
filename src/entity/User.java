@@ -25,13 +25,12 @@ public class User extends AbstractEntity {
         this.registerDate = registerDate;
     }
 
-    @Override
-    public void setId( int id ) {
-        super.setId( id ); //To change body of generated methods, choose Tools | Templates.
+    public void setLastLoginDate( Date lastLoginDate ) {
+        this.lastLoginDate = lastLoginDate;
     }
 
-    public void setUsername( String username ) {
-        this.username = username;
+    public void setUserAlias( String userAlias ) {
+        this.userAlias = userAlias;
     }
 
     public void setHashPass( String hashPass ) {
@@ -42,27 +41,6 @@ public class User extends AbstractEntity {
         this.email = email;
     }
 
-    public void setUserAlias( String userAlias ) {
-        this.userAlias = userAlias;
-    }
-
-    public void setLastLoginDate( Date lastLoginDate ) {
-        this.lastLoginDate = lastLoginDate;
-    }
-
-    public void setRegisterDate( Date registerDate ) {
-        this.registerDate = registerDate;
-    }
-
-    @Override
-    public int getId() {
-        return super.getId(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
     public String getHashPass() {
         return hashPass;
     }
@@ -71,16 +49,8 @@ public class User extends AbstractEntity {
         return email;
     }
 
-    public String getUserAlias() {
-        return userAlias;
-    }
-
-    public Date getLastLoginDate() {
-        return lastLoginDate;
-    }
-
-    public Date getRegisterDate() {
-        return registerDate;
+    public String getUsername() {
+        return username;
     }
 
     @Override
