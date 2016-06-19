@@ -104,6 +104,14 @@ public class Controller {
         return null;
     }
 
+    /*
+     * This abstract method provides INSERT database functionality on any table
+     * from the database.
+     * Parameters :
+     * Type - Identifiying string for specific table
+     * ArrayList<T> - Which should include a list with the elements which should
+     * be inserted (NB: They should be from the same type)
+     */
     public <T> boolean insertAbstract( String type, ArrayList<T> toInsert ) {
 
         String tN = "";
@@ -179,23 +187,65 @@ public class Controller {
         return false;
     }
 
+    /*
+     * This abstract method provides DELETE database functionality on any table
+     * from the database.
+     * Parameters :
+     * Type - Identifiying string for specific table
+     * EntryID - Refers to the id of the element which should be deleted
+     */
     public boolean deleteAbstract( String type, int entryId ) {
         return facade.deleteAbstract( getTableName( type ), entryId, logger );
     }
 
+    /*
+     * This abstract method provides UPDATE database functionality on any table
+     * from the database.
+     * Parameters :
+     * Type - Identifiying string for specific table
+     * ArrayList<T> - Which should include a list with the elements which should
+     * be updated (NB: They should be from the same type)
+     */
     public <T> boolean updateAbstract( String type, ArrayList<T> toUpdate ) {
 
         String tN = "";
         Class c = null;
         List<Field> f = null;
 
-        if ( "users".equals( type ) ) {
-            tN = getTableName( type );
-            c = User.class;
-            f = entityClassExplorer.retrieveFieldsFromEntity( c );
-        } else if ( "articles".equals( type ) ) {
-            tN = getTableName( type );
-            c = Article.class;
+        if ( null != type ) {
+            switch ( type ) {
+                case "users":
+                    tN = getTableName( type );
+                    c = User.class;
+                    break;
+                case "articles":
+                    tN = getTableName( type );
+                    c = Article.class;
+                    break;
+                case "articletypes":
+                    tN = getTableName( type );
+                    c = ArticleType.class;
+                    break;
+                case "gallery":
+                    tN = getTableName( type );
+                    c = Gallery.class;
+                    break;
+                case "guestbook":
+                    tN = getTableName( type );
+                    c = Guestbook.class;
+                    break;
+                case "tickets":
+                    tN = getTableName( type );
+                    c = Ticket.class;
+                    break;
+                case "tickettypes":
+                    tN = getTableName( type );
+                    c = TicketType.class;
+                    break;
+            }
+        }
+
+        if ( c != null ) {
             f = entityClassExplorer.retrieveFieldsFromEntity( c );
         }
 
@@ -205,6 +255,12 @@ public class Controller {
         return false;
     }
 
+    /*
+     * This method provides EXACT names of database tables based on a simplified
+     * string.
+     * Parameters :
+     * Type - Identifiying string for specific table
+     */
     private String getTableName( String type ) {
         String tableName = "";
         switch ( type ) {
@@ -233,6 +289,12 @@ public class Controller {
         return tableName;
     }
 
+    /*
+     * This method provides EXACT names of database sequences based on a simplified
+     * string.
+     * Parameters :
+     * Type - Identifiying string for specific sequence
+     */
     private String getSequenceName( String type ) {
         String sequenceName = "";
         switch ( type ) {
