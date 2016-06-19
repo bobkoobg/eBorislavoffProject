@@ -60,6 +60,28 @@ public class Controller {
         return null;
     }
 
+    public <T> List<T> getSpecificAbstract( String type, int entryId ) {
+
+        String tN = "";
+        Class c = null;
+        List<Field> f = null;
+
+        if ( "users".equals( type ) ) {
+            tN = getTableName( type );
+            c = User.class;
+            f = entityClassExplorer.retrieveFieldsFromEntity( c );
+        } else if ( "articles".equals( type ) ) {
+            tN = getTableName( type );
+            c = Article.class;
+            f = entityClassExplorer.retrieveFieldsFromEntity( c );
+        }
+
+        if ( !tN.isEmpty() && c != null && f != null ) {
+            return facade.getSpecificAbstract( tN, c, f, entryId, logger );
+        }
+        return null;
+    }
+
     public <T> boolean insertAbstract( String type, ArrayList<T> toInsert ) {
 
         String tN = "";

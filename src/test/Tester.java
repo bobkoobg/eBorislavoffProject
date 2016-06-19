@@ -23,19 +23,25 @@ public class Tester {
 //        boolean result = controller.insertAbstract( "users", usersToInsert );
 //        System.out.println( "The result form the insert is : " + result );
         //Delete
-//        boolean result = controller.deleteAbstract("users", 2 );
+//        boolean result = controller.deleteAbstract("users", 3 );
 //        System.out.println( "The result form the delete is : " + result );
         //Update
 //        ArrayList<User> usersToUpdate = new ArrayList();
-//        usersToUpdate.add( new User( 3, "Bobanka", "Hackva", "Vashiqt", "Svqt", new Date(), new Date() ) );
+//        usersToUpdate.add( new User( 4, "Bobanka", "Hackva", "Vashiqt", "Svqt", new Date(), new Date() ) );
 //        boolean result = controller.updateAbstract( "users", usersToUpdate );
 //        System.out.println( "The result form the insert is : " + result );
         //SELECT ALL
-        List<User> users = controller.getAllAbstract( "users" );
-
-        for ( int i = 0; i < users.size(); i++ ) {
-            System.out.println( users.get( i ).toString() );
-        }
+//        List<User> users = controller.getAllAbstract( "users" );
+//
+//        for ( int i = 0; i < users.size(); i++ ) {
+//            System.out.println( users.get( i ).toString() );
+//        }
+//        System.out.println( "End" );
+//        List<User> usersSpecific = controller.getSpecificAbstract( "users", 4 );
+//
+//        for ( int i = 0; i < usersSpecific.size(); i++ ) {
+//            System.out.println( usersSpecific.get( i ).toString() );
+//        }
 
         //Insert
 //        ArrayList<Article> articleToadd = new ArrayList();
@@ -52,11 +58,17 @@ public class Tester {
 //        boolean result = controller.updateAbstract( "articles", articlesToUpdate );
 //        System.out.println( "The result form the insert is : " + result );
         //SELECT ALL
-        List<Article> articles = controller.getAllAbstract( "articles" );
-
-        for ( int i = 0; i < articles.size(); i++ ) {
-            System.out.println( articles.get( i ).toString() );
-        }
+//        List<Article> articles = controller.getAllAbstract( "articles" );
+//
+//        for ( int i = 0; i < articles.size(); i++ ) {
+//            System.out.println( articles.get( i ).toString() );
+//        }
+//        System.out.println( "End" );
+//        List<Article> articleSpecific = controller.getSpecificAbstract( "articles", 5 );
+//
+//        for ( int i = 0; i < articleSpecific.size(); i++ ) {
+//            System.out.println( articleSpecific.get( i ).toString() );
+//        }
     }
 
 }

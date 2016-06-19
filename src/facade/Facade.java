@@ -1,9 +1,6 @@
 package facade;
 
 import dataSource.AbstractMapper;
-import entity.Article;
-import entity.Article;
-import entity.User;
 import entity.User;
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -68,7 +65,6 @@ public class Facade {
         return true;
     }
 
-    //TODO : MAKE THOSE 4 TYPES OF METHODS GENERIC
     //TODO : Error handling
     //***TO BE ADDED - Check if fields in Classes types == DB Types(down here)
     //ArrayList<String> listOfSQLFieldTypes = getSQTableInformation("data_type", tableName,
@@ -79,16 +75,27 @@ public class Facade {
             List<Field> fields, Logger logger ) {
 
         PreparedStatement statement = statementCreator
-                .generateSQLString( "SELECT *", tableName, connection, logger );
+                .generateSQLString( tableName, connection, logger );
         return abstractMapper
                 .overpoweredAbstractMethod( statement, entityType, fields, connection, logger );
+    }
+
+    public <T> List<T> getSpecificAbstract( String tableName, Class<T> entityType,
+            List<Field> fields, int entryId, Logger logger ) {
+        List<String> columnNames = abstractMapper
+                .getColumnNamesByTableName( tableName, connection, logger );
+
+        PreparedStatement statement = statementCreator
+                .generateSQLString( "SELECT *", tableName, entryId, columnNames, connection, logger );
+
+        return abstractMapper.overpoweredAbstractMethod( statement, entityType, fields, connection, logger );
     }
 
     public <T> boolean insertAbstract( String tableName, Class<T> entityType,
             ArrayList<T> toInsert, List<Field> fields, Logger logger ) {
 
         PreparedStatement statement = statementCreator
-                .generateSQLStringInsert( "INSERT", tableName, fields, toInsert, connection, logger );
+                .generateSQLStringInsert( tableName, fields, toInsert, connection, logger );
 
         return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
     }
@@ -102,7 +109,7 @@ public class Facade {
                 .getColumnNamesByTableName( tableName, connection, logger );
 
         PreparedStatement statement = statementCreator
-                .generatesQLStringDelete( "DELETE", tableName, entryId, columnNames, connection, logger );
+                .generateSQLString( "DELETE", tableName, entryId, columnNames, connection, logger );
 
         return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
     }
@@ -112,7 +119,7 @@ public class Facade {
                 .getColumnNamesByTableName( tableName, connection, logger );
 
         PreparedStatement statement = statementCreator
-                .generateSQLStringUpdate( "UPDATE", tableName, toUpdate, fields, columnNames, connection, logger );
+                .generateSQLStringUpdate( tableName, toUpdate, fields, columnNames, connection, logger );
 
         return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
     }

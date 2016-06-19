@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 public class StatementCreator {
 
-    //TODO : Create missing SELECT 1 ELEMENT functionality!
     /*
      * Generate Question Marks for Prepared Statement structure based on
      * fields size
@@ -30,14 +29,14 @@ public class StatementCreator {
     /*
      * Generate Insert Prepared Statement
      */
-    public <T> PreparedStatement generateSQLStringInsert( String actionType, String tableName,
+    public <T> PreparedStatement generateSQLStringInsert( String tableName,
             List<Field> fields, ArrayList<T> listOfRequests, Connection connect,
             Logger logger ) {
 
         StringBuilder builder = new StringBuilder( "" );
         PreparedStatement statement = null;
 
-        builder.append( actionType )
+        builder.append( "INSERT" )
                 .append( " into " )
                 .append( tableName )
                 .append( " values (" )
@@ -62,7 +61,7 @@ public class StatementCreator {
     /*
      * Generate Update Prepared Statement
      */
-    public <T> PreparedStatement generateSQLStringUpdate( String actionType, String tableName,
+    public <T> PreparedStatement generateSQLStringUpdate( String tableName,
             ArrayList<T> listOfRequests, List<Field> fields, List<String> listOfFieldNames,
             Connection connect, Logger logger ) {
         String blank = "";
@@ -71,8 +70,7 @@ public class StatementCreator {
 
         Collections.rotate( listOfFieldNames, -1 );
         Collections.rotate( fields, -1 );
-        builder.append( actionType )
-                .append( " " )
+        builder.append( "UPDATE " )
                 .append( tableName )
                 .append( " set " );
         int size = listOfFieldNames.size();
@@ -111,10 +109,10 @@ public class StatementCreator {
     }
 
     /*
-     * Generate Delete Prepared Statement
+     * Generate Delete or SELECT (specific) Prepared Statement
      */
-    public <T> PreparedStatement generatesQLStringDelete( String actionType, String tableName,
-            int toBeDeleted, List<String> listOfFieldNames, Connection connect,
+    public <T> PreparedStatement generateSQLString( String actionType, String tableName,
+            int elemId, List<String> listOfFieldNames, Connection connect,
             Logger logger ) {
         String blank = "";
         StringBuilder builder = new StringBuilder( blank );
@@ -125,7 +123,7 @@ public class StatementCreator {
                 .append( tableName )
                 .append( " where " )
                 .append( listOfFieldNames.get( 0 ) ).append( " = " )
-                .append( toBeDeleted );
+                .append( elemId );
         try {
             statement = connect.prepareStatement( builder.toString() );
         } catch ( SQLException ex ) {
@@ -140,14 +138,14 @@ public class StatementCreator {
     /*
      * Generate Select * (ALL) Prepared Statement
      */
-    public <T> PreparedStatement generateSQLString( String actionType, String tableName,
-            Connection connect, Logger logger ) {
+    public <T> PreparedStatement generateSQLString( String tableName, Connection connect,
+            Logger logger ) {
 
         String blank = "";
         StringBuilder builder = new StringBuilder( blank );
         PreparedStatement statement = null;
 
-        builder.append( actionType )
+        builder.append( "SELECT *" )
                 .append( " from " )
                 .append( tableName );
 
