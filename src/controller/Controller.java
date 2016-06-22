@@ -202,7 +202,7 @@ public class Controller {
      * Type - Identifiying string for specific table
      * EntryId - Used for SELECTing specific entry based on Id, 0 (or NULL) if ALL
      */
-    public <T> List<T> getAbstract( String type, int entryId ) {
+    public <T> List<T> getAbstract( String type, Object comparisonValue, String filterBy ) {
 
         String tN = "";
         Class c = null;
@@ -246,15 +246,27 @@ public class Controller {
         }
 
         if ( !tN.isEmpty() && c != null && f != null ) {
-            if ( entryId == 0 ) {
+            boolean isInteger = comparisonValue instanceof Integer ? true : false;
+            
+            if ( isInteger && ( Integer ) comparisonValue == 0 ) {
+                
                 return facade.getAllAbstract( tN, c, f, logger );
             } else {
-                return facade.getSpecificAbstract( tN, c, f, entryId, logger );
+                
+                String actualFilter = "id";
+                for ( int i = 0; i < f.size(); i++ ) {
+                    if ( f.get( i ).getName().equals( filterBy ) ) {
+                        actualFilter = filterBy;
+                        break;
+                    }
+                }
+                return facade.getSpecificAbstract( tN, c, f, comparisonValue, actualFilter, logger );
             }
 
         }
         return null;
     }
+
 
     /*
      * This abstract method provides INSERT database functionality on any table
@@ -346,8 +358,8 @@ public class Controller {
      * Type - Identifiying string for specific table
      * EntryID - Refers to the id of the element which should be deleted
      */
-    public boolean deleteAbstract( String type, int entryId ) {
-        return facade.deleteAbstract( getTableName( type ), entryId, logger );
+    public boolean deleteAbstract( String type, int entryId, String filterBy ) {
+        return facade.deleteAbstract( getTableName( type ), entryId, filterBy, logger );
     }
 
     /*

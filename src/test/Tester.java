@@ -18,7 +18,7 @@ public class Tester {
         new Tester().tester();
     }
 
-    private void tester() {
+    private <T> void tester() {
 
         Controller controller = Controller.getInstance();
 
@@ -117,46 +117,47 @@ public class Tester {
 //        ttUpdate.add( new TicketType( 1, "hackedTYPEZZZZ" ) );
 //        boolean result17 = controller.updateAbstract( "tickettypes", ttUpdate );
 //        System.out.println( "The result form the insert is : " + result17 );
-        //SELECT ALL
-        List<User> users = controller.getAbstract( "users", 0 );
+//        //SELECT ALL
+        List<User> users = controller.getAbstract( "users", 0, "id" );
 
         for ( int i = 0; i < users.size(); i++ ) {
             System.out.println( users.get( i ).toString() );
         }
-        List<Article> articles = controller.getAbstract( "articles", 0 );
-
-        for ( int i = 0; i < articles.size(); i++ ) {
-            System.out.println( articles.get( i ).toString() );
-        }
-        List<ArticleType> articletypes = controller.getAbstract( "articletypes", 0 );
-
-        for ( int i = 0; i < articletypes.size(); i++ ) {
-            System.out.println( articletypes.get( i ).toString() );
-        }
-        List<Gallery> gallery = controller.getAbstract( "gallery", 0 );
-
-        for ( int i = 0; i < gallery.size(); i++ ) {
-            System.out.println( gallery.get( i ).toString() );
-        }
-        List<Guestbook> guestbook = controller.getAbstract( "guestbook", 0 );
-
-        for ( int i = 0; i < guestbook.size(); i++ ) {
-            System.out.println( guestbook.get( i ).toString() );
-        }
-        List<Ticket> ticket = controller.getAbstract( "tickets", 0 );
-
-        for ( int i = 0; i < ticket.size(); i++ ) {
-            System.out.println( ticket.get( i ).toString() );
-        }
-        List<TicketType> tickettypes = controller.getAbstract( "tickettypes", 0 );
-
-        for ( int i = 0; i < tickettypes.size(); i++ ) {
-            System.out.println( tickettypes.get( i ).toString() );
-        }
-        System.out.println( "End" );
+//        List<Article> articles = controller.getAbstract( "articles", 0 );
+//
+//        for ( int i = 0; i < articles.size(); i++ ) {
+//            System.out.println( articles.get( i ).toString() );
+//        }
+//        List<ArticleType> articletypes = controller.getAbstract( "articletypes", 0 );
+//
+//        for ( int i = 0; i < articletypes.size(); i++ ) {
+//            System.out.println( articletypes.get( i ).toString() );
+//        }
+//        List<Gallery> gallery = controller.getAbstract( "gallery", 0 );
+//
+//        for ( int i = 0; i < gallery.size(); i++ ) {
+//            System.out.println( gallery.get( i ).toString() );
+//        }
+//        List<Guestbook> guestbook = controller.getAbstract( "guestbook", 0 );
+//
+//        for ( int i = 0; i < guestbook.size(); i++ ) {
+//            System.out.println( guestbook.get( i ).toString() );
+//        }
+//        List<Ticket> ticket = controller.getAbstract( "tickets", 0 );
+//
+//        for ( int i = 0; i < ticket.size(); i++ ) {
+//            System.out.println( ticket.get( i ).toString() );
+//        }
+//        List<TicketType> tickettypes = controller.getAbstract( "tickettypes", 0 );
+//
+//        for ( int i = 0; i < tickettypes.size(); i++ ) {
+//            System.out.println( tickettypes.get( i ).toString() );
+//        }
+//        System.out.println( "End" );
         //SELECT SPECIFIC
-//        List<User> usersSpecific = controller.getAbstract( "users", 2 );
-//        System.out.println( usersSpecific.get( 0 ).toString() );
+        String obj2 = "emko";
+        List<User> usersSpecific = controller.getAbstract( "users", obj2, "username" );
+        System.out.println( usersSpecific.get( 0 ).toString() );
 //
 //        List<Article> articleSpecific = controller.getAbstract( "articles", 2 );
 //        System.out.println( articleSpecific.get( 0 ).toString() );

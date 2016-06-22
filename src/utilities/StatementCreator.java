@@ -112,7 +112,7 @@ public class StatementCreator {
      * Generate Delete or SELECT (specific) Prepared Statement
      */
     public <T> PreparedStatement generateSQLString( String actionType, String tableName,
-            int elemId, List<String> listOfFieldNames, Connection connect,
+            T comparisonValue, List<String> listOfFieldNames, String filterBy, Connection connect,
             Logger logger ) {
         String blank = "";
         StringBuilder builder = new StringBuilder( blank );
@@ -121,9 +121,27 @@ public class StatementCreator {
         builder.append( actionType )
                 .append( " from " )
                 .append( tableName )
-                .append( " where " )
-                .append( listOfFieldNames.get( 0 ) ).append( " = " )
-                .append( elemId );
+                .append( " where " );
+
+        if ( filterBy.isEmpty() || filterBy.equals( "id" ) ) {
+            builder.append( listOfFieldNames.get( 0 ) ).append( " = " )
+                    .append( comparisonValue );
+        } else {
+            for ( int i = 0; i < listOfFieldNames.size(); i++ ) {
+                if ( filterBy.equalsIgnoreCase( listOfFieldNames.get( i ) ) ) {
+                    builder.append( listOfFieldNames.get( i ) ).append( " = " );
+                    if ( comparisonValue instanceof String ) {
+                        builder.append( "'" + comparisonValue + "'" );
+                    } else {
+                        builder.append( comparisonValue );
+                    }
+
+                }
+            }
+        }
+
+        System.out.println( "Final : " + builder.toString() );
+
         try {
             statement = connect.prepareStatement( builder.toString() );
         } catch ( SQLException ex ) {

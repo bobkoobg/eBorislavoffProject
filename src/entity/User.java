@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class User extends AbstractEntity {
 
-    private String username;
+    protected String username;
     private String hashPass;
     private String email;
     private String userAlias;

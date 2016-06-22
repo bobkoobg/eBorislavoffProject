@@ -81,12 +81,12 @@ public class Facade {
     }
 
     public <T> List<T> getSpecificAbstract( String tableName, Class<T> entityType,
-            List<Field> fields, int entryId, Logger logger ) {
+            List<Field> fields, T comparisonValue, String filterBy, Logger logger ) {
         List<String> columnNames = abstractMapper
                 .getColumnNamesByTableName( tableName, connection, logger );
 
         PreparedStatement statement = statementCreator
-                .generateSQLString( "SELECT *", tableName, entryId, columnNames, connection, logger );
+                .generateSQLString( "SELECT *", tableName, comparisonValue, columnNames, filterBy, connection, logger );
 
         return abstractMapper.overpoweredAbstractMethod( statement, entityType, fields, connection, logger );
     }
@@ -104,12 +104,12 @@ public class Facade {
         return abstractMapper.getNextSequenceID( sequenceName, connection, logger );
     }
 
-    public boolean deleteAbstract( String tableName, int entryId, Logger logger ) {
+    public boolean deleteAbstract( String tableName, int entryId, String filterBy, Logger logger ) {
         List<String> columnNames = abstractMapper
                 .getColumnNamesByTableName( tableName, connection, logger );
 
         PreparedStatement statement = statementCreator
-                .generateSQLString( "DELETE", tableName, entryId, columnNames, connection, logger );
+                .generateSQLString( "DELETE", tableName, entryId, columnNames, filterBy, connection, logger );
 
         return abstractMapper.overpoweredAbstractMethod( statement, connection, logger );
     }
