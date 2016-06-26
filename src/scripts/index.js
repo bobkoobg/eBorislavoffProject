@@ -4,7 +4,7 @@ var $username;
 var clientRN;
 var serverRN;
 var $loginStatus;
-var cookieName = "musicladder-user-sessionid";
+var cookieName = "borislavoff-user-sessionid";
 
 function getCookie(cname) {
     var name = cname + "=";
@@ -24,7 +24,8 @@ function setCookie(cname, cvalue, minutes) {
     d.setTime(d.getTime() + (minutes * 60 * 1000)); //days*24*60*60*1000
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
-    window.location = "/musicLadder";
+    //window.location = "/musicLadder";
+    $loginStatus.html("BETA TESTING - SUCCESS LOGIN.");
 }
 
 function evaluateLoginServerResponse(object, status) {
@@ -37,7 +38,7 @@ function evaluateLoginServerResponse(object, status) {
 
 function sendLoginInformation(ignore) {
     var password = (serverRN + "").concat(hashedPassword.concat((clientRN + "")));
-    
+
     $.ajax({
         "url": "/api/login",
         "type": "POST",
@@ -104,16 +105,18 @@ function loadComponents() {
     $username = $("#login-form").find("input[name='username']");
     $password = $("#login-form").find("input[name='password']");
     $loginStatus = $(".login-status");
-    
+
     $("#login-form-button").removeAttr("disabled");
     $('#login-form').submit(breakSubmitRedirect);
 }
 
 function evaluateServerCookieResponse(object, status) {
+    $loginStatus = $(".login-status");
     if (status === "success" && object != true) {
-        window.location = "/musicLadder";
+        //window.location = "/musicLadder";
+        $loginStatus.html("BETA TESTING - SUCCESS LOGIN.");
     } else {
-        $loginStatus = $(".login-status");
+
         $loginStatus.html(status + " - Incorrect session id, please relog.");
         loadComponents();
     }
@@ -133,9 +136,9 @@ function evaluateUserCookie(cookie) {
 function load() {
     console.log("index.js loaded...");
 
-    var cookie = getCookie( cookieName );
-    if ( cookie ) {
-        evaluateUserCookie( cookie );
+    var cookie = getCookie(cookieName);
+    if (cookie) {
+        evaluateUserCookie(cookie);
     } else {
         loadComponents();
     }

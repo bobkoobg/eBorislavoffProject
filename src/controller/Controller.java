@@ -10,7 +10,8 @@ import entity.Guestbook;
 import entity.Ticket;
 import entity.TicketType;
 import entity.User;
-import entity.web.UserIdentifiers;
+import entity.web.SessionIdentifier;
+import entity.web.UserWebSession;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.List;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import java.util.logging.Logger;
+import org.mindrot.jbcrypt.BCrypt;
 import utilities.PerformanceLogger;
 import utilities.SessionIDsGenerator;
 
@@ -35,7 +37,7 @@ public class Controller {
     private EntityClassExplorer entityClassExplorer;
 
     private Gson gson = null;
-    private List<UserIdentifiers> userIdentifiers;
+    private List<SessionIdentifier> userIdentifiers;
     private SessionIDsGenerator sessionIdsGen = null;
 
     private Controller() {
@@ -67,47 +69,40 @@ public class Controller {
         return logger;
     }
 
-    //How to approach ? 
-    //1. Start with the database functionality of how to extract a user based on username
-    //  ex SELECT (specific) should have where username = ? (this will be tricky and nice)
-    //2. Decide what you want to send back (User is a bad idea) Maybe WebSession object
-    //  containing username, sessionid (alias, lastlogin, registerdate) anything BUT the hashpw
-    //3. Make it rain!
-    //  GL!
     /*
      * User authentication start
      */
     public boolean registerUser( String clientReqIP, String jQueryObject ) {
-//        User jsonObject = gson.fromJson( jQueryObject, User.class );
-//
-//        long MAX_DURATION = MILLISECONDS.convert( 1, MINUTES );
-//        Date now = new Date();
-//
-//        String clientSHA256PlusIdsPW = jsonObject.getPassword();
-//
-//        if ( clientSHA256PlusIdsPW.length() != (64 + 2) ) {
-//            return false;
-//        }
-//
-//        //decompose password
-//        for ( int i = 0; i < userIdentifiers.size(); i++ ) {
-//            if ( userIdentifiers.get( i ).getClientReqIP().equals( clientReqIP )
-//                    && "register".equals( userIdentifiers.get( i ).getType() ) ) {
-//                clientSHA256PlusIdsPW = clientSHA256PlusIdsPW.substring( 1, clientSHA256PlusIdsPW.length() - 1 );
-//                jsonObject.setPassword( clientSHA256PlusIdsPW );
-//            }
-//            if ( now.getTime() - userIdentifiers.get( i ).getCurDate().getTime() >= MAX_DURATION ) {
-//                userIdentifiers.remove( i );
-//            }
-//        }
-//
-//        int status = facade.registerUser( logger, jsonObject );
-//
-//        if ( status == 0 ) {
-        return false;
-//        }
-//
-//        return true;
+        User jsonObject = gson.fromJson( jQueryObject, User.class );
+
+        long MAX_DURATION = MILLISECONDS.convert( 1, MINUTES );
+        Date now = new Date();
+
+        String clientSHA256PlusIdsPW = jsonObject.getPassword();
+
+        if ( clientSHA256PlusIdsPW.length() != (64 + 2) ) {
+            return false;
+        }
+
+        //decompose password
+        for ( int i = 0; i < userIdentifiers.size(); i++ ) {
+            if ( userIdentifiers.get( i ).getClientReqIP().equals( clientReqIP )
+                    && "register".equals( userIdentifiers.get( i ).getType() ) ) {
+                clientSHA256PlusIdsPW = clientSHA256PlusIdsPW.substring( 1, clientSHA256PlusIdsPW.length() - 1 );
+                jsonObject.setPassword( clientSHA256PlusIdsPW );
+            }
+            if ( now.getTime() - userIdentifiers.get( i ).getCurDate().getTime() >= MAX_DURATION ) {
+                userIdentifiers.remove( i );
+            }
+        }
+
+        ArrayList<User> insertT = new ArrayList();
+        insertT.add( new User( 0, jsonObject.getUsername(),
+                               BCrypt.hashpw( jsonObject.getPassword(), BCrypt.gensalt() ),
+                               jsonObject.getEmail(), jsonObject.getUserAlias(),
+                               new Date(), new Date() ) );
+
+        return insertAbstract( "users", insertT );
     }
 
     public boolean createUserIdentifierObj( String clientReqIP, int curServerID, String type ) {
@@ -120,7 +115,7 @@ public class Controller {
                     && userIdentifiers.get( i ).getType().equals( type ) ) {
 
                 userIdentifiers.remove( i );
-                userIdentifiers.add( new UserIdentifiers( clientReqIP, curServerID, new Date(), type ) );
+                userIdentifiers.add( new SessionIdentifier( clientReqIP, curServerID, new Date(), type ) );
                 found = true;
             }
             if ( now.getTime() - userIdentifiers.get( i ).getCurDate().getTime() >= MAX_DURATION ) {
@@ -128,7 +123,7 @@ public class Controller {
             }
         }
         if ( !found ) {
-            userIdentifiers.add( new UserIdentifiers( clientReqIP, curServerID, new Date(), type ) );
+            userIdentifiers.add( new SessionIdentifier( clientReqIP, curServerID, new Date(), type ) );
         }
         return true;
     }
@@ -152,13 +147,13 @@ public class Controller {
         return false;
     }
 
-    public User loginUser( String clientReqIP, String jQueryObject ) {
+    public <T> User loginUser( String clientReqIP, String jQueryObject ) {
         User jsonObject = gson.fromJson( jQueryObject, User.class );
 
         long MAX_DURATION = MILLISECONDS.convert( 1, MINUTES );
         Date now = new Date();
 
-        String clientSHA256PlusIdsPW = jsonObject.getHashPass();
+        String clientSHA256PlusIdsPW = jsonObject.getPassword();
 
         if ( clientSHA256PlusIdsPW.length() != (64 + 2) ) {
             return null;
@@ -169,21 +164,35 @@ public class Controller {
             if ( userIdentifiers.get( i ).getClientReqIP().equals( clientReqIP )
                     && "login".equals( userIdentifiers.get( i ).getType() ) ) {
                 clientSHA256PlusIdsPW = clientSHA256PlusIdsPW.substring( 1, clientSHA256PlusIdsPW.length() - 1 );
-                jsonObject.setHashPass( clientSHA256PlusIdsPW );
+                jsonObject.setPassword( clientSHA256PlusIdsPW );
             }
             if ( now.getTime() - userIdentifiers.get( i ).getCurDate().getTime() >= MAX_DURATION ) {
                 userIdentifiers.remove( i );
             }
         }
 
-//        User currUser = facade.getUser( logger, jsonObject.getUsername(), jsonObject.getPassword() );
-//
-//        if ( currUser != null ) {
-//            currUser.setSessionId( sessionIdsGen.registerSession( clientReqIP, currUser.getUsername() ) );
-//        }
-//
-//        return currUser;
-        return null;
+        List<User> currUser = getAbstract( "users", jsonObject.getUsername(), "username" );
+
+        boolean isCorrectPassword = false;
+        String hashedPassword = currUser.get( 0 ).getPassword();
+        String password = jsonObject.getPassword();
+        if ( hashedPassword != null ) {
+            isCorrectPassword = BCrypt.checkpw( password, hashedPassword );
+        }
+
+        if ( !isCorrectPassword ) {
+            return null;
+        }
+
+        UserWebSession uws = null;
+        if ( currUser.get( 0 ) != null ) {
+            uws = new UserWebSession( currUser.get( 0 ).getUsername(),
+                                      sessionIdsGen.registerSession( clientReqIP, currUser.get( 0 ).getUsername() ) );
+        } else {
+            return null;
+        }
+
+        return uws;
     }
 
     public boolean authenticateSession( String address, String sessionId ) {
@@ -247,12 +256,12 @@ public class Controller {
 
         if ( !tN.isEmpty() && c != null && f != null ) {
             boolean isInteger = comparisonValue instanceof Integer ? true : false;
-            
+
             if ( isInteger && ( Integer ) comparisonValue == 0 ) {
-                
+
                 return facade.getAllAbstract( tN, c, f, logger );
             } else {
-                
+
                 String actualFilter = "id";
                 for ( int i = 0; i < f.size(); i++ ) {
                     if ( f.get( i ).getName().equals( filterBy ) ) {

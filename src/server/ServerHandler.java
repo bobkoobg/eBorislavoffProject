@@ -30,7 +30,7 @@ public class ServerHandler implements HttpHandler {
 
         File file = null;
         byte[] bytesToSend = null;
-        
+
         //Debug START
         Date date = new Date();
         DateFormat formatter = new SimpleDateFormat( "HH:mm:ss" );
@@ -78,7 +78,7 @@ public class ServerHandler implements HttpHandler {
                         mime = getMime( ".html" );
                     }
 
-                    if ( "text/javascript".equals( mime ) ) {
+                    if ( "text/javascript".equals( mime ) || "text/css".equals( mime ) ) {
                         file = new File( scriptsDirectory + lastElemStr );
                     } else {
                         file = new File( pagesDirectory + lastElemStr );
@@ -114,12 +114,14 @@ public class ServerHandler implements HttpHandler {
 
         if ( status == 200 || status == 404 ) {
             bytesToSend = new byte[ ( int ) file.length() ];
+            if ( "text/css".equals( mime ) ) {
+                he.getResponseHeaders().add( "Content-Type", "text/css" );
+            }
             he.sendResponseHeaders( status, bytesToSend.length );
 
         } else if ( status == 500 ) {
 
             bytesToSend = "<h1>500 Not supported</h1>".getBytes();
-
             he.getResponseHeaders().add( "Content-Type", "application/json" );
             he.sendResponseHeaders( status, 0 );
         }

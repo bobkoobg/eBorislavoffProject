@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>Register user</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- IE -->
+        <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
+        <!-- other browsers -->
+        <link rel="icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+        <script type="text/javascript" src="sha256.js"></script>
+        <script type="text/javascript" src="register.js"></script>
+        <link rel="stylesheet" type="text/css" href="register.css" />
+    </head>
+    <body>
+        <div id="registerWrapper">
+            <h1>Register new user here!</h1>
+            <form id="register-form">
+                <div>
+                    <span>Username:</span>
+                    <input type="text" name="username" placeholder="Insert your username">
+                </div>
+                <div>
+                    <span>Password:</span>
+                    <input type="password" name="password" placeholder="Insert your password">
+                </div>
+                <div>
+                    <span>Password again:</span>
+                    <input type="password" name="password-repeated" placeholder="Insert your password again">
+                </div>
+                <div>
+                    <span>E-mail:</span>
+                    <input type="text" name="email" placeholder="Insert your e-mail">
+                </div>
+                <div>
+                    <span>E-mail again:</span>
+                    <input type="text" name="email-repeated" placeholder="Insert your e-mail again">
+                </div>
+                <input id="register-form-button" type="submit" value="Register" disabled>
+            </form>
+            <span class="registration-status"></span>
+        </div>
+    </body>
+</html>

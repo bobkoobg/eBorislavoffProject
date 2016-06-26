@@ -1,21 +1,14 @@
 package entity.web;
 
-public class WebSessions {
+import entity.User;
 
-    private String username;
+public class UserWebSession extends User {
+
     private String sessionId;
 
-    public WebSessions( String username, String sessionId ) {
+    public UserWebSession( String username, String sessionId ) {
         this.username = username;
         this.sessionId = sessionId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername( String username ) {
-        this.username = username;
     }
 
     public String getSessionId() {

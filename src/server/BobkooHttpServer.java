@@ -33,7 +33,7 @@ public class BobkooHttpServer implements Runnable {
             //REST Routes
             //server.createContext( "/musicLadderAPI", new MusicLadderAPIHandler( controller ) );
             //HTTP Server Routes
-            //server.createContext( "/api", new ServerAPIHandler( controller ) );
+            server.createContext( "/api", new ServerAPIHandler( controller ) );
             server.createContext( "/", new ServerHandler() );
 
             server.start();

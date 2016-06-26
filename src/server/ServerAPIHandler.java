@@ -46,12 +46,12 @@ public class ServerAPIHandler implements HttpHandler {
                  * URL : http://localhost:8084/api/loginId
                  */
                 if ( parts.length > 2 && parts[ 2 ] != null && "loginServerId".equals( parts[ 2 ] ) ) {
-
+                    
                     int curServerId = random.nextInt( 10 - 1 ) + 1;
                     if ( controller.createUserIdentifierObj( address, curServerId, "login" ) ) {
                         response = new Gson().toJson( curServerId );
                         status = 201;
-                    }
+                    } 
                 } else if ( parts.length > 2 && parts[ 2 ] != null && "registerServerId".equals( parts[ 2 ] ) ) {
 
                     int curServerId = random.nextInt( 10 - 1 ) + 1;

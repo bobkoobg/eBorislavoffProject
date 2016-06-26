@@ -2,7 +2,7 @@ package entity.web;
 
 import java.util.Date;
 
-public class UserIdentifiers {
+public class SessionIdentifier {
 
     private String clientReqIP;
     private int curClientId;
@@ -10,7 +10,7 @@ public class UserIdentifiers {
     private Date curDate;
     private String type;
 
-    public UserIdentifiers( String clientReqIP, int curServerId, Date curDate, String type ) {
+    public SessionIdentifier( String clientReqIP, int curServerId, Date curDate, String type ) {
         this.clientReqIP = clientReqIP;
         this.curServerId = curServerId;
         this.curDate = curDate;

@@ -140,8 +140,6 @@ public class StatementCreator {
             }
         }
 
-        System.out.println( "Final : " + builder.toString() );
-
         try {
             statement = connect.prepareStatement( builder.toString() );
         } catch ( SQLException ex ) {

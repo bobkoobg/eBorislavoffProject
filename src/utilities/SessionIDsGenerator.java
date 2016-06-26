@@ -1,5 +1,6 @@
 package utilities;
 
+import entity.web.UserSession;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Date;
@@ -11,7 +12,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 public class SessionIDsGenerator {
 
     private SecureRandom random;
-    private Map<String, SessionObject> sessionsList;
+    private Map<String, UserSession> sessionsList;
     private long MAX_DURATION = MILLISECONDS.convert( 30, MINUTES );
 
     private static String errorMessage = "Empty essential parameters";
@@ -37,10 +38,10 @@ public class SessionIDsGenerator {
 
         Date now = new Date();
 
-        for ( Map.Entry<String, SessionObject> entry : sessionsList.entrySet() ) {
+        for ( Map.Entry<String, UserSession> entry : sessionsList.entrySet() ) {
 
             String key = entry.getKey();
-            SessionObject value = entry.getValue();
+            UserSession value = entry.getValue();
 
             if ( now.getTime() - value.getSessionTime().getTime() >= MAX_DURATION ) {
                 sessionsList.remove( key );
@@ -50,7 +51,7 @@ public class SessionIDsGenerator {
         }
 
         String newKey = nextSessionId();
-        sessionsList.put( newKey, new SessionObject( ipAddress, username ) );
+        sessionsList.put( newKey, new UserSession( ipAddress, username ) );
         return newKey;
     }
 
@@ -62,10 +63,10 @@ public class SessionIDsGenerator {
 
         Date now = new Date();
 
-        for ( Map.Entry<String, SessionObject> entry : sessionsList.entrySet() ) {
+        for ( Map.Entry<String, UserSession> entry : sessionsList.entrySet() ) {
 
             String key = entry.getKey();
-            SessionObject value = entry.getValue();
+            UserSession value = entry.getValue();
 
             if ( now.getTime() - value.getSessionTime().getTime() >= MAX_DURATION ) {
                 sessionsList.remove( key );
@@ -75,31 +76,5 @@ public class SessionIDsGenerator {
             }
         }
         return false;
-    }
-
-    private class SessionObject {
-
-        private String ipAddress;
-        private String username;
-        private Date sessionTime;
-
-        public SessionObject( String ipAddress, String username ) {
-            this.ipAddress = ipAddress;
-            this.username = username;
-            sessionTime = new Date();
-        }
-
-        public String getIpAddress() {
-            return ipAddress;
-        }
-
-        public Date getSessionTime() {
-            return sessionTime;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
     }
 }
