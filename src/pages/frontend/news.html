@@ -3,7 +3,7 @@
         <title>Emilian Borislavoff</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <!-- IE -->
         <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
         <!-- other browsers -->
@@ -13,11 +13,21 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+        <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
         <script type="text/javascript" src="page.js"></script>
-
         <link rel="stylesheet" type="text/css" href="nav.css" />
+        <script type="text/javascript" src="news.js"></script>
     </head>
     <body>
-        <div>News</div>
+        <h3>Welcome to the news section</h3>
+        <div id="newsWrapper"></div>
+        <script id="news-element-template" type="text/x-handlebars-template">
+            <tr class="news" data-newsid="{{id}}">
+                <td>{{title}}</td>
+                <td>{{author}}</td>
+                <td>{{text}}</td>
+                <td>{{date}}</td>
+            </tr>
+        </script>
     </body>
 </html>
