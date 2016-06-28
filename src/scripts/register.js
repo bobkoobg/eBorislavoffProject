@@ -12,7 +12,7 @@ var cookieName = "borislavoff-user-sessionid";
 
 function evaluateRegistrationServerResponse(object, status) {
     if (status === "success" && object != null) {
-        window.location = '/';
+        window.location = '/emkobarona';
     } else {
         $registrationStatus.html(status + " - Incorrect login information.");
     }
@@ -21,7 +21,7 @@ function evaluateRegistrationServerResponse(object, status) {
 function sendRegistrationInformation(data) {
     var password = (serverRN + "").concat(hashedPassword.concat((clientRN + "")));
     $.ajax({
-        "url": "/api/register",
+        "url": "/emkobaronaAPI/register",
         "type": "POST",
         "headers": {"Content-Type": "application/json"},
         "data": JSON.stringify({
@@ -39,7 +39,7 @@ function sendClientIdentifier(data) {
     clientRN = Math.floor((Math.random() * 10) + 1);
 
     $.ajax({
-        "url": "/api/clientId",
+        "url": "/emkobaronaAPI/clientId",
         "type": "POST",
         "headers": {"Content-Type": "application/json"},
         "data": JSON.stringify(clientRN),
@@ -51,7 +51,7 @@ function requestServerIdentifier() {
     hashedPassword = sha256($password.val());
 
     $.ajax({
-        "url": "/api/registerServerId",
+        "url": "/emkobaronaAPI/registerServerId",
         "type": "GET",
         "headers": {},
         "data": {},
@@ -132,20 +132,25 @@ function getCookie(cname) {
     return "";
 }
 
+function deleteCookie(name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
 function evaluateServerCookieResponse(object, status) {
     $registrationStatus = $(".registration-status");
     if (status === "success" && object != true) {
-        //window.location = "/musicLadder";
         $registrationStatus.html("You currently have a session.");
+        window.location = '/emkobarona';
     } else {
         $registrationStatus.html(status + " - Incorrect session id, please relog.");
+        deleteCookie(cookieName);
         loadComponents();
     }
 }
 
 function evaluateUserCookie(cookie) {
     $.ajax({
-        "url": "/api/session",
+        "url": "/emkobaronaAPI/session",
         "type": "POST",
         "headers": {"Content-Type": "application/json"},
         "data": JSON.stringify(cookie),

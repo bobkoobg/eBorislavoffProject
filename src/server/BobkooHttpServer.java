@@ -14,6 +14,7 @@ public class BobkooHttpServer implements Runnable {
     private Logger logger = null;
 
     private static Controller controller;
+
     public static void main( String[] args ) throws IOException {
         if ( args.length >= 3 ) {
             port = Integer.parseInt( args[ 0 ] );
@@ -31,10 +32,12 @@ public class BobkooHttpServer implements Runnable {
             HttpServer server = HttpServer.create( new InetSocketAddress( ip, port ), 0 );
 
             //REST Routes
-            //server.createContext( "/musicLadderAPI", new MusicLadderAPIHandler( controller ) );
+            server.createContext( "/emkobaronaAPI", new BackendServerAPIHandler( controller ) );
+            server.createContext( "/api", new FrontendServerAPIHandler( controller ) );
+
             //HTTP Server Routes
-            server.createContext( "/api", new ServerAPIHandler( controller ) );
-            server.createContext( "/", new ServerHandler() );
+            server.createContext( "/emkobarona", new BackendServerHandler() );
+            server.createContext( "/", new FrontendServerHandler() );
 
             server.start();
             logger.info( "Java HTTP Server Started ! IP: " + ip + ", PORT: " + port );

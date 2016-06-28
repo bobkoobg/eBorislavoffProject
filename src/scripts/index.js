@@ -40,7 +40,7 @@ function sendLoginInformation(ignore) {
     var password = (serverRN + "").concat(hashedPassword.concat((clientRN + "")));
 
     $.ajax({
-        "url": "/api/login",
+        "url": "/emkobaronaAPI/login",
         "type": "POST",
         "headers": {"Content-Type": "application/json"},
         "data": JSON.stringify({'username': $username.val(), 'password': password}),
@@ -54,7 +54,7 @@ function sendClientIdentifier(dataServerID) {
     clientRN = Math.floor((Math.random() * 10) + 1);
 
     $.ajax({
-        "url": "/api/clientId",
+        "url": "/emkobaronaAPI/clientId",
         "type": "POST",
         "headers": {"Content-Type": "application/json"},
         "data": JSON.stringify(clientRN),
@@ -66,7 +66,7 @@ function requestServerIdentifier() {
     hashedPassword = sha256($password.val());
 
     $.ajax({
-        "url": "/api/loginServerId",
+        "url": "/emkobaronaAPI/loginServerId",
         "type": "GET",
         "headers": {},
         "data": {},
@@ -110,6 +110,10 @@ function loadComponents() {
     $('#login-form').submit(breakSubmitRedirect);
 }
 
+function deleteCookie(name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
 function evaluateServerCookieResponse(object, status) {
     $loginStatus = $(".login-status");
     if (status === "success" && object != true) {
@@ -118,13 +122,14 @@ function evaluateServerCookieResponse(object, status) {
     } else {
 
         $loginStatus.html(status + " - Incorrect session id, please relog.");
+        deleteCookie(cookieName);
         loadComponents();
     }
 }
 
 function evaluateUserCookie(cookie) {
     $.ajax({
-        "url": "/api/session",
+        "url": "/emkobaronaAPI/session",
         "type": "POST",
         "headers": {"Content-Type": "application/json"},
         "data": JSON.stringify(cookie),

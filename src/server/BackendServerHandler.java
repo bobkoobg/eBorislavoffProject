@@ -11,7 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ServerHandler implements HttpHandler {
+public class BackendServerHandler implements HttpHandler {
 
     private static String pagesDirectory = "src/pages/";
     private static String scriptsDirectory = "src/scripts/";
@@ -44,8 +44,8 @@ public class ServerHandler implements HttpHandler {
                  * Startup page
                  * URL : http://localhost:8084/ OR http://localhost:8084/index
                  */
-                if ( parts.length == 0
-                        || (parts.length == 2 && parts[ 1 ] != null && "index".equals( parts[ 1 ] )) ) {
+                if ( parts.length == 2
+                        || (parts.length == 3 && parts[ 2 ] != null && "index".equals( parts[ 2 ] )) ) {
 
                     mime = getMime( ".html" );
                     file = new File( pagesDirectory + "index.html" );
@@ -53,20 +53,12 @@ public class ServerHandler implements HttpHandler {
                 } /*
                  * Register page
                  * URL : http://localhost:8084/register
-                 */ else if ( parts.length == 2 && parts[ 1 ] != null && "register".equals( parts[ 1 ] ) ) {
+                 */ else if ( parts.length == 3 && parts[ 2 ] != null && "register".equals( parts[ 2 ] ) ) {
 
                     mime = getMime( ".html" );
                     file = new File( pagesDirectory + "register.html" );
 
                 } /*
-                 * Music Ladder page
-                 * URL : http://localhost:8084/musicLadder
-                 */ else if ( parts.length == 2 && parts[ 1 ] != null && "musicLadder".equals( parts[ 1 ] ) ) {
-
-                    mime = getMime( ".html" );
-                    file = new File( pagesDirectory + "musicLadder/musicLadderIndex.html" );
-
-                }/*
                  * Any other js, html, css, ico file
                  */ else {
                     String lastElemStr = parts[ (parts.length - 1) ];
@@ -88,13 +80,13 @@ public class ServerHandler implements HttpHandler {
                      */
                     if ( !file.exists() || file.isDirectory() ) {
 
-                        if ( "text/html".equals( mime ) ) {
-                            status = 404;
-                            file = new File( pagesDirectory + "index.html" );
-                        } else {
+//                        if ( "text/html".equals( mime ) ) {
+//                            status = 404;
+//                            file = new File( pagesDirectory + "index.html" );
+//                        } else {
                             status = 404;
                             file = new File( pagesDirectory + "notfound.html" );
-                        }
+                        //}
                     }
                 }
                 break;

@@ -13,12 +13,12 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.util.Random;
 
-public class ServerAPIHandler implements HttpHandler {
+public class BackendServerAPIHandler implements HttpHandler {
 
     private Controller controller;
     private Random random;
 
-    public ServerAPIHandler( Controller controller ) {
+    public BackendServerAPIHandler( Controller controller ) {
         this.controller = controller;
         random = new Random();
     }
