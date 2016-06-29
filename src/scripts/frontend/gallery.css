@@ -1,0 +1,42 @@
+#galleryWrapper {
+    width: 500px;
+    margin: 0 auto;
+    border: 1px solid;
+}
+
+h3 {
+    text-align: center;
+}
+
+#galleryElementsWrapper {
+    border-collapse: collapse;
+}
+
+.gallery {
+    border-top: 30px solid;
+    border-bottom: 30px solid;
+    border-color: transparent;
+}
+
+.gallery:nth-child(even) {
+    background-color: #d3d3d3;
+}
+
+.gallery:nth-child(odd) {
+    background-color: #7c7c7c;
+}
+
+.author {
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.date {
+    overflow: hidden;
+    float: right;
+    margin: 10px 0;
+}
+
+img {
+    width: 500px;
+}

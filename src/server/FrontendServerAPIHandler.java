@@ -7,8 +7,10 @@ import com.sun.net.httpserver.HttpServer;
 import controller.Controller;
 import entity.Article;
 import entity.ArticleType;
+import entity.Gallery;
 import entity.User;
 import entity.web.ArticleAuthor;
+import entity.web.GalleryAuthor;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,12 +25,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FrontendServerAPIHandler implements HttpHandler {
 
     private Controller controller;
     private Random random;
     private static String frontendPagesDIR = "src/pages/frontend/";
+    private static String frontendImagesDIR = "src/images/";
 
     public FrontendServerAPIHandler( Controller controller ) {
         this.controller = controller;
@@ -177,6 +182,37 @@ public class FrontendServerAPIHandler implements HttpHandler {
                         status = 200;
                         decisionMade = true;
                     }
+                }
+
+                if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "gallery".equals( parts[ 2 ] )) ) {
+
+                    List<GalleryAuthor> specificGalleryItemsWithAuthors = new ArrayList();
+                    List<Gallery> galleryItems = controller.getAbstract( "gallery", 0, "" );
+                    String imagePath = "";
+                    for ( int i = 0; i < galleryItems.size(); i++ ) {
+                        List<User> specificUser = controller.getAbstract( "users", galleryItems.get( i ).getUser_id(), "id" );
+
+                        imagePath = galleryItems.get( i ).getImagePath();
+                        galleryItems.get( i ).setImagePath( imagePath.substring( imagePath.lastIndexOf( "/" ) + 1 ).trim() );
+
+                        specificGalleryItemsWithAuthors.add(
+                                new GalleryAuthor( galleryItems.get( i ).getId(),
+                                                   specificUser.get( 0 ).getUserAlias(),
+                                                   galleryItems.get( i ).getImagePath(),
+                                                   galleryItems.get( i ).getCreationDate()
+                                ) );
+                    }
+                    response = new Gson().toJson( specificGalleryItemsWithAuthors );
+                    status = 200;
+                    decisionMade = true;
+                }
+
+                if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
+                        && "image".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
+                    System.out.println( "Hello YoU :)" + parts[ 3 ] );
+                    mime = getMime( ".html" );
+                    file = new File( frontendImagesDIR + parts[ 3 ] );
+                    decisionMade = true;
                 }
 
                 break;

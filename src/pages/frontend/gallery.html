@@ -3,7 +3,7 @@
         <title>Emilian Borislavoff</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <!-- IE -->
         <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
         <!-- other browsers -->
@@ -13,11 +13,23 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+        <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
         <script type="text/javascript" src="page.js"></script>
-
         <link rel="stylesheet" type="text/css" href="nav.css" />
+        <link rel="stylesheet" type="text/css" href="gallery.css" />
+        <script type="text/javascript" src="gallery.js"></script>
     </head>
     <body>
-        <div>Gallery :)</div>
+        <div id="galleryWrapper">
+            <h3>Welcome to the Gallery section</h3>
+            <div id="galleryElementsWrapper"></div>
+        </div>
+        <script id="gallery-element-template" type="text/x-handlebars-template">
+            <div class="gallery" data-galleryid="{{id}}">
+                <div class="imagePath"><img src="{{imagePath}}"></div>
+                <div class="author">{{author}}</div>
+                <div class="date">{{date}}</div>
+            </div>
+        </script>
     </body>
 </html>
