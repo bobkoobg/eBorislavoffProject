@@ -26,9 +26,19 @@
         </div>
         <script id="gallery-element-template" type="text/x-handlebars-template">
             <div class="gallery" data-galleryid="{{id}}">
-                <div class="imagePath"><img src="{{imagePath}}"></div>
+                <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>
                 <div class="author">{{author}}</div>
                 <div class="date">{{date}}</div>
+            </div>
+        </script>
+        <script id="specific-gallery-element-template" type="text/x-handlebars-template">
+            <div class="specific-gallery-popupwrapper" data-galleryid="{{id}}">
+                <div class="specific-gallery-popup">
+                    <span class="close">X</span>
+                    <div class="imagePath"><img src="{{imagePath}}"></div>
+                    <div class="author">{{author}}</div>
+                    <div class="date">{{date}}</div>
+              </div>
             </div>
         </script>
     </body>

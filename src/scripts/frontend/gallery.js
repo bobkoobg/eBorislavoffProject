@@ -2,6 +2,27 @@
 
 var $body;
 var $galleryElementsWrapper;
+var $actualImage;
+var $imagePath;
+
+function popInImage() {
+    var $clickedElem = $(event.target);
+    var elemId = $clickedElem.closest(".gallery").attr("data-galleryid");
+    $actualImage = $(".actualImage");
+    console.log($actualImage);
+    console.log(elemId);
+
+//    var source = $("#specific-gallery-element-template").html();
+//    var template = Handlebars.compile(source);
+//    var content = {
+//        id: dataValue.id,
+//        author: dataValue.author,
+//        imagePath: "/api/image/" + dataValue.imagePath,
+//        date: dataValue.creationDate
+//    };
+//    var html = template(content);
+//    $body.append(html);
+}
 
 function loadGallery(data, status) {
 
@@ -14,7 +35,7 @@ function loadGallery(data, status) {
             var content = {
                 id: dataValue.id,
                 author: dataValue.author,
-                imagePath: "/api/image/"+dataValue.imagePath,
+                imagePath: "/api/image/" + dataValue.imagePath,
                 date: dataValue.creationDate
             };
             var html = template(content);
@@ -42,6 +63,8 @@ function load() {
     $galleryElementsWrapper = $("#galleryElementsWrapper");
 
     requestGallery();
+
+    $body.on("click", ".imagePath", popInImage);
 }
 
 $(window).ready(load);
