@@ -8,4 +8,8 @@ public class AbstractEntity extends Object {
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
 }

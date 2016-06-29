@@ -2,18 +2,18 @@ package entity;
 
 public class ArticleType extends AbstractEntity {
 
-    String name;
+    String articletypename;
 
     public ArticleType() {
     }
 
-    public ArticleType( int articleTypeId, String name ) {
+    public ArticleType( int articleTypeId, String articletypename ) {
         this.id = articleTypeId;
-        this.name = name;
+        this.articletypename = articletypename;
     }
 
     @Override
     public String toString() {
-        return "id: " + this.id + "> ArticleType{" + "name=" + name + '}';
+        return "id: " + this.id + "> ArticleType{" + "articletypename=" + articletypename + '}';
     }
 }

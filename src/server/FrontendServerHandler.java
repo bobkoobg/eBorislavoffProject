@@ -62,6 +62,15 @@ public class FrontendServerHandler implements HttpHandler {
                     decisionMade = true;
                 }
 
+                boolean isNewsSpecific = parts.length == 3 && "news".equals( parts[ 1 ] )
+                        && parts[ 2 ] != null && isNumeric( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && isNewsSpecific ) {
+
+                    mime = getMime( ".html" );
+                    file = new File( frontendPagesDIR + "newsSpecific.html" );
+                    decisionMade = true;
+                }
+
                 boolean isExercises = parts.length == 2 && "exercises".equals( parts[ 1 ] ) ? true : false;
                 boolean isExercises2 = parts.length == 2 && "exercises.html".equals( parts[ 1 ] ) ? true : false;
                 if ( !decisionMade && (isExercises || isExercises2) ) {
@@ -206,6 +215,15 @@ public class FrontendServerHandler implements HttpHandler {
                 break;
         }
         return mime;
+    }
+
+    private static Boolean isNumeric( String str ) {
+        try {
+            Integer d = Integer.parseInt( str );
+        } catch ( NumberFormatException nfe ) {
+            return false;
+        }
+        return true;
     }
 
 }

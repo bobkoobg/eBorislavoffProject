@@ -1,0 +1,39 @@
+#newsWrapper {
+    width: 500px;
+    margin: 0 auto;
+    border: 1px solid;
+}
+
+h3 {
+    text-align: center;
+}
+
+#newsElementWrapper {
+    border-collapse: collapse;
+}
+
+.news {
+    border-top: 30px solid;
+    border-bottom: 30px solid;
+    border-color: transparent;
+}
+
+.title {
+    background-color: #a59a9a;
+}
+
+.text {
+    padding: 0 10px;
+    background-color: #fbf5f5;
+}
+
+.author {
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.date {
+    overflow: hidden;
+    float: right;
+    margin: 10px 0;
+}

@@ -118,11 +118,11 @@ public class Tester {
 //        boolean result17 = controller.updateAbstract( "tickettypes", ttUpdate );
 //        System.out.println( "The result form the insert is : " + result17 );
 //        //SELECT ALL
-        List<User> users = controller.getAbstract( "users", 0, "id" );
-
-        for ( int i = 0; i < users.size(); i++ ) {
-            System.out.println( users.get( i ).toString() );
-        }
+//        List<User> users = controller.getAbstract( "users", 0, "id" );
+//
+//        for ( int i = 0; i < users.size(); i++ ) {
+//            System.out.println( users.get( i ).toString() );
+//        }
 //        List<Article> articles = controller.getAbstract( "articles", 0 );
 //
 //        for ( int i = 0; i < articles.size(); i++ ) {
@@ -155,9 +155,9 @@ public class Tester {
 //        }
 //        System.out.println( "End" );
         //SELECT SPECIFIC
-        String obj2 = "emko";
-        List<User> usersSpecific = controller.getAbstract( "users", obj2, "username" );
-        System.out.println( usersSpecific.get( 0 ).toString() );
+//        String obj2 = "emko";
+//        List<User> usersSpecific = controller.getAbstract( "users", obj2, "username" );
+//        System.out.println( usersSpecific.get( 0 ).toString() );
 //
 //        List<Article> articleSpecific = controller.getAbstract( "articles", 2 );
 //        System.out.println( articleSpecific.get( 0 ).toString() );
@@ -176,6 +176,19 @@ public class Tester {
 //
 //        List<TicketType> ticketTypeSpecific = controller.getAbstract( "tickettypes", 2 );
 //        System.out.println( ticketTypeSpecific.get( 0 ).toString() );
+        List<ArticleType> articletypes = controller.getAbstract( "articletypes", "News", "articletypename" );
+
+        for ( int i = 0; i < articletypes.size(); i++ ) {
+            System.out.println( articletypes.get( i ).toString() );
+        }
+
+        List<Article> articles = controller.getAbstract( "articles", articletypes.get( 0 ).getId(), "type_id" );
+
+        for ( int i = 0; i < articles.size(); i++ ) {
+            System.out.println( articles.get( i ).toString() );
+        }
+        
+        
     }
 
 }

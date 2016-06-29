@@ -264,11 +264,13 @@ public class Controller {
 
                 String actualFilter = "id";
                 for ( int i = 0; i < f.size(); i++ ) {
+                    //System.out.println( "i " + i + " name : " + f.get( i ).getName() + " compared with " + filterBy );
                     if ( f.get( i ).getName().equals( filterBy ) ) {
                         actualFilter = filterBy;
                         break;
                     }
                 }
+                //System.out.println( "actualfilter ? " + actualFilter );
                 return facade.getSpecificAbstract( tN, c, f, comparisonValue, actualFilter, logger );
             }
 

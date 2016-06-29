@@ -6,7 +6,9 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import controller.Controller;
 import entity.Article;
+import entity.ArticleType;
 import entity.User;
+import entity.web.ArticleAuthor;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,6 +19,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -87,13 +90,48 @@ public class FrontendServerAPIHandler implements HttpHandler {
                 }
 
                 if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "news".equals( parts[ 2 ] )) ) {
-                    System.out.println( "Hello" );
-                    List<Article> articles = controller.getAbstract( "articles", 0, "type_id" );
-                    System.out.println( "size ? " + articles.size() );
-                    response = new Gson().toJson( articles );
-                    System.out.println( "Response is : " + response );
+
+                    List<ArticleType> specificArticleType = controller.getAbstract( "articletypes", "News", "articletypename" );
+                    List<Article> articles = controller.getAbstract( "articles", specificArticleType.get( 0 ).getId(), "type_id" );
+                    List<ArticleAuthor> specificArticlesWithAuthors = new ArrayList();
+
+                    for ( int i = 0; i < articles.size(); i++ ) {
+                        List<User> specificUser = controller.getAbstract( "users", articles.get( i ).getUserId(), "id" );
+                        specificArticlesWithAuthors.add(
+                                new ArticleAuthor( articles.get( i ).getId(),
+                                                   specificUser.get( 0 ).getUserAlias(),
+                                                   articles.get( i ).getTitle(),
+                                                   articles.get( i ).getText(),
+                                                   articles.get( i ).getCreationDate() ) );
+                    }
+                    response = new Gson().toJson( specificArticlesWithAuthors );
                     status = 200;
                     decisionMade = true;
+                }
+
+                if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
+                        && "news".equals( parts[ 2 ] )) && parts[ 3 ] != null
+                        && isNumeric( parts[ 3 ] ) ) {
+                    int index = Integer.parseInt( parts[ 3 ] );
+
+                    List<ArticleType> specificArticleType = controller.getAbstract( "articletypes", "News", "articletypename" );
+                    int newsTypeId = specificArticleType.get( 0 ).getId();
+
+                    List<Article> articles = controller.getAbstract( "articles", index, "id" );
+                    if ( newsTypeId == articles.get( 0 ).getType_id() ) {
+
+                        List<User> specificUser = controller.getAbstract( "users", articles.get( 0 ).getUserId(), "id" );
+                        ArticleAuthor articleAuthor
+                                = new ArticleAuthor( articles.get( 0 ).getId(),
+                                                     specificUser.get( 0 ).getUserAlias(),
+                                                     articles.get( 0 ).getTitle(),
+                                                     articles.get( 0 ).getText(),
+                                                     articles.get( 0 ).getCreationDate() );
+
+                        response = new Gson().toJson( articleAuthor );
+                        status = 200;
+                        decisionMade = true;
+                    }
                 }
 
                 break;
@@ -231,5 +269,14 @@ public class FrontendServerAPIHandler implements HttpHandler {
                 break;
         }
         return mime;
+    }
+
+    private static Boolean isNumeric( String str ) {
+        try {
+            Integer d = Integer.parseInt( str );
+        } catch ( NumberFormatException nfe ) {
+            return false;
+        }
+        return true;
     }
 }
