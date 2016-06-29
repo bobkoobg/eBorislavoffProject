@@ -134,6 +134,51 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     }
                 }
 
+                if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "exercises".equals( parts[ 2 ] )) ) {
+
+                    List<ArticleType> specificArticleType = controller.getAbstract( "articletypes", "Exercises", "articletypename" );
+                    List<Article> articles = controller.getAbstract( "articles", specificArticleType.get( 0 ).getId(), "type_id" );
+                    List<ArticleAuthor> specificArticlesWithAuthors = new ArrayList();
+
+                    for ( int i = 0; i < articles.size(); i++ ) {
+                        List<User> specificUser = controller.getAbstract( "users", articles.get( i ).getUserId(), "id" );
+                        specificArticlesWithAuthors.add(
+                                new ArticleAuthor( articles.get( i ).getId(),
+                                                   specificUser.get( 0 ).getUserAlias(),
+                                                   articles.get( i ).getTitle(),
+                                                   articles.get( i ).getText(),
+                                                   articles.get( i ).getCreationDate() ) );
+                    }
+                    response = new Gson().toJson( specificArticlesWithAuthors );
+                    status = 200;
+                    decisionMade = true;
+                }
+
+                if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
+                        && "exercises".equals( parts[ 2 ] )) && parts[ 3 ] != null
+                        && isNumeric( parts[ 3 ] ) ) {
+                    int index = Integer.parseInt( parts[ 3 ] );
+
+                    List<ArticleType> specificArticleType = controller.getAbstract( "articletypes", "Exercises", "articletypename" );
+                    int newsTypeId = specificArticleType.get( 0 ).getId();
+
+                    List<Article> articles = controller.getAbstract( "articles", index, "id" );
+                    if ( newsTypeId == articles.get( 0 ).getType_id() ) {
+
+                        List<User> specificUser = controller.getAbstract( "users", articles.get( 0 ).getUserId(), "id" );
+                        ArticleAuthor articleAuthor
+                                = new ArticleAuthor( articles.get( 0 ).getId(),
+                                                     specificUser.get( 0 ).getUserAlias(),
+                                                     articles.get( 0 ).getTitle(),
+                                                     articles.get( 0 ).getText(),
+                                                     articles.get( 0 ).getCreationDate() );
+
+                        response = new Gson().toJson( articleAuthor );
+                        status = 200;
+                        decisionMade = true;
+                    }
+                }
+
                 break;
             case "POST":
                 //use PUT to create resources, or use POST to update resources.

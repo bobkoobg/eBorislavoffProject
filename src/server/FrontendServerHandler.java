@@ -79,6 +79,15 @@ public class FrontendServerHandler implements HttpHandler {
                     file = new File( frontendPagesDIR + "exercises.html" );
                     decisionMade = true;
                 }
+                
+                boolean isExercisesSpecific = parts.length == 3 && "exercises".equals( parts[ 1 ] )
+                        && parts[ 2 ] != null && isNumeric( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && isExercisesSpecific ) {
+
+                    mime = getMime( ".html" );
+                    file = new File( frontendPagesDIR + "exercisesSpecific.html" );
+                    decisionMade = true;
+                }
 
                 boolean isGallery = parts.length == 2 && "gallery".equals( parts[ 1 ] ) ? true : false;
                 boolean isGallery2 = parts.length == 2 && "gallery.html".equals( parts[ 1 ] ) ? true : false;

@@ -16,13 +16,12 @@
         <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
         <script type="text/javascript" src="page.js"></script>
         <link rel="stylesheet" type="text/css" href="nav.css" />
-        <link rel="stylesheet" type="text/css" href="exercises.css" />
-        <script type="text/javascript" src="exercises.js"></script>
+        <link rel="stylesheet" type="text/css" href="exercisesSpecific.css" />
+        <script type="text/javascript" src="exercisesSpecific.js"></script>
     </head>
     <body>
         <div id="exercisesWrapper">
-            <h3>Welcome to the exercises section</h3>
-            <div id="exercisesElementsWrapper"></div>
+            <div id="exercisesElementWrapper"></div>
         </div>
         <script id="exercises-element-template" type="text/x-handlebars-template">
             <div class="exercises" data-exercisesid="{{id}}">
@@ -31,9 +30,6 @@
                 <div class="author">{{author}}</div>
                 <div class="date">{{date}}</div>
             </div>
-        </script>
-        <script id="exercises-element-readmore-template" type="text/x-handlebars-template">
-            <a class="readmore" href="{{path}}">...read more</a>
         </script>
     </body>
 </html>
