@@ -1,0 +1,45 @@
+#feedback-wrapper {
+    width: 500px;
+    margin: 0 auto;
+    border: 1px solid;
+}
+
+h3 {
+    text-align: center;
+}
+
+#feedback-clients-elements-wrapper,
+#feedback-guestbook-elements-wrapper {
+    border-collapse: collapse;
+}
+
+.feedback {
+    border-top: 30px solid;
+    border-bottom: 30px solid;
+    border-color: transparent;
+}
+
+.feedback:nth-child(even) {
+    background-color: #d3d3d3;
+}
+
+.feedback:nth-child(odd) {
+    background-color: #7c7c7c;
+}
+
+.message {
+    padding: 0 10px;
+    background-color: #fbf5f5;
+}
+
+.guestName {
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.creationDate {
+    overflow: hidden;
+    float: right;
+    margin: 10px 0;
+}
+

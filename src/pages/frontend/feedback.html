@@ -3,7 +3,7 @@
         <title>Emilian Borislavoff</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <!-- IE -->
         <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
         <!-- other browsers -->
@@ -13,11 +13,33 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+        <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
         <script type="text/javascript" src="page.js"></script>
-
         <link rel="stylesheet" type="text/css" href="nav.css" />
+        <link rel="stylesheet" type="text/css" href="feedback.css" />
+        <script type="text/javascript" src="feedback.js"></script>
     </head>
     <body>
-        <div>Feedbackzzzz</div>
+        <div id="feedback-wrapper">
+            <h3>Welcome to the feedback section</h3>
+            <span>You will be able to see opinions of clients on this section and on the top of that - give your own.</span>
+            <div id="feedback-clients-elements-wrapper"></div>
+            <div id="feedback-guestbook-elements-wrapper"></div>
+        </div>
+        <script id="clients-element-template" type="text/x-handlebars-template">
+            <div class="client" data-newsid="{{id}}">
+                <div class="imagePath"><img class="actualImage" src="{{imagepath}}"></div>
+                <div class="guestname">{{guestname}}</div>
+                <div class="message">{{message}}</div>
+                <div class="creationdate">{{creationdate}}</div>
+            </div>
+        </script>
+        <script id="guestbook-element-template" type="text/x-handlebars-template">
+            <div class="feedback" data-messageid="{{id}}">
+                <div class="guestName">{{guestName}}</div>
+                <div class="creationDate">{{creationDate}}</div>
+                <div class="message">{{message}}</div>
+            </div>
+        </script>
     </body>
 </html>

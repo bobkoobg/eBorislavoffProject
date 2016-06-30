@@ -3,33 +3,29 @@ package server;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 import controller.Controller;
 import entity.Article;
 import entity.ArticleType;
 import entity.Gallery;
+import entity.Guestbook;
 import entity.Ticket;
 import entity.TicketType;
 import entity.User;
 import entity.web.ArticleAuthor;
 import entity.web.GalleryAuthor;
 import entity.web.TicketSecret;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class FrontendServerAPIHandler implements HttpHandler {
 
@@ -216,6 +212,15 @@ public class FrontendServerAPIHandler implements HttpHandler {
 
                     mime = getMime( ".html" );
                     file = new File( frontendImagesDIR + parts[ 3 ] );
+                    decisionMade = true;
+                }
+
+                if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "feedback".equals( parts[ 2 ] )) ) {
+
+                    List<Guestbook> guestbookList = controller.getAbstract( "guestbook", 0, "" );
+
+                    response = new Gson().toJson( guestbookList );
+                    status = 200;
                     decisionMade = true;
                 }
 
