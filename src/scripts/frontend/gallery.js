@@ -4,13 +4,27 @@ var $body;
 var $galleryElementsWrapper;
 var $actualImage;
 var $imagePath;
+var $close;
+var $popUp;
 
-function popInImage() {
+function closePopup() {
+    $popUp.fadeOut();
+}
+
+function showPopup() {
     var $clickedElem = $(event.target);
-    var elemId = $clickedElem.closest(".gallery").attr("data-galleryid");
-    $actualImage = $(".actualImage");
-    console.log($actualImage);
-    console.log(elemId);
+    var $gallery = $clickedElem.closest(".gallery");
+
+    console.log("galleryId : " + $gallery.attr("data-galleryid"));
+    console.log("image src : " + $gallery.find(".actualImage").attr("src"));
+    console.log("author : " + $gallery.find(".author").text());
+    console.log("date : " + $gallery.find(".date").text());
+
+    $popUp.find(".popupImagePath").attr("src", $gallery.find(".actualImage").attr("src"));
+    $popUp.find(".popupAuthor").text($gallery.find(".author").text());
+    $popUp.find(".popupDate").text($gallery.find(".date").text());
+
+    $popUp.fadeIn();
 
 //    var source = $("#specific-gallery-element-template").html();
 //    var template = Handlebars.compile(source);
@@ -61,10 +75,13 @@ function requestGallery() {
 function load() {
     $body = $(document.body);
     $galleryElementsWrapper = $("#galleryElementsWrapper");
+    $popUp = $(".specific-gallery-popupwrapper");
+    $close = $(".close");
 
     requestGallery();
 
-    $body.on("click", ".imagePath", popInImage);
+    $body.on("click", ".imagePath", showPopup);
+    $body.on("click", ".close", closePopup);
 }
 
 $(window).ready(load);

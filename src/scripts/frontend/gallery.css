@@ -4,7 +4,10 @@
     border: 1px solid;
 }
 
-h3 {
+h3,
+.popupDate, 
+.popupAuthor,
+.popupImagePathWrap {
     text-align: center;
 }
 

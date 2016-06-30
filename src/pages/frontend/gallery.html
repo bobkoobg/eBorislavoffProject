@@ -20,25 +20,25 @@
         <script type="text/javascript" src="gallery.js"></script>
     </head>
     <body>
+        <div class="specific-gallery-popupwrapper">
+            <div class="specific-gallery-popup">
+                <span class="close">X</span>
+                <div class="popUpImagePathWrap">
+                    <img class="popupImagePath" src="" align="center">
+                </div>
+                <div class="popupAuthor"></div>
+                <div class="popupDate"></div>
+            </div>
+        </div>
         <div id="galleryWrapper">
             <h3>Welcome to the Gallery section</h3>
             <div id="galleryElementsWrapper"></div>
         </div>
         <script id="gallery-element-template" type="text/x-handlebars-template">
             <div class="gallery" data-galleryid="{{id}}">
-                <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>
-                <div class="author">{{author}}</div>
-                <div class="date">{{date}}</div>
-            </div>
-        </script>
-        <script id="specific-gallery-element-template" type="text/x-handlebars-template">
-            <div class="specific-gallery-popupwrapper" data-galleryid="{{id}}">
-                <div class="specific-gallery-popup">
-                    <span class="close">X</span>
-                    <div class="imagePath"><img src="{{imagePath}}"></div>
-                    <div class="author">{{author}}</div>
-                    <div class="date">{{date}}</div>
-              </div>
+            <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>
+            <div class="author">{{author}}</div>
+            <div class="date">{{date}}</div>
             </div>
         </script>
     </body>
