@@ -29,6 +29,14 @@ public class Guestbook extends AbstractEntity {
         this.creationDate = creationDate;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath( String imagePath ) {
+        this.imagePath = imagePath;
+    }
+
     @Override
     public String toString() {
         return "id: " + this.id + "> Guestbook{" + "guestName=" + guestName

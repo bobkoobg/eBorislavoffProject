@@ -43,3 +43,17 @@ h3 {
     margin: 10px 0;
 }
 
+.actualImage {
+    width: 500px;
+    height: 375px;
+}
+
+.carousel-holder {
+    list-style-type: none; 
+    margin-left: -2.5em;
+}
+
+.hideable {
+    display: none;
+}
+

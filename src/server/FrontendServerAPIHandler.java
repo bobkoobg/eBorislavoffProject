@@ -219,6 +219,17 @@ public class FrontendServerAPIHandler implements HttpHandler {
 
                     List<Guestbook> guestbookList = controller.getAbstract( "guestbook", 0, "" );
 
+                    String imagePath = "";
+                    System.out.println( "Size is : " + guestbookList.size() );
+                    for ( int i = 0; i < guestbookList.size(); i++ ) {
+                        System.out.println( "i1 " + i + " > " + guestbookList.get( i ).toString() );
+
+                        imagePath = guestbookList.get( i ).getImagePath();
+                        if ( imagePath != null ) {
+                            guestbookList.get( i ).setImagePath( imagePath.substring( imagePath.lastIndexOf( "/" ) + 1 ).trim() );
+                        }
+                    }
+
                     response = new Gson().toJson( guestbookList );
                     status = 200;
                     decisionMade = true;

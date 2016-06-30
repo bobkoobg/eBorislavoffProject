@@ -23,16 +23,20 @@
         <div id="feedback-wrapper">
             <h3>Welcome to the feedback section</h3>
             <span>You will be able to see opinions of clients on this section and on the top of that - give your own.</span>
-            <div id="feedback-clients-elements-wrapper"></div>
+            <div id="feedback-clients-elements-wrapper">
+                <ul class="carousel-holder"></ul>
+                <input class="backButton" type="button" value="Back"/>
+                <input class="forwardButton" type="button" value="Forward"/>
+            </div>
             <div id="feedback-guestbook-elements-wrapper"></div>
         </div>
         <script id="clients-element-template" type="text/x-handlebars-template">
-            <div class="client" data-newsid="{{id}}">
-                <div class="imagePath"><img class="actualImage" src="{{imagepath}}"></div>
-                <div class="guestname">{{guestname}}</div>
+            <li id="{{carouselId}}" class="client hideable" style="{{elemStyle}}" data-newsid="{{id}}">
+                <div class="guestname">{{guestName}}</div>
+                <div class="creationdate">{{creationDate}}</div>
+                <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>
                 <div class="message">{{message}}</div>
-                <div class="creationdate">{{creationdate}}</div>
-            </div>
+            </li>
         </script>
         <script id="guestbook-element-template" type="text/x-handlebars-template">
             <div class="feedback" data-messageid="{{id}}">

@@ -184,12 +184,67 @@ INSERT INTO EMKO_TICKETS_TBL(TICKET_ID,TITLE, TYPE_ID, MESSAGE, HANDLER_ID,STATU
  );
  
 INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
-  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Pesho picha', 'Bahti qkiq!!', 'src/pesho.jpg', 
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Pesho', 'Blagodarenie na teb sum mnogo qk', 'src/images/couplecats.jpg', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+ );
+ 
+ INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Nasko', 'Veche se chuvstvam mnogo po-dobre', 'src/images/hiddencat.jpg', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+ );
+ 
+ INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Desi', 'Dobre che si ti <3', 'src/images/runningdog.jpg', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+ );
+ 
+ INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Aleks', 'Blagodaria ti', 'src/images/nature.jpg', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+ );
+ 
+ INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Emko', 'Shamana pravi vsichko tova vuzmojno', 'src/images/couplecats.jpg', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+ );
+ 
+ INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Genkov', 'Nerealno dobur trener @@@PRO', 'src/images/runningdog.jpg', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+ );
+ 
+ INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Gonko', 'Mnogo silen choEK, BAH TIQ RYKI', 'src/images/hiddencat.jpg', 
   TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
  );
  
 INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
-  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Gosho ot pochivka', 'Dneska fen sum ti', '', 
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Gosho', 'Dneska fen sum ti', '', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+);
+
+INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Ivan', 'Mnogo sum dovolen', '', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+);
+
+INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'George', 'Really cool guy', '', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+);
+
+INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Gergana', 'Mnogo raboten', '', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+);
+
+INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Misho', 'Nerealno dobur trenyor', '', 
+  TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
+);
+
+INSERT INTO EMKO_GUESTBOOK_TBL(GB_ID,GUESTNAME, MESSAGE, IMAGEPATH, CREATIONDATE)
+  VALUES( EMKO_GUESTBOOK_ID_SEQ.nextval, 'Bobanka', 'MLG EPS OMFG OVER 9000 DMG brb hf', '', 
   TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
 );
  
