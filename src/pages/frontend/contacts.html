@@ -3,7 +3,7 @@
         <title>Emilian Borislavoff</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <!-- IE -->
         <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
         <!-- other browsers -->
@@ -13,11 +13,50 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+        <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
         <script type="text/javascript" src="page.js"></script>
-
         <link rel="stylesheet" type="text/css" href="nav.css" />
+        <link rel="stylesheet" type="text/css" href="contacts.css" />
+        <script type="text/javascript" src="contacts.js"></script>
     </head>
     <body>
-        <div>Contacts</div>
+        <div class="submittion-confirmation-popupwrapper">
+            <div class="submittion-confirmation-popup">
+                <span class="close">X</span>
+                <h3>Confirmation for submission :</h3>
+                <div>Your name :<span class="clientName"></span></div>
+                <div>Your email :<span class="clientEmail"></span></div>
+                <div>Your title :<span class="clientTitle"></span></div>
+                <div>Your message :<span class="clientMessage"></span></div>
+                <div>Current date :<span class="clientDate"></span></div>
+                <div>Status of your ticket :<span class="clientStatus"></span></div>
+            </div>
+        </div>
+        <div id="contactWrapper">
+            <h3>Hey, here you can contact the owner for general questions:</h3>
+            <form id="contact-form">
+                <div>
+                    <span>Name :</span>
+                    <input type="text" name="name" placeholder="Insert your name">
+                </div>
+                <div>
+                    <span>Email :</span>
+                    <input type="text" name="email" placeholder="Insert your e-mail">
+                </div>
+                <div>
+                    <span>Title :</span>
+                    <input type="text" name="title" placeholder="Insert your questions' title">
+                </div>
+                <div>
+                    <span>Message :</span>
+                    <textarea class="formMessage" rows="4" cols="50" name="message"
+                              placeholder="Insert your questions' message"></textarea>
+                </div>
+                <div>
+                    <input id="contact-form-button" type="submit" value="Submit your question" disabled>
+                </div>
+                <span class="contact-form-status"></span>
+            </form>
+        </div>
     </body>
 </html>

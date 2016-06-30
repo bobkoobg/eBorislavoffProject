@@ -8,9 +8,12 @@ import controller.Controller;
 import entity.Article;
 import entity.ArticleType;
 import entity.Gallery;
+import entity.Ticket;
+import entity.TicketType;
 import entity.User;
 import entity.web.ArticleAuthor;
 import entity.web.GalleryAuthor;
+import entity.web.TicketSecret;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -55,6 +58,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
         InputStreamReader isr;
         BufferedReader br;
         String jsonQuery;
+        Gson gson = new Gson();
 
         //In case of request for components such as "nav"
         File file = null;
@@ -209,7 +213,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
 
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "image".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
-                    System.out.println( "Hello YoU :)" + parts[ 3 ] );
+
                     mime = getMime( ".html" );
                     file = new File( frontendImagesDIR + parts[ 3 ] );
                     decisionMade = true;
@@ -224,65 +228,33 @@ public class FrontendServerAPIHandler implements HttpHandler {
                 jsonQuery = br.readLine();
                 /*
                  * Save Client Identifier 
-                 * URL : http://localhost:8084/api/loginId
+                 * URL : http://localhost:8084/api/submitContact
                  * JSON : {"clientRN": 8 }
                  */
-//                if ( parts.length > 2 && parts[ 2 ] != null && "clientId".equals( parts[ 2 ] ) ) {
-//                    //response = new Gson().toJson( controller.createSongAPI( jsonQuery ) );
-//                    int curClientId = Integer.parseInt( jsonQuery );
-//                    if ( controller.addClientId( address, curClientId ) ) {
-//                        response = new Gson().toJson( curClientId );
-//                        status = 201;
-//                    }
-//                } 
-                /*
-                 * Evaluate username and password from user
-                 * URL : http://localhost:8084/api/login
-                 * JSON : {"username": "adminuser", "password":"$2a$05$zOsBcOSp9gpn1np..." }
-                 */
-//                else if ( parts.length > 2 && parts[ 2 ] != null && "login".equals( parts[ 2 ] ) ) {
-//                    User user = controller.loginUser( address, jsonQuery );
-//                    if ( user != null ) {
-//                        response = new Gson().toJson( user );
-//                        status = 200;
-//                    } else {
-//                        response = "{\"error\":\"Incorrect login info, Unauthorized\"}";
-//                        status = 401;
-//                    }
-//                } 
-                /*
-                 * Evaluate username and password from user
-                 * URL : http://localhost:8084/api/register
-                 * JSON : {"username": "adminuser", "password":"$2a$05$zOsBcOSp9gpn1np..." }
-                 */
-//                 else if ( parts.length > 2 && parts[ 2 ] != null && "register".equals( parts[ 2 ] ) ) {
-//                    boolean dbStatus = controller.registerUser( address, jsonQuery );
-//                    if ( dbStatus ) {
-//                        response = "{\"response\":\"Successfull registration\"}";
-//                        status = 201;
-//                    } else {
-//                        response = "{\"error\":\"Internal server error\"}";
-//                        status = 500;
-//                    }
-//                }
-                /*
-                 * Evaluate session user token
-                 * URL : http://localhost:8084/api/session
-                 * JSON : { qwerty12345 }
-                 */
-//                 else if ( parts.length > 2 && parts[ 2 ] != null && "session".equals( parts[ 2 ] ) ) {
-//                    boolean dbStatus = controller.authenticateSession( address, jsonQuery );
-//                    if ( dbStatus ) {
-//                        response = "{\"response\":\"Successfull session id authentication\"}";
-//                        status = 200;
-//                    } else {
-//                        response = "{\"error\":\"Expired, incorrect or non-existing session id, please relog.\"}";
-//                        status = 401;
-//                    }
-//                } else {
-//                    response = "404 Not found";
-//                    status = 404;
-//                }
+                if ( parts.length == 3 && parts[ 2 ] != null && "submitContact".equals( parts[ 2 ] ) ) {
+                    //response = new Gson().toJson( controller.createSongAPI( jsonQuery ) );
+                    TicketSecret jsonObject = gson.fromJson( jsonQuery, TicketSecret.class );
+
+                    List<TicketType> specificTicketType = controller.
+                            getAbstract( "tickettypes", "Contacts", "tickettypename" );
+
+                    Ticket toInsertObject = new Ticket( 0, jsonObject.getTitle(),
+                                                        specificTicketType.get( 0 ).getId(),
+                                                        jsonObject.getMessage(), 1,
+                                                        "open",
+                                                        jsonObject.getSender_email(),
+                                                        jsonObject.getSender_name(),
+                                                        new Date() );
+                    ArrayList<Ticket> toInsertList = new ArrayList();
+                    toInsertList.add( toInsertObject );
+
+                    boolean result = controller.insertAbstract( "tickets", toInsertList );
+
+                    if ( result ) {
+                        response = new Gson().toJson( toInsertObject );
+                        status = 201;
+                    }
+                }
                 break;
             case "PUT":
                 status = 500;

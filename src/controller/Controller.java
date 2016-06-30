@@ -356,6 +356,8 @@ public class Controller {
             }
         }
 
+        System.out.println( "elem is : " + toInsert.get( 0 ).toString() );
+
         if ( !tN.isEmpty() && c != null && f != null ) {
             return facade.insertAbstract( tN, c, toInsert, f, logger );
         }

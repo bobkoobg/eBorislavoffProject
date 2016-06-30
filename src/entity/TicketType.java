@@ -2,19 +2,19 @@ package entity;
 
 public class TicketType extends AbstractEntity {
 
-    private String name;
+    private String tickettypename;
 
     public TicketType() {
     }
 
-    public TicketType( int typeTypeId, String name ) {
+    public TicketType( int typeTypeId, String tickettypename ) {
         this.id = typeTypeId;
-        this.name = name;
+        this.tickettypename = tickettypename;
     }
 
     @Override
     public String toString() {
-        return "id: " + this.id + "> TicketType{" + "name=" + name + '}';
+        return "id: " + this.id + "> TicketType{" + "tickettypename=" + tickettypename + '}';
     }
 
 }

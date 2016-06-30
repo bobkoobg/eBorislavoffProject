@@ -176,16 +176,22 @@ public class Tester {
 //
 //        List<TicketType> ticketTypeSpecific = controller.getAbstract( "tickettypes", 2 );
 //        System.out.println( ticketTypeSpecific.get( 0 ).toString() );
-        List<ArticleType> articletypes = controller.getAbstract( "articletypes", "News", "articletypename" );
-
-        for ( int i = 0; i < articletypes.size(); i++ ) {
-            System.out.println( articletypes.get( i ).toString() );
-        }
-
-        List<Article> articles = controller.getAbstract( "articles", articletypes.get( 0 ).getId(), "type_id" );
-
-        for ( int i = 0; i < articles.size(); i++ ) {
-            System.out.println( articles.get( i ).toString() );
+//        List<ArticleType> articletypes = controller.getAbstract( "articletypes", "News", "articletypename" );
+//
+//        for ( int i = 0; i < articletypes.size(); i++ ) {
+//            System.out.println( articletypes.get( i ).toString() );
+//        }
+//
+//        List<Article> articles = controller.getAbstract( "articles", articletypes.get( 0 ).getId(), "type_id" );
+//
+//        for ( int i = 0; i < articles.size(); i++ ) {
+//            System.out.println( articles.get( i ).toString() );
+//        }
+        
+        List<TicketType> specificTicketType = controller.getAbstract( "tickettypes", "Contacts", "tickettypename" );
+        
+        for ( int i = 0; i < specificTicketType.size(); i++ ) {
+            System.out.println( specificTicketType.get( i ).toString() );
         }
         
         

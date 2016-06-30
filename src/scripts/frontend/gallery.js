@@ -25,17 +25,6 @@ function showPopup() {
     $popUp.find(".popupDate").text($gallery.find(".date").text());
 
     $popUp.fadeIn();
-
-//    var source = $("#specific-gallery-element-template").html();
-//    var template = Handlebars.compile(source);
-//    var content = {
-//        id: dataValue.id,
-//        author: dataValue.author,
-//        imagePath: "/api/image/" + dataValue.imagePath,
-//        date: dataValue.creationDate
-//    };
-//    var html = template(content);
-//    $body.append(html);
 }
 
 function loadGallery(data, status) {

@@ -43,6 +43,7 @@ public class StatementCreator {
                 .append( countValuesforSQLString( fields ) )
                 .append( ")" );
 
+        System.out.println( "#># " + builder.toString() );
         for ( int i = 0; i < listOfRequests.size(); i++ ) {
             try {
                 T currentRequest = listOfRequests.get( i );
