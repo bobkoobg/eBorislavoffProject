@@ -25,13 +25,17 @@
             <span>You will be able to see opinions of clients on this section and on the top of that - give your own.</span>
             <div id="feedback-clients-elements-wrapper">
                 <ul class="carousel-holder"></ul>
+                <input class="firstButton" type="button" value="First Elem"/>
                 <input class="backButton" type="button" value="Back"/>
+                <input class="pauseButton" type="button" value="Pause"/>
+                <input class="restartButton" type="button" value="Restart"/>
                 <input class="forwardButton" type="button" value="Forward"/>
+                <input class="lastButton" type="button" value="Last Elem"/>
             </div>
             <div id="feedback-guestbook-elements-wrapper"></div>
         </div>
         <script id="clients-element-template" type="text/x-handlebars-template">
-            <li id="{{carouselId}}" class="client hideable" style="{{elemStyle}}" data-newsid="{{id}}">
+            <li id="{{carouselId}}" class="client hideable" style="{{elemStyle}}" data-clientmid="{{id}}">
                 <div class="guestname">{{guestName}}</div>
                 <div class="creationdate">{{creationDate}}</div>
                 <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>
@@ -39,7 +43,7 @@
             </li>
         </script>
         <script id="guestbook-element-template" type="text/x-handlebars-template">
-            <div class="feedback" data-messageid="{{id}}">
+            <div class="feedback" data-guestmid="{{id}}">
                 <div class="guestName">{{guestName}}</div>
                 <div class="creationDate">{{creationDate}}</div>
                 <div class="message">{{message}}</div>

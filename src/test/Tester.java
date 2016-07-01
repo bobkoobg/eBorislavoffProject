@@ -3,6 +3,8 @@ package test;
 import controller.Controller;
 import entity.Article;
 import entity.ArticleType;
+import entity.FlexibleSection;
+import entity.FlexibleSectionGallery;
 import entity.Gallery;
 import entity.Guestbook;
 import entity.Ticket;
@@ -187,14 +189,23 @@ public class Tester {
 //        for ( int i = 0; i < articles.size(); i++ ) {
 //            System.out.println( articles.get( i ).toString() );
 //        }
-        
-        List<TicketType> specificTicketType = controller.getAbstract( "tickettypes", "Contacts", "tickettypename" );
-        
-        for ( int i = 0; i < specificTicketType.size(); i++ ) {
-            System.out.println( specificTicketType.get( i ).toString() );
+//        List<TicketType> specificTicketType = controller.getAbstract( "tickettypes", "Contacts", "tickettypename" );
+//        
+//        for ( int i = 0; i < specificTicketType.size(); i++ ) {
+//            System.out.println( specificTicketType.get( i ).toString() );
+//        }
+        List<FlexibleSection> flexibleSections = controller.getAbstract( "flexiblesections", 0, "" );
+
+        for ( int i = 0; i < flexibleSections.size(); i++ ) {
+            System.out.println( flexibleSections.get( i ).toString() );
         }
-        
-        
+
+        List<FlexibleSectionGallery> flexibleSectionsGallery = controller.getAbstract( "flexiblesectionsgallery", 0, "" );
+
+        for ( int i = 0; i < flexibleSectionsGallery.size(); i++ ) {
+            System.out.println( flexibleSectionsGallery.get( i ).toString() );
+        }
+
     }
 
 }

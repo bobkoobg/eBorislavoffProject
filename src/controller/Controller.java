@@ -5,6 +5,8 @@ import facade.Facade;
 import entity.Article;
 import entity.ArticleType;
 import entity.EntityClassExplorer;
+import entity.FlexibleSection;
+import entity.FlexibleSectionGallery;
 import entity.Gallery;
 import entity.Guestbook;
 import entity.Ticket;
@@ -247,6 +249,14 @@ public class Controller {
                     tN = getTableName( type );
                     c = TicketType.class;
                     break;
+                case "flexiblesections":
+                    tN = getTableName( type );
+                    c = FlexibleSection.class;
+                    break;
+                case "flexiblesectionsgallery":
+                    tN = getTableName( type );
+                    c = FlexibleSectionGallery.class;
+                    break;
             }
         }
 
@@ -323,6 +333,14 @@ public class Controller {
                     tN = getTableName( type );
                     c = TicketType.class;
                     break;
+                case "flexiblesections":
+                    tN = getTableName( type );
+                    c = FlexibleSection.class;
+                    break;
+                case "flexiblesectionsgallery":
+                    tN = getTableName( type );
+                    c = FlexibleSectionGallery.class;
+                    break;
             }
         }
 
@@ -352,6 +370,12 @@ public class Controller {
                         .getNextSequenceIdAbstract( getSequenceName( type ), logger ) );
             } else if ( insElem instanceof TicketType ) {
                 (( TicketType ) insElem).setId( facade
+                        .getNextSequenceIdAbstract( getSequenceName( type ), logger ) );
+            } else if ( insElem instanceof FlexibleSection ) {
+                (( FlexibleSection ) insElem).setId( facade
+                        .getNextSequenceIdAbstract( getSequenceName( type ), logger ) );
+            } else if ( insElem instanceof FlexibleSectionGallery ) {
+                (( FlexibleSectionGallery ) insElem).setId( facade
                         .getNextSequenceIdAbstract( getSequenceName( type ), logger ) );
             }
         }
@@ -419,6 +443,14 @@ public class Controller {
                     tN = getTableName( type );
                     c = TicketType.class;
                     break;
+                case "flexiblesections":
+                    tN = getTableName( type );
+                    c = FlexibleSection.class;
+                    break;
+                case "flexiblesectionsgallery":
+                    tN = getTableName( type );
+                    c = FlexibleSectionGallery.class;
+                    break;
             }
         }
 
@@ -462,6 +494,12 @@ public class Controller {
             case "tickettypes":
                 tableName = "EMKO_TICKETTYPES_TBL";
                 break;
+            case "flexiblesections":
+                tableName = "EMKO_FLEXIBLE_SECTIONS_TBL";
+                break;
+            case "flexiblesectionsgallery":
+                tableName = "EMKO_FS_GALLERY_TBL";
+                break;
         }
         return tableName;
     }
@@ -496,8 +534,13 @@ public class Controller {
             case "tickettypes":
                 sequenceName = "EMKO_TICKETTYPES_ID_SEQ";
                 break;
+            case "flexiblesections":
+                sequenceName = "EMKO_FLEXIBLE_SECTIONS_ID_SEQ";
+                break;
+            case "flexiblesectionsgallery":
+                sequenceName = "EMKO_FS_GALLERY_ID_SEQ";
+                break;
         }
         return sequenceName;
     }
-
 }

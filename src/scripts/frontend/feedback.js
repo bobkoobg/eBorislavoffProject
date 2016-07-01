@@ -6,10 +6,13 @@ var $feedbackClientsElementsWrapper;
 var $backButton;
 var $forwardButton;
 var $carouselHolder;
+var switching;
+var $pauseButton;
+var $restartButton;
+var $firstButton;
+var $lastButton;
 
 function loadFeedback(data, status) {
-    //$feedbackGuestbookElementsWrapper.empty();
-    //$feedbackClientsElementsWrapper.empty();
 
     if (status == "success") {
         var source;
@@ -22,9 +25,10 @@ function loadFeedback(data, status) {
             if (dataValue.imagePath) {
                 if (carouselId == 1) {
                     elemStyle = "display: block;";
+                } else {
+                    elemStyle = "display: none;";
                 }
 
-                console.log("Client***");
                 source = $("#clients-element-template").html();
                 template = Handlebars.compile(source);
                 content = {
@@ -38,9 +42,8 @@ function loadFeedback(data, status) {
                 };
                 html = template(content);
 
-                //$feedbackClientsElementsWrapper.append(html);
-
                 $carouselHolder.append(html);
+
                 carouselId++;
                 elemStyle = "";
             } else {
@@ -104,8 +107,7 @@ function getVisible(elements) {
 
 // direction = boolean value: true or false. If true, go to NEXT slide; otherwise go to PREV slide
 function toggleSlide(event) {
-    console.log("Hello : " + event.data.status);
-    var direction = event.data.status;
+    var direction = event.data.direction;
     var elements = document.getElementsByClassName("hideable"); // gets all the "slides" in our slideshow 
     var visibleID = getVisible(elements); // Find the element that's currently displayed
     elements[visibleID].style.display = "none"; // hide the currently visible element
@@ -120,6 +122,30 @@ function toggleSlide(event) {
     elements[makeVisible].style.display = "block"; // show the previous or next elem
 }
 
+function stopSwitching() {
+    clearInterval(switching);
+}
+
+function startSwitching() {
+    switching = window.setInterval(function () {
+        $forwardButton.trigger("click");
+    }, 3000);
+}
+
+function goToEdge(event) {
+    var direction = event.data.direction;
+    var elements = document.getElementsByClassName("hideable");
+
+    var visibleID = getVisible(elements);
+
+    elements[visibleID].style.display = "none"; //hides the currently visible item
+    if (!direction) {
+        elements[0].style.display = "block"; //shows the first item
+    } else {
+        elements[elements.length - 1].style.display = "block"; //shows the last item
+    }
+}
+
 function load() {
     $body = $(document.body);
     $feedbackGuestbookElementsWrapper = $("#feedback-guestbook-elements-wrapper");
@@ -130,9 +156,21 @@ function load() {
 
     $backButton = $(".backButton");
     $forwardButton = $(".forwardButton");
+    $pauseButton = $(".pauseButton");
+    $restartButton = $(".restartButton");
+    $firstButton = $(".firstButton");
+    $lastButton = $(".lastButton");
 
-    $backButton.click({status: false}, toggleSlide);
-    $forwardButton.click({status: true}, toggleSlide);
+    $backButton.click({direction: false}, toggleSlide);
+    $forwardButton.click({direction: true}, toggleSlide);
+
+    $pauseButton.click(stopSwitching);
+    $restartButton.click(startSwitching);
+
+    $firstButton.click({direction: false}, goToEdge);
+    $lastButton.click({direction: true}, goToEdge);
+
+    startSwitching();
 
 }
 
