@@ -4,10 +4,10 @@ import java.util.Date;
 
 public class FlexibleSectionGallery extends AbstractEntity {
 
-    private int fs_id;
+    protected int fs_id;
     private int user_id;
-    private String imagepath;
-    private Date creationdate;
+    protected String imagepath;
+    protected Date creationdate;
 
     public FlexibleSectionGallery() {
     }
@@ -19,6 +19,26 @@ public class FlexibleSectionGallery extends AbstractEntity {
         this.user_id = user_id;
         this.imagepath = imagepath;
         this.creationdate = creationdate;
+    }
+
+    public Date getCreationdate() {
+        return creationdate;
+    }
+
+    public int getFs_id() {
+        return fs_id;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public String getImagepath() {
+        return imagepath;
+    }
+
+    public void setImagepath( String imagepath ) {
+        this.imagepath = imagepath;
     }
 
     @Override

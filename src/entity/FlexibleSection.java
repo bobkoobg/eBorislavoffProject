@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class FlexibleSection extends AbstractEntity {
 
-    private String fs_purpose;
-    private String title;
-    private String message;
+    protected String fs_purpose;
+    protected String title;
+    protected String message;
     private int user_id;
-    private Date creationdate;
+    protected Date creationdate;
 
     public FlexibleSection() {
     }
@@ -21,6 +21,26 @@ public class FlexibleSection extends AbstractEntity {
         this.message = message;
         this.user_id = user_id;
         this.creationdate = creationdate;
+    }
+
+    public String getFs_purpose() {
+        return fs_purpose;
+    }
+
+    public Date getCreationdate() {
+        return creationdate;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getUser_id() {
+        return user_id;
     }
 
     @Override

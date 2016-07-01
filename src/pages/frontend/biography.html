@@ -3,7 +3,7 @@
         <title>Emilian Borislavoff</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <!-- IE -->
         <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
         <!-- other browsers -->
@@ -13,11 +13,32 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+        <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
         <script type="text/javascript" src="page.js"></script>
-
         <link rel="stylesheet" type="text/css" href="nav.css" />
+        <link rel="stylesheet" type="text/css" href="biography.css" />
+        <script type="text/javascript" src="biography.js"></script>
     </head>
     <body>
-        <div>Biography</div>
+        <div id="biography-wrapper">
+            <h3>Biography</h3>
+            <div id="biography-element-wrapper"></div>
+            <div id="biography-gallery-elements-wrapper"></div>
+        </div>
+        <script id="biography-element-template" type="text/x-handlebars-template">
+            <div class="biography" data-fsid="{{id}}">
+                <h3 class="title">{{title}}</h3>
+                <div class="message">{{message}}</div>
+                <div class="author">{{author}}</div>
+                <div class="date">{{date}}</div>
+            </div>
+        </script>
+        <script id="biography-gallery-element-template" type="text/x-handlebars-template">
+            <div class="gallery" data-biographygalleryid="{{id}}">
+            <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>
+            <div class="author">{{author}}</div>
+            <div class="date">{{date}}</div>
+            </div>
+        </script>
     </body>
 </html>

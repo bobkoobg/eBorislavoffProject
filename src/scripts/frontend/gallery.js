@@ -15,11 +15,6 @@ function showPopup() {
     var $clickedElem = $(event.target);
     var $gallery = $clickedElem.closest(".gallery");
 
-    console.log("galleryId : " + $gallery.attr("data-galleryid"));
-    console.log("image src : " + $gallery.find(".actualImage").attr("src"));
-    console.log("author : " + $gallery.find(".author").text());
-    console.log("date : " + $gallery.find(".date").text());
-
     $popUp.find(".popupImagePath").attr("src", $gallery.find(".actualImage").attr("src"));
     $popUp.find(".popupAuthor").text($gallery.find(".author").text());
     $popUp.find(".popupDate").text($gallery.find(".date").text());

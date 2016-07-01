@@ -6,12 +6,16 @@ import com.sun.net.httpserver.HttpHandler;
 import controller.Controller;
 import entity.Article;
 import entity.ArticleType;
+import entity.FlexibleSection;
+import entity.FlexibleSectionGallery;
 import entity.Gallery;
 import entity.Guestbook;
 import entity.Ticket;
 import entity.TicketType;
 import entity.User;
 import entity.web.ArticleAuthor;
+import entity.web.FlexibleSectionAuthor;
+import entity.web.FlexibleSectionGalleryAuthor;
 import entity.web.GalleryAuthor;
 import entity.web.TicketSecret;
 import java.io.BufferedReader;
@@ -220,9 +224,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     List<Guestbook> guestbookList = controller.getAbstract( "guestbook", 0, "" );
 
                     String imagePath = "";
-                    System.out.println( "Size is : " + guestbookList.size() );
                     for ( int i = 0; i < guestbookList.size(); i++ ) {
-                        System.out.println( "i1 " + i + " > " + guestbookList.get( i ).toString() );
 
                         imagePath = guestbookList.get( i ).getImagePath();
                         if ( imagePath != null ) {
@@ -231,6 +233,67 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     }
 
                     response = new Gson().toJson( guestbookList );
+                    status = 200;
+                    decisionMade = true;
+                }
+
+                if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
+                        && "flexiblesections".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "biography".equals( parts[ 3 ] )) ) {
+
+                    List<FlexibleSection> fss = controller.getAbstract( "flexiblesections", parts[ 3 ], "fs_purpose" );
+
+                    List<FlexibleSectionAuthor> fsAuthor = new ArrayList();
+                    for ( int i = 0; i < fss.size(); i++ ) {
+                        List<User> specificUser = controller.getAbstract( "users", fss.get( i ).getUser_id(), "id" );
+
+                        fsAuthor.add(
+                                new FlexibleSectionAuthor(
+                                        fss.get( i ).getId(), fss.get( i ).getFs_purpose(),
+                                        fss.get( i ).getTitle(), fss.get( i ).getMessage(),
+                                        specificUser.get( 0 ).getUserAlias(),
+                                        fss.get( i ).getCreationdate() ) );
+                    }
+
+                    response = new Gson().toJson( fsAuthor );
+                    status = 200;
+                    decisionMade = true;
+                }
+
+                if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
+                        && "flexiblesectionsgallery".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "biography".equals( parts[ 3 ] )) ) {
+
+                    //Lets get the id of the biography flexible section so that we
+                    //can get the corresponding flexible section gallery objects
+                    List<FlexibleSection> fss = controller.getAbstract( "flexiblesections", "biography", "fs_purpose" );
+
+                    //list of the corresponding flexible section gallery objects
+                    List<FlexibleSectionGallery> fsgList = controller.getAbstract( "flexiblesectionsgallery", fss.get( 0 ).getId(), "fs_id" );
+                    for ( int i = 0; i < fsgList.size(); i++ ) {
+                        System.out.println( "i " + i + " #> " + fsgList.get( i ).toString() );
+                    }
+
+                    //now we need to create a list which will contain the author's name
+                    //instead of his/her id
+                    //fsgaList = flexibleSectionsGalleriesWithAuthorsList X.X
+                    List<FlexibleSectionGalleryAuthor> fsgaList = new ArrayList();
+
+                    String imagePath = "";
+                    for ( int i = 0; i < fsgList.size(); i++ ) {
+                        List<User> specificUser = controller.getAbstract( "users", fsgList.get( i ).getUser_id(), "id" );
+
+                        imagePath = fsgList.get( i ).getImagepath();
+                        fsgList.get( i ).setImagepath( imagePath.substring( imagePath.lastIndexOf( "/" ) + 1 ).trim() );
+
+                        fsgaList.add(
+                                new FlexibleSectionGalleryAuthor(
+                                        fsgList.get( i ).getId(), fsgList.get( i ).getFs_id(),
+                                        specificUser.get( 0 ).getUserAlias(),
+                                        fsgList.get( i ).getImagepath(),
+                                        fsgList.get( i ).getCreationdate() ) );
+                    }
+                    response = new Gson().toJson( fsgaList );
                     status = 200;
                     decisionMade = true;
                 }
