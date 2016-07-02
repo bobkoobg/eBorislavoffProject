@@ -32,17 +32,17 @@ import java.util.List;
 import java.util.Random;
 
 public class FrontendServerAPIHandler implements HttpHandler {
-
+    
     private Controller controller;
     private Random random;
     private static String frontendPagesDIR = "src/pages/frontend/";
     private static String frontendImagesDIR = "src/images/";
-
+    
     public FrontendServerAPIHandler( Controller controller ) {
         this.controller = controller;
         random = new Random();
     }
-
+    
     @Override
     public void handle( HttpExchange he ) throws IOException {
         //ALL
@@ -77,10 +77,10 @@ public class FrontendServerAPIHandler implements HttpHandler {
         System.out.println( "FrontendServerAPIHandler DEBUG: # " + dateFormatted + " # #Request method: " + method + ", Request path : " + path + ", path Length: " + parts.length + " / 2nd elem : " + (parts.length > 0 ? parts[ 1 ] : "NO") );
         //Debug END
 
+        boolean decisionMade = false;
+        
         switch ( method ) {
             case "GET":
-                boolean decisionMade = false;
-
                 /*
                  * Generate server identifier and send to client
                  * URL : http://localhost:8084/api/nav
@@ -90,20 +90,20 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     file = new File( frontendPagesDIR + "nav.html" );
                     decisionMade = true;
                 }
-
+                
                 if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "cool".equals( parts[ 2 ] )) ) {
                     User user = new User( 23, "bobkoo", "rocks", "mail@mail.dk", "SwaggerBoy", new Date(), new Date() );
                     response = new Gson().toJson( user );
                     status = 200;
                     decisionMade = true;
                 }
-
+                
                 if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "news".equals( parts[ 2 ] )) ) {
-
+                    
                     List<ArticleType> specificArticleType = controller.getAbstract( "articletypes", "News", "articletypename" );
                     List<Article> articles = controller.getAbstract( "articles", specificArticleType.get( 0 ).getId(), "type_id" );
                     List<ArticleAuthor> specificArticlesWithAuthors = new ArrayList();
-
+                    
                     for ( int i = 0; i < articles.size(); i++ ) {
                         List<User> specificUser = controller.getAbstract( "users", articles.get( i ).getUserId(), "id" );
                         specificArticlesWithAuthors.add(
@@ -117,18 +117,18 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     status = 200;
                     decisionMade = true;
                 }
-
+                
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "news".equals( parts[ 2 ] )) && parts[ 3 ] != null
                         && isNumeric( parts[ 3 ] ) ) {
                     int index = Integer.parseInt( parts[ 3 ] );
-
+                    
                     List<ArticleType> specificArticleType = controller.getAbstract( "articletypes", "News", "articletypename" );
                     int newsTypeId = specificArticleType.get( 0 ).getId();
-
+                    
                     List<Article> articles = controller.getAbstract( "articles", index, "id" );
                     if ( newsTypeId == articles.get( 0 ).getType_id() ) {
-
+                        
                         List<User> specificUser = controller.getAbstract( "users", articles.get( 0 ).getUserId(), "id" );
                         ArticleAuthor articleAuthor
                                 = new ArticleAuthor( articles.get( 0 ).getId(),
@@ -136,19 +136,19 @@ public class FrontendServerAPIHandler implements HttpHandler {
                                                      articles.get( 0 ).getTitle(),
                                                      articles.get( 0 ).getText(),
                                                      articles.get( 0 ).getCreationDate() );
-
+                        
                         response = new Gson().toJson( articleAuthor );
                         status = 200;
                         decisionMade = true;
                     }
                 }
-
+                
                 if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "exercises".equals( parts[ 2 ] )) ) {
-
+                    
                     List<ArticleType> specificArticleType = controller.getAbstract( "articletypes", "Exercises", "articletypename" );
                     List<Article> articles = controller.getAbstract( "articles", specificArticleType.get( 0 ).getId(), "type_id" );
                     List<ArticleAuthor> specificArticlesWithAuthors = new ArrayList();
-
+                    
                     for ( int i = 0; i < articles.size(); i++ ) {
                         List<User> specificUser = controller.getAbstract( "users", articles.get( i ).getUserId(), "id" );
                         specificArticlesWithAuthors.add(
@@ -162,18 +162,18 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     status = 200;
                     decisionMade = true;
                 }
-
+                
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "exercises".equals( parts[ 2 ] )) && parts[ 3 ] != null
                         && isNumeric( parts[ 3 ] ) ) {
                     int index = Integer.parseInt( parts[ 3 ] );
-
+                    
                     List<ArticleType> specificArticleType = controller.getAbstract( "articletypes", "Exercises", "articletypename" );
                     int newsTypeId = specificArticleType.get( 0 ).getId();
-
+                    
                     List<Article> articles = controller.getAbstract( "articles", index, "id" );
                     if ( newsTypeId == articles.get( 0 ).getType_id() ) {
-
+                        
                         List<User> specificUser = controller.getAbstract( "users", articles.get( 0 ).getUserId(), "id" );
                         ArticleAuthor articleAuthor
                                 = new ArticleAuthor( articles.get( 0 ).getId(),
@@ -181,24 +181,24 @@ public class FrontendServerAPIHandler implements HttpHandler {
                                                      articles.get( 0 ).getTitle(),
                                                      articles.get( 0 ).getText(),
                                                      articles.get( 0 ).getCreationDate() );
-
+                        
                         response = new Gson().toJson( articleAuthor );
                         status = 200;
                         decisionMade = true;
                     }
                 }
-
+                
                 if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "gallery".equals( parts[ 2 ] )) ) {
-
+                    
                     List<GalleryAuthor> specificGalleryItemsWithAuthors = new ArrayList();
                     List<Gallery> galleryItems = controller.getAbstract( "gallery", 0, "" );
                     String imagePath = "";
                     for ( int i = 0; i < galleryItems.size(); i++ ) {
                         List<User> specificUser = controller.getAbstract( "users", galleryItems.get( i ).getUser_id(), "id" );
-
+                        
                         imagePath = galleryItems.get( i ).getImagePath();
                         galleryItems.get( i ).setImagePath( imagePath.substring( imagePath.lastIndexOf( "/" ) + 1 ).trim() );
-
+                        
                         specificGalleryItemsWithAuthors.add(
                                 new GalleryAuthor( galleryItems.get( i ).getId(),
                                                    specificUser.get( 0 ).getUserAlias(),
@@ -210,43 +210,43 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     status = 200;
                     decisionMade = true;
                 }
-
+                
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "image".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
-
+                    
                     mime = getMime( ".html" );
                     file = new File( frontendImagesDIR + parts[ 3 ] );
                     decisionMade = true;
                 }
-
+                
                 if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "feedback".equals( parts[ 2 ] )) ) {
-
+                    
                     List<Guestbook> guestbookList = controller.getAbstract( "guestbook", 0, "" );
-
+                    
                     String imagePath = "";
                     for ( int i = 0; i < guestbookList.size(); i++ ) {
-
+                        
                         imagePath = guestbookList.get( i ).getImagePath();
                         if ( imagePath != null ) {
                             guestbookList.get( i ).setImagePath( imagePath.substring( imagePath.lastIndexOf( "/" ) + 1 ).trim() );
                         }
                     }
-
+                    
                     response = new Gson().toJson( guestbookList );
                     status = 200;
                     decisionMade = true;
                 }
-
+                
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "flexiblesections".equals( parts[ 2 ] ) && parts[ 3 ] != null
                         && "biography".equals( parts[ 3 ] )) ) {
-
+                    
                     List<FlexibleSection> fss = controller.getAbstract( "flexiblesections", parts[ 3 ], "fs_purpose" );
-
+                    
                     List<FlexibleSectionAuthor> fsAuthor = new ArrayList();
                     for ( int i = 0; i < fss.size(); i++ ) {
                         List<User> specificUser = controller.getAbstract( "users", fss.get( i ).getUser_id(), "id" );
-
+                        
                         fsAuthor.add(
                                 new FlexibleSectionAuthor(
                                         fss.get( i ).getId(), fss.get( i ).getFs_purpose(),
@@ -254,12 +254,12 @@ public class FrontendServerAPIHandler implements HttpHandler {
                                         specificUser.get( 0 ).getUserAlias(),
                                         fss.get( i ).getCreationdate() ) );
                     }
-
+                    
                     response = new Gson().toJson( fsAuthor );
                     status = 200;
                     decisionMade = true;
                 }
-
+                
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "flexiblesectionsgallery".equals( parts[ 2 ] ) && parts[ 3 ] != null
                         && "biography".equals( parts[ 3 ] )) ) {
@@ -278,14 +278,14 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     //instead of his/her id
                     //fsgaList = flexibleSectionsGalleriesWithAuthorsList X.X
                     List<FlexibleSectionGalleryAuthor> fsgaList = new ArrayList();
-
+                    
                     String imagePath = "";
                     for ( int i = 0; i < fsgList.size(); i++ ) {
                         List<User> specificUser = controller.getAbstract( "users", fsgList.get( i ).getUser_id(), "id" );
-
+                        
                         imagePath = fsgList.get( i ).getImagepath();
                         fsgList.get( i ).setImagepath( imagePath.substring( imagePath.lastIndexOf( "/" ) + 1 ).trim() );
-
+                        
                         fsgaList.add(
                                 new FlexibleSectionGalleryAuthor(
                                         fsgList.get( i ).getId(), fsgList.get( i ).getFs_id(),
@@ -297,7 +297,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     status = 200;
                     decisionMade = true;
                 }
-
+                
                 break;
             case "POST":
                 //use PUT to create resources, or use POST to update resources.
@@ -311,12 +311,12 @@ public class FrontendServerAPIHandler implements HttpHandler {
                  * JSON : {"clientRN": 8 }
                  */
                 if ( parts.length == 3 && parts[ 2 ] != null && "submitContact".equals( parts[ 2 ] ) ) {
-                    //response = new Gson().toJson( controller.createSongAPI( jsonQuery ) );
+                    
                     TicketSecret jsonObject = gson.fromJson( jsonQuery, TicketSecret.class );
-
+                    
                     List<TicketType> specificTicketType = controller.
                             getAbstract( "tickettypes", "Contacts", "tickettypename" );
-
+                    
                     Ticket toInsertObject = new Ticket( 0, jsonObject.getTitle(),
                                                         specificTicketType.get( 0 ).getId(),
                                                         jsonObject.getMessage(), 1,
@@ -326,15 +326,33 @@ public class FrontendServerAPIHandler implements HttpHandler {
                                                         new Date() );
                     ArrayList<Ticket> toInsertList = new ArrayList();
                     toInsertList.add( toInsertObject );
-
+                    
                     boolean result = controller.insertAbstract( "tickets", toInsertList );
-
+                    
                     if ( result ) {
                         response = new Gson().toJson( toInsertObject );
                         status = 201;
                     }
                 }
+                
+                if ( parts.length == 3 && parts[ 2 ] != null && "submitFeedback".equals( parts[ 2 ] ) ) {
+                    Guestbook jsonObject = gson.fromJson( jsonQuery, Guestbook.class );
+                    jsonObject.setCreationDate( new Date() );
+                    jsonObject.setIp( address );
+                    System.out.println( "My baby boo??" + jsonObject.toString() );
+                    
+                    ArrayList<Guestbook> guestbookList = new ArrayList();
+                    guestbookList.add( jsonObject );
+                    
+                    boolean result = controller.insertAbstract( "guestbook", guestbookList );
+                    
+                    if ( result ) {
+                        response = new Gson().toJson( jsonObject );
+                        status = 201;
+                    }
+                }
                 break;
+            
             case "PUT":
                 status = 500;
                 response = "not supported";
@@ -348,9 +366,10 @@ public class FrontendServerAPIHandler implements HttpHandler {
                 response = "not supported";
                 break;
         }
-
-        if ( file != null ) {
-
+        
+        if ( file
+                != null ) {
+            
             he.sendResponseHeaders( 200, 0 );
             OutputStream os = he.getResponseBody();
             FileInputStream fs = new FileInputStream( file );
@@ -369,7 +388,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
             }
         }
     }
-
+    
     private String getMime( String extension ) {
         String mime = "";
         switch ( extension ) {
@@ -402,7 +421,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
         }
         return mime;
     }
-
+    
     private static Boolean isNumeric( String str ) {
         try {
             Integer d = Integer.parseInt( str );

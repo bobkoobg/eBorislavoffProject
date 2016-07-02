@@ -20,6 +20,16 @@
         <script type="text/javascript" src="feedback.js"></script>
     </head>
     <body>
+        <div class="submittion-confirmation-popupwrapper">
+            <div class="submittion-confirmation-popup">
+                <span class="close">X</span>
+                <h3>Confirmation for submission :</h3>
+                <div>Your name :<span class="clientName"></span></div>
+                <div>Your message :<span class="clientMessage"></span></div>
+                <div>Current date :<span class="clientDate"></span></div>
+                <div>Your IP :<span class="clientIP"></span></div>
+            </div>
+        </div>
         <div id="feedback-wrapper">
             <h3>Welcome to the feedback section</h3>
             <span>You will be able to see opinions of clients on this section and on the top of that - give your own.</span>
@@ -32,21 +42,40 @@
                 <input class="forwardButton" type="button" value="Forward"/>
                 <input class="lastButton" type="button" value="Last Elem"/>
             </div>
+            <div id="feedback-form-wrapper">
+                <h3>Hey, here you can post feedback:</h3>
+                <form id="feedback-form">
+                    <div>
+                        <span>Name :</span>
+                        <input type="text" name="name" placeholder="Insert your name/alias">
+                    </div>
+                    <div>
+                        <span>Message :</span>
+                        <textarea class="formMessage" rows="4" cols="50" name="message"
+                                  placeholder="Insert your feedbacks' message"></textarea>
+                    </div>
+                    <div>
+                        <input id="feedback-form-button" type="submit" value="Submit your opinion" disabled>
+                    </div>
+                    <span class="feedback-form-status"></span>
+                </form>
+            </div>
             <div id="feedback-guestbook-elements-wrapper"></div>
         </div>
         <script id="clients-element-template" type="text/x-handlebars-template">
             <li id="{{carouselId}}" class="client hideable" style="{{elemStyle}}" data-clientmid="{{id}}">
-                <div class="guestname">{{guestName}}</div>
-                <div class="creationdate">{{creationDate}}</div>
-                <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>
-                <div class="message">{{message}}</div>
+            <div class="guestname">{{guestName}}</div>
+            <div class="creationdate">{{creationDate}}</div>
+            <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>
+            <div class="message">{{message}}</div>
             </li>
         </script>
         <script id="guestbook-element-template" type="text/x-handlebars-template">
             <div class="feedback" data-guestmid="{{id}}">
-                <div class="guestName">{{guestName}}</div>
-                <div class="creationDate">{{creationDate}}</div>
-                <div class="message">{{message}}</div>
+            <div class="guestName">{{guestName}}</div>
+            <div class="creationDate">{{creationDate}}</div>
+            <div class="guestip">{{ip}}</div>
+            <div class="message">{{message}}</div>
             </div>
         </script>
     </body>

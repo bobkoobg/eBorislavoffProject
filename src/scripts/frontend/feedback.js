@@ -11,6 +11,11 @@ var $pauseButton;
 var $restartButton;
 var $firstButton;
 var $lastButton;
+var $formName;
+var $formMessage;
+var $contactStatus;
+var $popUp;
+var $close;
 
 function loadFeedback(data, status) {
 
@@ -22,43 +27,47 @@ function loadFeedback(data, status) {
         var carouselId = 1;
         var elemStyle;
         $.each(data, function (dataKey, dataValue) {
-            if (dataValue.imagePath) {
-                if (carouselId == 1) {
-                    elemStyle = "display: block;";
+            if (!($("[data-clientmid='" + dataValue.id + "']").length > 0
+                    || $("[data-guestmid='" + dataValue.id + "']").length > 0)) {
+                if (dataValue.imagePath) {
+                    if (carouselId == 1) {
+                        elemStyle = "display: block;";
+                    } else {
+                        elemStyle = "display: none;";
+                    }
+
+                    source = $("#clients-element-template").html();
+                    template = Handlebars.compile(source);
+                    content = {
+                        carouselId: carouselId,
+                        elemStyle: elemStyle,
+                        id: dataValue.id,
+                        imagePath: "/api/image/" + dataValue.imagePath,
+                        guestName: dataValue.guestName,
+                        message: dataValue.message,
+                        creationDate: dataValue.creationDate
+                    };
+                    html = template(content);
+
+                    $carouselHolder.append(html);
+
+                    carouselId++;
+                    elemStyle = "";
                 } else {
-                    elemStyle = "display: none;";
+
+                    source = $("#guestbook-element-template").html();
+                    template = Handlebars.compile(source);
+                    content = {
+                        id: dataValue.id,
+                        guestName: dataValue.guestName,
+                        message: dataValue.message,
+                        ip: dataValue.ip,
+                        creationDate: dataValue.creationDate
+                    };
+                    html = template(content);
+
+                    $feedbackGuestbookElementsWrapper.append(html);
                 }
-
-                source = $("#clients-element-template").html();
-                template = Handlebars.compile(source);
-                content = {
-                    carouselId: carouselId,
-                    elemStyle: elemStyle,
-                    id: dataValue.id,
-                    imagePath: "/api/image/" + dataValue.imagePath,
-                    guestName: dataValue.guestName,
-                    message: dataValue.message,
-                    creationDate: dataValue.creationDate
-                };
-                html = template(content);
-
-                $carouselHolder.append(html);
-
-                carouselId++;
-                elemStyle = "";
-            } else {
-
-                source = $("#guestbook-element-template").html();
-                template = Handlebars.compile(source);
-                content = {
-                    id: dataValue.id,
-                    guestName: dataValue.guestName,
-                    message: dataValue.message,
-                    creationDate: dataValue.creationDate
-                };
-                html = template(content);
-
-                $feedbackGuestbookElementsWrapper.append(html);
             }
         });
     } else {
@@ -146,6 +155,71 @@ function goToEdge(event) {
     }
 }
 
+function closePopup() {
+    $popUp.fadeOut();
+
+    $formName.val("");
+    $formMessage.val("");
+}
+
+function evaluateFeedbackSubmittion(data, status) {
+    console.log("data is : " + data + ", status is : " + status);
+
+    if (status == "success") {
+        $(".clientName").text(data.guestName);
+        $(".clientMessage").text(data.message);
+        $(".clientDate").text(data.creationDate);
+        $(".clientIP").text(data.ip);
+
+        $popUp.fadeIn();
+    } else {
+        $formMessage.text("Internal error, status : " + status + ". Please, try again later.");
+    }
+}
+
+function submitFeedback() {
+    console.log("Ready to make request");
+
+    $.ajax({
+        "url": "/api/submitFeedback",
+        "type": "POST",
+        "headers": {"Content-Type": "application/json"},
+        "data": JSON.stringify({
+            'guestName': $formName.val(),
+            'message': $formMessage.val(),
+            'secret': "secret2"
+        }),
+        "success": evaluateFeedbackSubmittion,
+        "error": evaluateFeedbackSubmittion
+    });
+}
+
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+function basicCheck() {
+    var name = $formName.val();
+    var message = $formMessage.val();
+
+    if (!name) {
+        alert("Please write your name in the form.");
+        return false;
+    }
+    if (message.length <= 5) {
+        alert("Please write a meaningful message for your form. (More than 5 symbols)");
+        return false;
+    }
+
+    submitFeedback();
+}
+
+function breakSubmitRedirect() {
+    basicCheck();
+    return false;
+}
+
 function load() {
     $body = $(document.body);
     $feedbackGuestbookElementsWrapper = $("#feedback-guestbook-elements-wrapper");
@@ -153,6 +227,10 @@ function load() {
     $carouselHolder = $(".carousel-holder");
 
     requestFeedback();
+    //Request feedback every 30sec. to get if there is something new
+    window.setInterval(function () {
+        requestFeedback();
+    }, 30000);
 
     $backButton = $(".backButton");
     $forwardButton = $(".forwardButton");
@@ -171,6 +249,16 @@ function load() {
     $lastButton.click({direction: true}, goToEdge);
 
     startSwitching();
+
+    $formName = $("#feedback-form").find("input[name='name']");
+    $formMessage = $(".formMessage");
+    $contactStatus = $(".feedback-form-status");
+    $popUp = $(".submittion-confirmation-popupwrapper");
+    $close = $(".close");
+
+    $("#feedback-form-button").removeAttr("disabled");
+    $('#feedback-form').submit(breakSubmitRedirect);
+    $body.on("click", ".close", closePopup);
 
 }
 

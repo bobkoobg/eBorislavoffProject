@@ -113,6 +113,7 @@ CREATE TABLE EMKO_GUESTBOOK_TBL (
   guestname VARCHAR2(255) NOT NULL,
   message VARCHAR2(4000) NOT NULL,
   imagepath VARCHAR2(255),
+  ip VARCHAR(45),
   creationdate date NOT NULL
 );
 
@@ -151,5 +152,5 @@ INSERT INTO EMKO_USERS_TBL (USER_ID, USERNAME, HASHPASS, EMAIL, USERALIAS, LASTL
     TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss'), 
     TO_DATE('2003/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss' ) 
   );
- 
+  
 COMMIT;
