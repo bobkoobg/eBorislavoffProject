@@ -3,7 +3,7 @@
         <title>Emilian Borislavoff</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <!-- IE -->
         <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
         <!-- other browsers -->
@@ -13,11 +13,36 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-        <script type="text/javascript" src="page.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+        <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
+        <script type="text/javascript" src="page.js"></script>
         <link rel="stylesheet" type="text/css" href="nav.css" />
+        <link rel="stylesheet" type="text/css" href="services.css" />
+        <script type="text/javascript" src="services.js"></script>
     </head>
     <body>
-        <div>Services</div>
+        <div id="services-wrapper">
+            <h3>Services</h3>
+            <div id="services-element-wrapper"></div>
+            <div id="services-gallery-elements-wrapper"></div>
+        </div>
+        <script id="services-element-template" type="text/x-handlebars-template">
+            <div class="service" data-fsid="{{id}}">
+                <h3 class="title">{{title}}</h3>
+                <div class="message">{{message}}</div>
+                <div class="author">{{author}}</div>
+                <div class="date">{{date}}</div>
+            </div>
+        </script>
+        <script id="services-gallery-element-template" type="text/x-handlebars-template">
+            <div class="servicegallery" data-servicegalleryid="{{id}}">
+            <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>
+            <div class="author">{{author}}</div>
+            <div class="date">{{date}}</div>
+            </div>
+        </script>
     </body>
 </html>
