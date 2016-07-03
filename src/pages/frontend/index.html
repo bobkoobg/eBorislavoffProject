@@ -13,14 +13,22 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+        <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
         <script type="text/javascript" src="index.js"></script>
         <script type="text/javascript" src="page.js"></script>
-
-        <link rel="stylesheet" type="text/css" href="nav.css" />
+        <link rel="stylesheet" type="text/css" href="page.css" />
+        <link rel="stylesheet" type="text/css" href="index.css" />
     </head>
     <body>
-        <div class="indexPageWrapper">
-            <div>Greetings traveler! :) This is the index (frontend) page</div>
+        <div id="index-wrapper">
+            <div id="index-gallery-elements-wrapper"></div>
         </div>
+        <script id="index-gallery-element-template" type="text/x-handlebars-template">
+            <div class="gallery" data-indexgalleryid="{{id}}">
+            <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>
+            <div class="author">{{author}}</div>
+            <div class="date">{{date}}</div>
+            </div>
+        </script>
     </body>
 </html>

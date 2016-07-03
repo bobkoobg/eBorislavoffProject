@@ -1,10 +1,10 @@
-#biography-wrapper {
+#index-wrapper {
     width: 500px;
     margin: 0 auto;
     border: 1px solid;
 }
 
-#biography-element-wrapper {
+#index-element-wrapper {
     border-collapse: collapse;
 }
 

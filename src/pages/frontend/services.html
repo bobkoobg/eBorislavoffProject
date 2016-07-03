@@ -19,24 +19,14 @@
 
         <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
         <script type="text/javascript" src="page.js"></script>
-        <link rel="stylesheet" type="text/css" href="nav.css" />
+        <link rel="stylesheet" type="text/css" href="page.css" />
         <link rel="stylesheet" type="text/css" href="services.css" />
         <script type="text/javascript" src="services.js"></script>
     </head>
     <body>
         <div id="services-wrapper">
-            <h3>Services</h3>
-            <div id="services-element-wrapper"></div>
             <div id="services-gallery-elements-wrapper"></div>
         </div>
-        <script id="services-element-template" type="text/x-handlebars-template">
-            <div class="service" data-fsid="{{id}}">
-                <h3 class="title">{{title}}</h3>
-                <div class="message">{{message}}</div>
-                <div class="author">{{author}}</div>
-                <div class="date">{{date}}</div>
-            </div>
-        </script>
         <script id="services-gallery-element-template" type="text/x-handlebars-template">
             <div class="servicegallery" data-servicegalleryid="{{id}}">
             <div class="imagePath"><img class="actualImage" src="{{imagePath}}"></div>

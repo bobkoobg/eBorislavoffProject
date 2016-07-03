@@ -1,0 +1,66 @@
+#navigationMenu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+#navigationMenu li {
+    float: left;
+}
+
+#navigationMenu li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+#navigationMenu li a:hover:not(.active) {
+    background-color: #111;
+}
+
+#navigationMenu .active {
+    background-color: #4CAF50;
+}
+
+footer {
+    text-align: center;
+    margin-top: 15px;
+    background-color: #333;
+}
+
+footer .footer-text {
+    color: white;
+    font-size: 12px;
+}
+
+footer .footer-text:hover:not(.active) {
+    background-color: #111;
+}
+
+h3 {
+    text-align: center;
+}
+
+.fstitle {
+    background-color: #a59a9a;
+}
+
+.fsmessage {
+    padding: 0 10px;
+    background-color: #fbf5f5;
+}
+
+.fsauthor {
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.fsdate {
+    overflow: hidden;
+    float: right;
+    margin: 10px 0;
+}

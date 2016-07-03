@@ -124,6 +124,8 @@ public class StatementCreator {
                 .append( tableName )
                 .append( " where " );
 
+        //System.out.println( "> " + builder.toString() );
+
         if ( filterBy.isEmpty() || filterBy.equals( "id" ) ) {
             builder.append( listOfFieldNames.get( 0 ) ).append( " = " )
                     .append( comparisonValue );

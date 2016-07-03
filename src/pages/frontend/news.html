@@ -15,21 +15,20 @@
 
         <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
         <script type="text/javascript" src="page.js"></script>
-        <link rel="stylesheet" type="text/css" href="nav.css" />
+        <link rel="stylesheet" type="text/css" href="page.css" />
         <link rel="stylesheet" type="text/css" href="news.css" />
         <script type="text/javascript" src="news.js"></script>
     </head>
     <body>
         <div id="newsWrapper">
-            <h3>Welcome to the news section</h3>
             <div id="newsElementsWrapper"></div>
         </div>
         <script id="news-element-template" type="text/x-handlebars-template">
             <div class="news" data-newsid="{{id}}">
-                <h3 class="title">{{title}}</h3>
-                <div class="text">{{text}}</div>
-                <div class="author">{{author}}</div>
-                <div class="date">{{date}}</div>
+            <h3 class="title">{{title}}</h3>
+            <div class="text">{{text}}</div>
+            <div class="author">{{author}}</div>
+            <div class="date">{{date}}</div>
             </div>
         </script>
         <script id="news-element-readmore-template" type="text/x-handlebars-template">

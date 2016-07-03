@@ -8,30 +8,6 @@
     border-collapse: collapse;
 }
 
-h3 {
-    text-align: center;
-}
-
-.title {
-    background-color: #a59a9a;
-}
-
-.message {
-    padding: 0 10px;
-    background-color: #fbf5f5;
-}
-
-.author {
-    display: inline-block;
-    margin: 10px 0;
-}
-
-.date {
-    overflow: hidden;
-    float: right;
-    margin: 10px 0;
-}
-
 img {
     width: 500px;
 }

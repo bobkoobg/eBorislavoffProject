@@ -91,6 +91,18 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     decisionMade = true;
                 }
 
+                if ( parts.length == 3 && parts[ 2 ] != null && "footer".equals( parts[ 2 ] ) ) {
+                    mime = getMime( ".html" );
+                    file = new File( frontendPagesDIR + "footer.html" );
+                    decisionMade = true;
+                }
+                
+                 if ( parts.length == 3 && parts[ 2 ] != null && "flexibleSection".equals( parts[ 2 ] ) ) {
+                    mime = getMime( ".html" );
+                    file = new File( frontendPagesDIR + "flexibleSection.html" );
+                    decisionMade = true;
+                }
+
                 if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "cool".equals( parts[ 2 ] )) ) {
                     User user = new User( 23, "bobkoo", "rocks", "mail@mail.dk", "SwaggerBoy", new Date(), new Date() );
                     response = new Gson().toJson( user );
@@ -220,12 +232,10 @@ public class FrontendServerAPIHandler implements HttpHandler {
                 }
 
                 if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null && "feedback".equals( parts[ 2 ] )) ) {
-
                     List<Guestbook> guestbookList = controller.getAbstract( "guestbook", 0, "" );
 
                     String imagePath = "";
                     for ( int i = 0; i < guestbookList.size(); i++ ) {
-
                         imagePath = guestbookList.get( i ).getImagePath();
                         if ( imagePath != null ) {
                             guestbookList.get( i ).setImagePath( imagePath.substring( imagePath.lastIndexOf( "/" ) + 1 ).trim() );
