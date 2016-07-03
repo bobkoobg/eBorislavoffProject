@@ -23,19 +23,19 @@ public class AbstractMapper<T> {
                 + "from user_tab_cols "
                 + "where table_name=upper('" + tableName + "')";
 
-        PreparedStatement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
-            statement = connection.prepareStatement( SQLFieldNamesString );
+            preparedStatement = connection.prepareStatement( SQLFieldNamesString );
 
-            ResultSet resultSet = statement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             while ( resultSet.next() ) {
                 listOfFieldNames.add( resultSet.getString( 1 ) );
             }
 
-            statement.close();
+            resultSet.close();
+            preparedStatement.close();
         } catch ( SQLException ex ) {
-
             logger.severe( "getColumnNamesByTableName : " + ex );
             return null;
         }
@@ -54,29 +54,15 @@ public class AbstractMapper<T> {
         try {
             preparedStatement = connection.prepareStatement( SQLString );
             ResultSet rs = preparedStatement.executeQuery();
-            try {
-                if ( rs.next() ) {
-                    sequenceId = rs.getInt( 1 );
-                }
-            } finally {
-                try {
-                    rs.close();
-                } catch ( Exception e ) {
-                    logger.warning( "Exception - during retrieval of next duel id : " + e );
-                }
+
+            if ( rs.next() ) {
+                sequenceId = rs.getInt( 1 );
             }
-        } catch ( SQLException e ) {
-            logger.severe( "Method insertDuel (Part1) - Execution SQL Exception : [ " + e + " ]" );
-            return 0;
-        } finally {
-            try {
-                if ( preparedStatement != null ) {
-                    preparedStatement.close();
-                }
-            } catch ( SQLException e ) {
-                logger.severe( "Method insertDuel (Part1) - Closing SQL Exception : [ " + e + " ]" );
-                return 0;
-            }
+            rs.close();
+            preparedStatement.close();
+
+        } catch ( Exception e ) {
+            logger.warning( "Exception - during retrieval of next duel id : " + e );
         }
         return sequenceId;
     }
@@ -102,14 +88,14 @@ public class AbstractMapper<T> {
      * SELECT * (ALL) from any table based on entity class type and list of entity
      * class fields
      */
-    public <T> ArrayList<T> overpoweredAbstractMethod( PreparedStatement statement,
+    public <T> ArrayList<T> overpoweredAbstractMethod( PreparedStatement preparedStatement,
             Class<T> typeOfCurrentClass, List<Field> fieldsInClasses, Connection connect,
             Logger logger ) {
 
         List<T> listOfAllRequested = new ArrayList();
         try {
             T currentRequest;
-            ResultSet rs = statement.executeQuery();
+            ResultSet rs = preparedStatement.executeQuery();
             while ( rs.next() ) {
                 currentRequest = typeOfCurrentClass.newInstance();
 
@@ -119,21 +105,22 @@ public class AbstractMapper<T> {
 
                     if ( fieldsInClasses.get( j ).getType() == Integer.class
                             || fieldsInClasses.get( j ).getType() == int.class ) {
-
                         fieldsInClasses.get( j ).set( currentRequest, rs.getInt( columnIndex ) );
+
                     } else if ( fieldsInClasses.get( j ).getType() == String.class ) {
-
                         fieldsInClasses.get( j ).set( currentRequest, rs.getString( columnIndex ) );
+
                     } else if ( fieldsInClasses.get( j ).getType() == java.util.Date.class ) {
-
                         fieldsInClasses.get( j ).set( currentRequest, new java.util.Date( rs.getDate( columnIndex ).getTime() ) );
-                    } else if ( fieldsInClasses.get( j ).getType() == Boolean.class ) {
 
+                    } else if ( fieldsInClasses.get( j ).getType() == Boolean.class ) {
                         fieldsInClasses.get( j ).set( currentRequest, ( Boolean ) "Y".equals( rs.getString( columnIndex ) ) );
                     }
                 }
                 listOfAllRequested.add( currentRequest );
             }
+            rs.close();
+            preparedStatement.close();
         } catch ( SQLException | InstantiationException | IllegalAccessException ex ) {
             logger.severe( "overpoweredAbstractMethod (SELECT *) : " + ex );
             return null;
