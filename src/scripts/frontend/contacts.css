@@ -1,5 +1,8 @@
 #contact-form {
     text-align: center;
+    margin: 0 auto;
+    width: 500px;
+    height: 300px;
 }
 
 .submittion-confirmation-popupwrapper {

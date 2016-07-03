@@ -6,36 +6,39 @@ var $formMessage;
 var $contactStatus;
 var $popUp;
 var $close;
+var googleReCAPTCHA;
 
 function closePopup() {
     $popUp.fadeOut();
-    
+
     $formName.val("");
     $formEmail.val("");
     $formTitle.val("");
     $formMessage.val("");
+    
+    window.location = "/";
 }
 
 function evaluateContactSubmittion(data, status) {
-    console.log("data is : " + data + ", status is : " + status);
-
+    
     if (status == "success") {
-        $(".clientName").text(data.client_name);
-        $(".clientEmail").text(data.client_email);
+        $(".clientName").text(data.sender_name);
+        $(".clientEmail").text(data.sender_email);
         $(".clientTitle").text(data.title);
         $(".clientMessage").text(data.message);
         $(".clientDate").text(data.creationDate);
         $(".clientStatus").text(data.status);
 
         $popUp.fadeIn();
+        $formMessage.fadeOut();
     } else {
         $formMessage.text("Internal error, status : " + status + ". Please, try again later.");
+        $formMessage.fadeIn();
     }
 }
 
 function submitContact() {
-    console.log("Ready to make request");
-
+    
     $.ajax({
         "url": "/api/submitContact",
         "type": "POST",
@@ -45,7 +48,7 @@ function submitContact() {
             'sender_email': $formEmail.val(),
             'title': $formTitle.val(),
             'message': $formMessage.val(),
-            'secret': "secret"
+            'secret': googleReCAPTCHA
         }),
         "success": evaluateContactSubmittion,
         "error": evaluateContactSubmittion
@@ -57,7 +60,10 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-function basicCheck() {
+function breakSubmitRedirect(e) {
+    e.preventDefault();
+    googleReCAPTCHA = grecaptcha.getResponse();
+    
     var name = $formName.val();
     var email = $formEmail.val();
     var title = $formTitle.val();
@@ -81,11 +87,6 @@ function basicCheck() {
     }
 
     submitContact();
-}
-
-function breakSubmitRedirect() {
-    basicCheck();
-    return false;
 }
 
 function load() {

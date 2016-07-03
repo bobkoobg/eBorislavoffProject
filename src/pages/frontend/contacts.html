@@ -18,6 +18,8 @@
         <link rel="stylesheet" type="text/css" href="page.css" />
         <link rel="stylesheet" type="text/css" href="contacts.css" />
         <script type="text/javascript" src="contacts.js"></script>
+        
+        <script src="https://www.google.com/recaptcha/api.js"></script>
     </head>
     <body>
         <div class="submittion-confirmation-popupwrapper">
@@ -52,6 +54,8 @@
                     <textarea class="formMessage" rows="4" cols="50" name="message"
                               placeholder="Insert your questions' message"></textarea>
                 </div>
+                <div class="g-recaptcha" data-sitekey="6LfJJiQTAAAAAETUFwZdIo7s5R_vIgykiNAIVvGM"></div>
+                <div id='html_element'></div>
                 <div>
                     <input id="contact-form-button" type="submit" value="Submit your question" disabled>
                 </div>

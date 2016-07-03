@@ -4,7 +4,6 @@ var $body;
 var $exercisesElementWrapper;
 
 function loadNews(data, status) {
-    console.log("data is : " + data + ", status is : " + status);
 
     if (status == "success") {
         $exercisesElementWrapper.empty();

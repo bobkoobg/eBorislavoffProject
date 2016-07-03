@@ -96,8 +96,8 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     file = new File( frontendPagesDIR + "footer.html" );
                     decisionMade = true;
                 }
-                
-                 if ( parts.length == 3 && parts[ 2 ] != null && "flexibleSection".equals( parts[ 2 ] ) ) {
+
+                if ( parts.length == 3 && parts[ 2 ] != null && "flexibleSection".equals( parts[ 2 ] ) ) {
                     mime = getMime( ".html" );
                     file = new File( frontendPagesDIR + "flexibleSection.html" );
                     decisionMade = true;
@@ -320,25 +320,30 @@ public class FrontendServerAPIHandler implements HttpHandler {
 
                     TicketSecret jsonObject = gson.fromJson( jsonQuery, TicketSecret.class );
 
-                    List<TicketType> specificTicketType = controller.
-                            getAbstract( "tickettypes", "Contacts", "tickettypename" );
+                    boolean verify = VerifyRecaptcha.verify( jsonObject.getSecret() );
 
-                    Ticket toInsertObject = new Ticket( 0, jsonObject.getTitle(),
-                                                        specificTicketType.get( 0 ).getId(),
-                                                        jsonObject.getMessage(), 1,
-                                                        "open",
-                                                        jsonObject.getSender_email(),
-                                                        jsonObject.getSender_name(),
-                                                        new Date() );
-                    ArrayList<Ticket> toInsertList = new ArrayList();
-                    toInsertList.add( toInsertObject );
+                    if ( verify ) {
+                        List<TicketType> specificTicketType = controller.
+                                getAbstract( "tickettypes", "Contacts", "tickettypename" );
 
-                    boolean result = controller.insertAbstract( "tickets", toInsertList );
+                        Ticket toInsertObject = new Ticket( 0, jsonObject.getTitle(),
+                                                            specificTicketType.get( 0 ).getId(),
+                                                            jsonObject.getMessage(), 1,
+                                                            "open",
+                                                            jsonObject.getSender_email(),
+                                                            jsonObject.getSender_name(),
+                                                            new Date() );
+                        ArrayList<Ticket> toInsertList = new ArrayList();
+                        toInsertList.add( toInsertObject );
 
-                    if ( result ) {
-                        response = new Gson().toJson( toInsertObject );
-                        status = 201;
+                        boolean result = controller.insertAbstract( "tickets", toInsertList );
+
+                        if ( result ) {
+                            response = new Gson().toJson( toInsertObject );
+                            status = 201;
+                        }
                     }
+
                 }
 
                 if ( parts.length == 3 && parts[ 2 ] != null && "submitFeedback".equals( parts[ 2 ] ) ) {

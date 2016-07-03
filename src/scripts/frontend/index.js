@@ -34,13 +34,10 @@ function requestIndexImages() {
 }
 
 function load() {
-    console.log("index.js loaded...");
-
     $indexPageWrapper = $(".indexPageWrapper");
     $indexGalleryElementsWrapper = $("#index-gallery-elements-wrapper");
 
     requestIndexImages();
-
 }
 
 $(window).ready(load);

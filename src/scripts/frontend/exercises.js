@@ -4,8 +4,9 @@ var $body;
 var $exercisesElementsWrapper;
 
 function loadNews(data, status) {
-    console.log("data is : " + data + ", status is : " + status);
+    
     if (status == "success") {
+        
         $exercisesElementsWrapper.empty();
         $.each(data, function (dataKey, dataValue) {
             var extendedText = dataValue.text.length > 255 ? 1 : 0;

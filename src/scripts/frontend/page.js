@@ -1,15 +1,6 @@
 var $body;
 
 function loadFlexibleSectionContent(data, status) {
-//    if (status == "success") {
-//        $body.append(data);
-//    } else {
-    console.log("Failure in loadNavMenu Frontend Index ");
-    console.log("data is : " + data + ", status is : " + status);
-//    }
-}
-
-function loadFlexibleSectionContent(data, status) {
 
     if (status == "success") {
         $.each(data, function (dataKey, dataValue) {
@@ -36,7 +27,6 @@ function requestFlexibleSectionContent() {
     if (!type) {
         type = "index";
     }
-    console.log("type is : ", type);
     $.ajax({
         "url": "/api/flexiblesections/" + type,
         "type": "GET",
@@ -108,8 +98,6 @@ function requestNavMenu() {
 }
 
 function load() {
-    console.log("page.js loaded...");
-
     $body = $(document.body);
     requestNavMenu();
     requestFooter();
