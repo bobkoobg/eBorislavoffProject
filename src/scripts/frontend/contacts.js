@@ -15,12 +15,12 @@ function closePopup() {
     $formEmail.val("");
     $formTitle.val("");
     $formMessage.val("");
-    
+
     window.location = "/";
 }
 
 function evaluateContactSubmittion(data, status) {
-    
+
     if (status == "success") {
         $(".clientName").text(data.sender_name);
         $(".clientEmail").text(data.sender_email);
@@ -38,7 +38,7 @@ function evaluateContactSubmittion(data, status) {
 }
 
 function submitContact() {
-    
+
     $.ajax({
         "url": "/api/submitContact",
         "type": "POST",
@@ -60,10 +60,10 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-function breakSubmitRedirect(e) {
+function basicCheck(e) {
     e.preventDefault();
     googleReCAPTCHA = grecaptcha.getResponse();
-    
+
     var name = $formName.val();
     var email = $formEmail.val();
     var title = $formTitle.val();
@@ -100,7 +100,7 @@ function load() {
     $close = $(".close");
 
     $("#contact-form-button").removeAttr("disabled");
-    $('#contact-form').submit(breakSubmitRedirect);
+    $('#contact-form').submit(basicCheck);
     $body.on("click", ".close", closePopup);
 
 }

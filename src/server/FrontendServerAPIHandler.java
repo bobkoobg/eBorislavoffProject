@@ -17,6 +17,7 @@ import entity.web.ArticleAuthor;
 import entity.web.FlexibleSectionAuthor;
 import entity.web.FlexibleSectionGalleryAuthor;
 import entity.web.GalleryAuthor;
+import entity.web.GuestbookSecret;
 import entity.web.TicketSecret;
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,13 +35,11 @@ import java.util.Random;
 public class FrontendServerAPIHandler implements HttpHandler {
 
     private Controller controller;
-    private Random random;
     private static String frontendPagesDIR = "src/pages/frontend/";
     private static String frontendImagesDIR = "src/images/";
 
     public FrontendServerAPIHandler( Controller controller ) {
         this.controller = controller;
-        random = new Random();
     }
 
     @Override
@@ -320,7 +319,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
 
                     TicketSecret jsonObject = gson.fromJson( jsonQuery, TicketSecret.class );
 
-                    boolean verify = VerifyRecaptcha.verify( jsonObject.getSecret() );
+                    boolean verify = VerifyRecaptcha.verify( jsonObject.getSecret(), getSecretByType( "contact" ) );
 
                     if ( verify ) {
                         List<TicketType> specificTicketType = controller.
@@ -347,19 +346,30 @@ public class FrontendServerAPIHandler implements HttpHandler {
                 }
 
                 if ( parts.length == 3 && parts[ 2 ] != null && "submitFeedback".equals( parts[ 2 ] ) ) {
-                    Guestbook jsonObject = gson.fromJson( jsonQuery, Guestbook.class );
+                    GuestbookSecret jsonObject = gson.fromJson( jsonQuery, GuestbookSecret.class );
+
+                    //Setup*
                     jsonObject.setCreationDate( new Date() );
                     jsonObject.setIp( address );
-                    System.out.println( "My baby boo??" + jsonObject.toString() );
+                    System.out.println( "> " + jsonObject.toString() );
 
-                    ArrayList<Guestbook> guestbookList = new ArrayList();
-                    guestbookList.add( jsonObject );
+                    boolean verify = VerifyRecaptcha.verify( jsonObject.getSecret(), getSecretByType( "guestbook" ) );
 
-                    boolean result = controller.insertAbstract( "guestbook", guestbookList );
+                    if ( verify ) {
+                        Guestbook gbObject
+                                = new Guestbook( 0, jsonObject.getGuestName(),
+                                                 jsonObject.getMessage(), "",
+                                                 jsonObject.getIp(),
+                                                 jsonObject.getCreationDate() );
+                        ArrayList<Guestbook> guestbookList = new ArrayList();
+                        guestbookList.add( jsonObject );
 
-                    if ( result ) {
-                        response = new Gson().toJson( jsonObject );
-                        status = 201;
+                        boolean result = controller.insertAbstract( "guestbook", guestbookList );
+
+                        if ( result ) {
+                            response = new Gson().toJson( jsonObject );
+                            status = 201;
+                        }
                     }
                 }
                 break;
@@ -440,5 +450,23 @@ public class FrontendServerAPIHandler implements HttpHandler {
             return false;
         }
         return true;
+    }
+
+    private String getSecretByType( String type ) {
+        String secret = "";
+        switch ( type ) {
+            case "contact":
+                //google's borislavoffContact
+                secret = "6LfJJiQTAAAAAMvR-TWMWiTDk0rAPYP_9L3eDxcm";
+                break;
+            case "guestbook":
+                //google's borislavoffFeedback
+                secret = "6LcqNiQTAAAAAK1GKqu5SAKydaUFPbzZveHCjFtd";
+                break;
+            default:
+                secret = "";
+                break;
+        }
+        return secret;
     }
 }

@@ -16,6 +16,7 @@ var $formMessage;
 var $contactStatus;
 var $popUp;
 var $close;
+var googleReCAPTCHA;
 
 function loadFeedback(data, status) {
 
@@ -187,7 +188,7 @@ function submitFeedback() {
         "data": JSON.stringify({
             'guestName': $formName.val(),
             'message': $formMessage.val(),
-            'secret': "secret2"
+            'secret': googleReCAPTCHA
         }),
         "success": evaluateFeedbackSubmittion,
         "error": evaluateFeedbackSubmittion
@@ -199,7 +200,10 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-function basicCheck() {
+function breakSubmitRedirect(e) {
+    e.preventDefault();
+    googleReCAPTCHA = grecaptcha.getResponse();
+
     var name = $formName.val();
     var message = $formMessage.val();
 
@@ -213,11 +217,6 @@ function basicCheck() {
     }
 
     submitFeedback();
-}
-
-function breakSubmitRedirect() {
-    basicCheck();
-    return false;
 }
 
 function load() {

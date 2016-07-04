@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class Guestbook extends AbstractEntity {
 
-    private String guestName;
-    private String message;
+    protected String guestName;
+    protected String message;
     private String imagePath;
-    private String ip;
-    private Date creationDate;
+    protected String ip;
+    protected Date creationDate;
 
     public Guestbook() {
     }
