@@ -30,16 +30,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
+import utilities.HttpServerGeneralUtils;
+import utilities.VerifyRecaptcha;
 
 public class FrontendServerAPIHandler implements HttpHandler {
 
     private Controller controller;
+    private VerifyRecaptcha verifyRecaptcha;
+    private HttpServerGeneralUtils utilities;
     private static String frontendPagesDIR = "src/pages/frontend/";
     private static String frontendImagesDIR = "src/images/";
 
     public FrontendServerAPIHandler( Controller controller ) {
         this.controller = controller;
+        verifyRecaptcha = new VerifyRecaptcha();
+        utilities = new HttpServerGeneralUtils();
     }
 
     @Override
@@ -66,8 +71,8 @@ public class FrontendServerAPIHandler implements HttpHandler {
         //Extract mime out of getRequestURI path
         String lastElemStr = parts[ (parts.length - 1) ];
         String mime = lastElemStr.lastIndexOf( "." ) > -1
-                ? getMime( lastElemStr.substring( lastElemStr.lastIndexOf( "." ) ) )
-                : getMime( ".json" );
+                ? utilities.getMime( lastElemStr.substring( lastElemStr.lastIndexOf( "." ) ) )
+                : utilities.getMime( ".json" );
 
         //Debug START
         Date date = new Date();
@@ -85,19 +90,19 @@ public class FrontendServerAPIHandler implements HttpHandler {
                  * URL : http://localhost:8084/api/nav
                  */
                 if ( parts.length == 3 && parts[ 2 ] != null && "nav".equals( parts[ 2 ] ) ) {
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "nav.html" );
                     decisionMade = true;
                 }
 
                 if ( parts.length == 3 && parts[ 2 ] != null && "footer".equals( parts[ 2 ] ) ) {
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "footer.html" );
                     decisionMade = true;
                 }
 
                 if ( parts.length == 3 && parts[ 2 ] != null && "flexibleSection".equals( parts[ 2 ] ) ) {
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "flexibleSection.html" );
                     decisionMade = true;
                 }
@@ -131,7 +136,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
 
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "news".equals( parts[ 2 ] )) && parts[ 3 ] != null
-                        && isNumeric( parts[ 3 ] ) ) {
+                        && utilities.isNumeric( parts[ 3 ] ) ) {
                     int index = Integer.parseInt( parts[ 3 ] );
 
                     List<ArticleType> specificArticleType = controller.getAbstract( "articletypes", "News", "articletypename" );
@@ -176,7 +181,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
 
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "exercises".equals( parts[ 2 ] )) && parts[ 3 ] != null
-                        && isNumeric( parts[ 3 ] ) ) {
+                        && utilities.isNumeric( parts[ 3 ] ) ) {
                     int index = Integer.parseInt( parts[ 3 ] );
 
                     List<ArticleType> specificArticleType = controller.getAbstract( "articletypes", "Exercises", "articletypename" );
@@ -225,7 +230,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "image".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendImagesDIR + parts[ 3 ] );
                     decisionMade = true;
                 }
@@ -319,7 +324,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
 
                     TicketSecret jsonObject = gson.fromJson( jsonQuery, TicketSecret.class );
 
-                    boolean verify = VerifyRecaptcha.verify( jsonObject.getSecret(), getSecretByType( "contact" ) );
+                    boolean verify = verifyRecaptcha.verify( jsonObject.getSecret(), utilities.getSecretByType( "contact" ) );
 
                     if ( verify ) {
                         List<TicketType> specificTicketType = controller.
@@ -351,9 +356,8 @@ public class FrontendServerAPIHandler implements HttpHandler {
                     //Setup*
                     jsonObject.setCreationDate( new Date() );
                     jsonObject.setIp( address );
-                    System.out.println( "> " + jsonObject.toString() );
 
-                    boolean verify = VerifyRecaptcha.verify( jsonObject.getSecret(), getSecretByType( "guestbook" ) );
+                    boolean verify = verifyRecaptcha.verify( jsonObject.getSecret(), utilities.getSecretByType( "guestbook" ) );
 
                     if ( verify ) {
                         Guestbook gbObject
@@ -362,7 +366,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
                                                  jsonObject.getIp(),
                                                  jsonObject.getCreationDate() );
                         ArrayList<Guestbook> guestbookList = new ArrayList();
-                        guestbookList.add( jsonObject );
+                        guestbookList.add( gbObject );
 
                         boolean result = controller.insertAbstract( "guestbook", guestbookList );
 
@@ -388,8 +392,7 @@ public class FrontendServerAPIHandler implements HttpHandler {
                 break;
         }
 
-        if ( file
-                != null ) {
+        if ( file != null ) {
 
             he.sendResponseHeaders( 200, 0 );
             OutputStream os = he.getResponseBody();
@@ -408,65 +411,5 @@ public class FrontendServerAPIHandler implements HttpHandler {
                 os.write( response.getBytes() );
             }
         }
-    }
-
-    private String getMime( String extension ) {
-        String mime = "";
-        switch ( extension ) {
-//            case ".pdf":
-//                mime = "application/pdf";
-//                break;
-//            case ".png":
-//                mime = "image/png";
-//                break;
-//            case ".jar":
-//                mime = "application/java-archive";
-//                break;
-            case ".js":
-                mime = "text/javascript";
-                break;
-            case ".html":
-                mime = "text/html";
-                break;
-            case ".css":
-                mime = "text/css";
-                break;
-            case ".ico":
-                mime = "image/x-icon";
-                break;
-            case ".json":
-                mime = "application/json";
-            default:
-                mime = "application/json";
-                break;
-        }
-        return mime;
-    }
-
-    private static Boolean isNumeric( String str ) {
-        try {
-            Integer d = Integer.parseInt( str );
-        } catch ( NumberFormatException nfe ) {
-            return false;
-        }
-        return true;
-    }
-
-    private String getSecretByType( String type ) {
-        String secret = "";
-        switch ( type ) {
-            case "contact":
-                //google's borislavoffContact
-                secret = "6LfJJiQTAAAAAMvR-TWMWiTDk0rAPYP_9L3eDxcm";
-                break;
-            case "guestbook":
-                //google's borislavoffFeedback
-                secret = "6LcqNiQTAAAAAK1GKqu5SAKydaUFPbzZveHCjFtd";
-                break;
-            default:
-                secret = "";
-                break;
-        }
-        return secret;
     }
 }

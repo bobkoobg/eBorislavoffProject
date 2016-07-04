@@ -10,11 +10,19 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import utilities.HttpServerGeneralUtils;
 
 public class BackendServerHandler implements HttpHandler {
 
-    private static String pagesDirectory = "src/pages/";
-    private static String scriptsDirectory = "src/scripts/";
+    private HttpServerGeneralUtils utilities;
+
+    private static String pagesDirectory = "src/pages/backend/";
+    private static String scriptsDirectory = "src/scripts/backend/";
+    private static String componentsDirectory = "src/scripts/";
+
+    public BackendServerHandler() {
+        utilities = new HttpServerGeneralUtils();
+    }
 
     @Override
     public void handle( HttpExchange he ) throws IOException {
@@ -35,43 +43,51 @@ public class BackendServerHandler implements HttpHandler {
         Date date = new Date();
         DateFormat formatter = new SimpleDateFormat( "HH:mm:ss" );
         String dateFormatted = formatter.format( date );
-        System.out.println( "DEBUG: # " + dateFormatted + " # #M#" + method + " #PL# " + parts.length + " #P# " + path );
+        System.out.println( "BackendServerHandler DEBUG: # " + dateFormatted + " # #Request method: " + method + ", Request path : " + path + ", path Length: " + parts.length + " / 2nd elem : " + (parts.length > 0 ? parts[ 1 ] : "NO") );
         //Debug END
 
         switch ( method ) {
             case "GET":
                 /*
                  * Startup page
-                 * URL : http://localhost:8084/ OR http://localhost:8084/index
+                 * URL : http://localhost:8084/emkobarona OR http://localhost:8084/emkobarona/index
                  */
                 if ( parts.length == 2
                         || (parts.length == 3 && parts[ 2 ] != null && "index".equals( parts[ 2 ] )) ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( pagesDirectory + "index.html" );
 
                 } /*
                  * Register page
-                 * URL : http://localhost:8084/register
+                 * URL : http://localhost:8084/emkobarona/register
                  */ else if ( parts.length == 3 && parts[ 2 ] != null && "register".equals( parts[ 2 ] ) ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( pagesDirectory + "register.html" );
 
-                } /*
+                } else if ( parts.length == 3 && parts[ 2 ] != null && "articles".equals( parts[ 2 ] ) ) {
+
+                    mime = utilities.getMime( ".html" );
+                    file = new File( pagesDirectory + "articles.html" );
+
+                }/*
                  * Any other js, html, css, ico file
                  */ else {
                     String lastElemStr = parts[ (parts.length - 1) ];
                     int lastElemIndex = lastElemStr.lastIndexOf( "." );
 
                     if ( lastElemIndex > -1 ) {
-                        mime = getMime( lastElemStr.substring( lastElemStr.lastIndexOf( "." ) ) );
+                        mime = utilities.getMime( lastElemStr.substring( lastElemStr.lastIndexOf( "." ) ) );
                     } else {
-                        mime = getMime( ".html" );
+                        mime = utilities.getMime( ".html" );
                     }
 
                     if ( "text/javascript".equals( mime ) || "text/css".equals( mime ) ) {
                         file = new File( scriptsDirectory + lastElemStr );
+                        if ( !file.exists() || file.isDirectory() ) {
+                            file = new File( componentsDirectory + lastElemStr );
+                        }
                     } else {
                         file = new File( pagesDirectory + lastElemStr );
                     }
@@ -79,14 +95,8 @@ public class BackendServerHandler implements HttpHandler {
                      * If error on file show index page
                      */
                     if ( !file.exists() || file.isDirectory() ) {
-
-//                        if ( "text/html".equals( mime ) ) {
-//                            status = 404;
-//                            file = new File( pagesDirectory + "index.html" );
-//                        } else {
-                            status = 404;
-                            file = new File( pagesDirectory + "notfound.html" );
-                        //}
+                        status = 404;
+                        file = new File( pagesDirectory + "notfound.html" );
                     }
                 }
                 break;
@@ -126,37 +136,6 @@ public class BackendServerHandler implements HttpHandler {
         try ( OutputStream os = he.getResponseBody() ) {
             os.write( bytesToSend, 0, bytesToSend.length );
         }
-    }
-
-    private String getMime( String extension ) {
-        String mime = "";
-        switch ( extension ) {
-//            case ".pdf":
-//                mime = "application/pdf";
-//                break;
-//            case ".png":
-//                mime = "image/png";
-//                break;
-//            case ".jar":
-//                mime = "application/java-archive";
-//                break;
-            case ".js":
-                mime = "text/javascript";
-                break;
-            case ".html":
-                mime = "text/html";
-                break;
-            case ".css":
-                mime = "text/css";
-                break;
-            case ".ico":
-                mime = "image/x-icon";
-                break;
-            default:
-                mime = "text/html";
-                break;
-        }
-        return mime;
     }
 
 }

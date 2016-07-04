@@ -151,7 +151,7 @@ public class Controller {
 
     public <T> User loginUser( String clientReqIP, String jQueryObject ) {
         User jsonObject = gson.fromJson( jQueryObject, User.class );
-
+        System.out.println( "Controller : user is : " + jsonObject.toString() );
         long MAX_DURATION = MILLISECONDS.convert( 1, MINUTES );
         Date now = new Date();
 
@@ -160,13 +160,14 @@ public class Controller {
         if ( clientSHA256PlusIdsPW.length() != (64 + 2) ) {
             return null;
         }
-
+        System.out.println( "Tick! 1" );
         //decompose password
         for ( int i = 0; i < userIdentifiers.size(); i++ ) {
             if ( userIdentifiers.get( i ).getClientReqIP().equals( clientReqIP )
                     && "login".equals( userIdentifiers.get( i ).getType() ) ) {
                 clientSHA256PlusIdsPW = clientSHA256PlusIdsPW.substring( 1, clientSHA256PlusIdsPW.length() - 1 );
                 jsonObject.setPassword( clientSHA256PlusIdsPW );
+                System.out.println( "Tick! 2 " );
             }
             if ( now.getTime() - userIdentifiers.get( i ).getCurDate().getTime() >= MAX_DURATION ) {
                 userIdentifiers.remove( i );
@@ -174,20 +175,22 @@ public class Controller {
         }
 
         List<User> currUser = getAbstract( "users", jsonObject.getUsername(), "username" );
-
+        System.out.println( "Actual user : " + currUser.toString() );
         boolean isCorrectPassword = false;
         String hashedPassword = currUser.get( 0 ).getPassword();
         String password = jsonObject.getPassword();
         if ( hashedPassword != null ) {
+            System.out.println( "Tick! 3" );
             isCorrectPassword = BCrypt.checkpw( password, hashedPassword );
         }
 
         if ( !isCorrectPassword ) {
             return null;
         }
-
+        System.out.println( "Tick! 4" );
         UserWebSession uws = null;
         if ( currUser.get( 0 ) != null ) {
+            System.out.println( "Tick! 5" );
             uws = new UserWebSession( currUser.get( 0 ).getUsername(),
                                       sessionIdsGen.registerSession( clientReqIP, currUser.get( 0 ).getUsername() ) );
         } else {

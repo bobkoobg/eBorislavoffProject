@@ -10,12 +10,19 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import utilities.HttpServerGeneralUtils;
 
 public class FrontendServerHandler implements HttpHandler {
+
+    private HttpServerGeneralUtils utilities;
 
     private static String frontendPagesDIR = "src/pages/frontend/";
     private static String frontendScriptsDIR = "src/scripts/frontend/";
     private static String componentsDirectory = "src/scripts/";
+
+    public FrontendServerHandler() {
+        utilities = new HttpServerGeneralUtils();
+    }
 
     @Override
     public void handle( HttpExchange he ) throws IOException {
@@ -48,7 +55,7 @@ public class FrontendServerHandler implements HttpHandler {
                 boolean isIndex3 = parts.length == 2 && "index.html".equals( parts[ 1 ] ) ? true : false;
                 if ( isIndex || isIndex2 || isIndex3 ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "index.html" );
                     decisionMade = true;
                 }
@@ -57,16 +64,16 @@ public class FrontendServerHandler implements HttpHandler {
                 boolean isNews2 = parts.length == 2 && "news.html".equals( parts[ 1 ] ) ? true : false;
                 if ( !decisionMade && (isNews || isNews2) ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "news.html" );
                     decisionMade = true;
                 }
 
                 boolean isNewsSpecific = parts.length == 3 && "news".equals( parts[ 1 ] )
-                        && parts[ 2 ] != null && isNumeric( parts[ 2 ] ) ? true : false;
+                        && parts[ 2 ] != null && utilities.isNumeric( parts[ 2 ] ) ? true : false;
                 if ( !decisionMade && isNewsSpecific ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "newsSpecific.html" );
                     decisionMade = true;
                 }
@@ -75,16 +82,16 @@ public class FrontendServerHandler implements HttpHandler {
                 boolean isExercises2 = parts.length == 2 && "exercises.html".equals( parts[ 1 ] ) ? true : false;
                 if ( !decisionMade && (isExercises || isExercises2) ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "exercises.html" );
                     decisionMade = true;
                 }
-                
+
                 boolean isExercisesSpecific = parts.length == 3 && "exercises".equals( parts[ 1 ] )
-                        && parts[ 2 ] != null && isNumeric( parts[ 2 ] ) ? true : false;
+                        && parts[ 2 ] != null && utilities.isNumeric( parts[ 2 ] ) ? true : false;
                 if ( !decisionMade && isExercisesSpecific ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "exercisesSpecific.html" );
                     decisionMade = true;
                 }
@@ -93,7 +100,7 @@ public class FrontendServerHandler implements HttpHandler {
                 boolean isGallery2 = parts.length == 2 && "gallery.html".equals( parts[ 1 ] ) ? true : false;
                 if ( !decisionMade && (isGallery || isGallery2) ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "gallery.html" );
                     decisionMade = true;
                 }
@@ -102,7 +109,7 @@ public class FrontendServerHandler implements HttpHandler {
                 boolean isServices2 = parts.length == 2 && "services.html".equals( parts[ 1 ] ) ? true : false;
                 if ( !decisionMade && (isServices || isServices2) ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "services.html" );
                     decisionMade = true;
                 }
@@ -111,7 +118,7 @@ public class FrontendServerHandler implements HttpHandler {
                 boolean isContacts2 = parts.length == 2 && "contacts.html".equals( parts[ 1 ] ) ? true : false;
                 if ( !decisionMade && (isContacts || isContacts2) ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "contacts.html" );
                     decisionMade = true;
                 }
@@ -120,7 +127,7 @@ public class FrontendServerHandler implements HttpHandler {
                 boolean isFeedback2 = parts.length == 2 && "feedback.html".equals( parts[ 1 ] ) ? true : false;
                 if ( !decisionMade && (isFeedback || isFeedback2) ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "feedback.html" );
                     decisionMade = true;
                 }
@@ -129,7 +136,7 @@ public class FrontendServerHandler implements HttpHandler {
                 boolean isBiography2 = parts.length == 2 && "biography.html".equals( parts[ 1 ] ) ? true : false;
                 if ( !decisionMade && (isBiography || isBiography2) ) {
 
-                    mime = getMime( ".html" );
+                    mime = utilities.getMime( ".html" );
                     file = new File( frontendPagesDIR + "biography.html" );
                     decisionMade = true;
                 }
@@ -139,11 +146,14 @@ public class FrontendServerHandler implements HttpHandler {
                     //Extract mime out of getRequestURI path
                     String lastElemStr = parts[ (parts.length - 1) ];
                     mime = lastElemStr.lastIndexOf( "." ) > -1
-                            ? getMime( lastElemStr.substring( lastElemStr.lastIndexOf( "." ) ) )
-                            : getMime( ".html" );
+                            ? utilities.getMime( lastElemStr.substring( lastElemStr.lastIndexOf( "." ) ) )
+                            : utilities.getMime( ".html" );
 
                     if ( "text/javascript".equals( mime ) || "text/css".equals( mime ) ) {
                         file = new File( frontendScriptsDIR + lastElemStr );
+                        if ( !file.exists() || file.isDirectory() ) {
+                            file = new File( componentsDirectory + lastElemStr );
+                        }
                     } else {
                         file = new File( frontendPagesDIR + lastElemStr );
                     }
@@ -194,45 +204,4 @@ public class FrontendServerHandler implements HttpHandler {
             os.write( bytesToSend, 0, bytesToSend.length );
         }
     }
-
-    private String getMime( String extension ) {
-        String mime = "";
-        switch ( extension ) {
-//            case ".pdf":
-//                mime = "application/pdf";
-//                break;
-//            case ".png":
-//                mime = "image/png";
-//                break;
-//            case ".jar":
-//                mime = "application/java-archive";
-//                break;
-            case ".js":
-                mime = "text/javascript";
-                break;
-            case ".html":
-                mime = "text/html";
-                break;
-            case ".css":
-                mime = "text/css";
-                break;
-            case ".ico":
-                mime = "image/x-icon";
-                break;
-            default:
-                mime = "text/html";
-                break;
-        }
-        return mime;
-    }
-
-    private static Boolean isNumeric( String str ) {
-        try {
-            Integer d = Integer.parseInt( str );
-        } catch ( NumberFormatException nfe ) {
-            return false;
-        }
-        return true;
-    }
-
 }

@@ -8,7 +8,7 @@ var $registrationStatus;
 var hashedPassword;
 var clientRN;
 var serverRN;
-var cookieName = "borislavoff-user-sessionid";
+var cookieName = "eborislavoff-user-sessionid";
 
 function evaluateRegistrationServerResponse(object, status) {
     if (status === "success" && object != null) {

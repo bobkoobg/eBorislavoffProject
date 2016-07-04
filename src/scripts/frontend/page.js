@@ -22,19 +22,29 @@ function loadFlexibleSectionContent(data, status) {
     }
 }
 
+function arrayContains(needle, arrhaystack)
+{
+    return (arrhaystack.indexOf(needle) > -1);
+}
+
 function requestFlexibleSectionContent() {
+    var types = ["index", "news", "exercises", "gallery", "services", "contacts", "feedback", "biography"];
     var type = window.location.href.split("/").slice(-1).pop();
     if (!type) {
         type = "index";
     }
-    $.ajax({
-        "url": "/api/flexiblesections/" + type,
-        "type": "GET",
-        "headers": {"Content-Type": "application/json"},
-        "data": {},
-        "success": loadFlexibleSectionContent,
-        "error": loadFlexibleSectionContent
-    });
+    var status = arrayContains(type, types);
+
+    if (status) {
+        $.ajax({
+            "url": "/api/flexiblesections/" + type,
+            "type": "GET",
+            "headers": {"Content-Type": "application/json"},
+            "data": {},
+            "success": loadFlexibleSectionContent,
+            "error": loadFlexibleSectionContent
+        });
+    }
 }
 
 function loadFlexibleSection(data, status) {

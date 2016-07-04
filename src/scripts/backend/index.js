@@ -4,7 +4,7 @@ var $username;
 var clientRN;
 var serverRN;
 var $loginStatus;
-var cookieName = "borislavoff-user-sessionid";
+var cookieName = "eborislavoff-user-sessionid";
 
 function getCookie(cname) {
     var name = cname + "=";

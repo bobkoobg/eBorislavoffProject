@@ -3,24 +3,28 @@ package server;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 import controller.Controller;
 import entity.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.InetAddress;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
+import utilities.HttpServerGeneralUtils;
 
 public class BackendServerAPIHandler implements HttpHandler {
 
     private Controller controller;
     private Random random;
+    private HttpServerGeneralUtils utilities;
 
     public BackendServerAPIHandler( Controller controller ) {
         this.controller = controller;
         random = new Random();
+        utilities = new HttpServerGeneralUtils();
     }
 
     @Override
@@ -32,12 +36,19 @@ public class BackendServerAPIHandler implements HttpHandler {
         String path = he.getRequestURI().getPath();
         String[] parts = path.split( "/" );
         String ipport = he.getRemoteAddress().toString();
-        String address = ipport.substring(0, ipport.indexOf(":"));
+        String address = ipport.substring( 0, ipport.indexOf( ":" ) );
 
         //POST, PUT, (DELETE?)
         InputStreamReader isr;
         BufferedReader br;
         String jsonQuery;
+
+        //Debug START
+        Date date = new Date();
+        DateFormat formatter = new SimpleDateFormat( "HH:mm:ss" );
+        String dateFormatted = formatter.format( date );
+        System.out.println( "BackendServerAPIHandler DEBUG: # " + dateFormatted + " # #Request method: " + method + ", Request path : " + path + ", path Length: " + parts.length + " / 2nd elem : " + (parts.length > 0 ? parts[ 1 ] : "NO") );
+        //Debug END
 
         switch ( method ) {
             case "GET":
@@ -46,12 +57,12 @@ public class BackendServerAPIHandler implements HttpHandler {
                  * URL : http://localhost:8084/api/loginId
                  */
                 if ( parts.length > 2 && parts[ 2 ] != null && "loginServerId".equals( parts[ 2 ] ) ) {
-                    
+
                     int curServerId = random.nextInt( 10 - 1 ) + 1;
                     if ( controller.createUserIdentifierObj( address, curServerId, "login" ) ) {
                         response = new Gson().toJson( curServerId );
                         status = 201;
-                    } 
+                    }
                 } else if ( parts.length > 2 && parts[ 2 ] != null && "registerServerId".equals( parts[ 2 ] ) ) {
 
                     int curServerId = random.nextInt( 10 - 1 ) + 1;
@@ -85,11 +96,15 @@ public class BackendServerAPIHandler implements HttpHandler {
                  * URL : http://localhost:8084/api/login
                  * JSON : {"username": "adminuser", "password":"$2a$05$zOsBcOSp9gpn1np..." }
                  */ else if ( parts.length > 2 && parts[ 2 ] != null && "login".equals( parts[ 2 ] ) ) {
+                     System.out.println( "HEllo ?" );
                     User user = controller.loginUser( address, jsonQuery );
+                    System.out.println( "User > " + user.toString() );
                     if ( user != null ) {
+                        System.out.println( "fine!" );
                         response = new Gson().toJson( user );
                         status = 200;
                     } else {
+                        System.out.println( "not fine!" );
                         response = "{\"error\":\"Incorrect login info, Unauthorized\"}";
                         status = 401;
                     }
@@ -110,9 +125,7 @@ public class BackendServerAPIHandler implements HttpHandler {
                  * Evaluate session user token
                  * URL : http://localhost:8084/api/session
                  * JSON : { qwerty12345 }
-                 */ 
-                 
-                 else if ( parts.length > 2 && parts[ 2 ] != null && "session".equals( parts[ 2 ] ) ) {
+                 */ else if ( parts.length > 2 && parts[ 2 ] != null && "session".equals( parts[ 2 ] ) ) {
                     boolean dbStatus = controller.authenticateSession( address, jsonQuery );
                     if ( dbStatus ) {
                         response = "{\"response\":\"Successfull session id authentication\"}";
