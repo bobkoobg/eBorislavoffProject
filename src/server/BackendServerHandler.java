@@ -61,7 +61,12 @@ public class BackendServerHandler implements HttpHandler {
                 } /*
                  * Register page
                  * URL : http://localhost:8084/emkobarona/register
-                 */ else if ( parts.length == 3 && parts[ 2 ] != null && "register".equals( parts[ 2 ] ) ) {
+                 */ else if ( parts.length == 3 && parts[ 2 ] != null && "login".equals( parts[ 2 ] ) ) {
+
+                    mime = utilities.getMime( ".html" );
+                    file = new File( pagesDirectory + "login.html" );
+
+                } else if ( parts.length == 3 && parts[ 2 ] != null && "register".equals( parts[ 2 ] ) ) {
 
                     mime = utilities.getMime( ".html" );
                     file = new File( pagesDirectory + "register.html" );

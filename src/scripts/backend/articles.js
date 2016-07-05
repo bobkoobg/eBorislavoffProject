@@ -35,7 +35,8 @@ function evaluateServerCookieResponse(object, status) {
     if (status === "success" && object != true) {
         loadComponents();
     } else {
-        window.location = "/emkobarona/";
+        console.log("OUCH1");
+        //window.location = "/emkobarona/";
     }
 }
 
@@ -57,7 +58,8 @@ function load() {
     if (cookie) {
         evaluateUserCookie(cookie);
     } else {
-        window.location = "/emkobarona/";
+        console.log("OUCH2");
+        //window.location = "/emkobarona/";
     }
 
 

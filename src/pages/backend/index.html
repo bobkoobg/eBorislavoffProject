@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
 <html>
     <head>
         <title>Emilian Borislavoff</title>
@@ -13,27 +19,18 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-        <script type="text/javascript" src="emkobarona/sha256.js" ></script>
+        <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
+        <script type="text/javascript" src="emkobarona/page.js"></script>
+        <link rel="stylesheet" type="text/css" href="emkobarona/page.css" />
+
         <script type="text/javascript" src="emkobarona/index.js"></script>
         <link rel="stylesheet" type="text/css" href="emkobarona/index.css" />
 
     </head>
-    <body id="indexPageWrapper">
-        <div id="logInWrapper">
-            <h3>Hello, darling! >.> This is the Main Page ^^</h3>
-            <form id="login-form">
-                <div>
-                    <span>Username:</span>
-                    <input type="text" name="username" placeholder="Insert your username">
-                </div>
-                <div>
-                    <span>Password:</span>
-                    <input type="password" name="password" placeholder="Insert your password">
-                </div>
-                <div><input id="login-form-button" type="submit" value="Log in" disabled></div>
-                <span class="login-status"></span>
-            </form>
-            <input type="button" onclick="location.href = '/emkobarona/register';" value="Register">
-        </div>
+    <body>
+        <div><h3>Admin Index Page</h3></div>
+        <b>MUST:</b><br>
+        <div>Have correct session : <span class="correct-session"></span></div>
+        <div>Status : <span class="status"></span></div>
     </body>
 </html>

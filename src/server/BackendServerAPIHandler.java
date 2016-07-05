@@ -7,6 +7,8 @@ import controller.Controller;
 import entity.web.HttpResponseObject;
 import entity.web.UserWebSession;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -27,6 +29,8 @@ public class BackendServerAPIHandler implements HttpHandler {
     private HttpServerGeneralUtils utilities;
     private Gson gson;
     private HttpResponseObject httpResponseObj;
+    
+    private static String backendPagesDIR = "src/pages/backend/";
 
     public BackendServerAPIHandler( Controller controller ) {
         this.controller = controller;
@@ -71,6 +75,10 @@ public class BackendServerAPIHandler implements HttpHandler {
         BufferedReader br = new BufferedReader( isr );
         String jsonQuery = br.readLine();
 
+        //In case of request for components such as "nav"
+        File file = null;
+        byte[] bytesToSend = null;
+
         //Debug START
         Date date = new Date();
         DateFormat formatter = new SimpleDateFormat( "HH:mm:ss" );
@@ -88,6 +96,18 @@ public class BackendServerAPIHandler implements HttpHandler {
                         500, "Not supported - Your method : " + method );
                 status = 500;
                 response = gson.toJson( httpResponseObj );
+
+                /*
+                 * Generate server identifier and send to client
+                 * URL : http://localhost:8084/api/nav
+                 */
+                if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null
+                        && "nav".equals( parts[ 2 ] )) ) {
+                    //mime = utilities.getMime( ".html" );
+                    file = new File( backendPagesDIR + "nav.html" );
+                    decisionMade = true;
+                }
+
                 break;
             case "POST":
 
@@ -217,15 +237,29 @@ public class BackendServerAPIHandler implements HttpHandler {
                 break;
         }
 
-        //getResponseHeaders should always be application/json because of the
-        //communication with the client sides Ajax.
-        httpExchange.getResponseHeaders().add( "Content-Type", "application/json" );
-        //status, response.length() are must for the sendResponseHeaders, so that
-        //we can send the actual status and response *Yes, I do stupid mistakes*
-        httpExchange.sendResponseHeaders( status, response.length() );
-        //Spit it out.
-        try ( OutputStream os = httpExchange.getResponseBody() ) {
-            os.write( response.getBytes() );
+        if ( file != null ) {
+
+            httpExchange.sendResponseHeaders( 200, 0 );
+            OutputStream os = httpExchange.getResponseBody();
+            FileInputStream fs = new FileInputStream( file );
+            final byte[] buffer = new byte[ 0x10000 ];
+            int count = 0;
+            while ( (count = fs.read( buffer )) >= 0 ) {
+                os.write( buffer, 0, count );
+            }
+            fs.close();
+            os.close();
+        } else {
+            //getResponseHeaders should always be application/json because of the
+            //communication with the client sides Ajax.
+            httpExchange.getResponseHeaders().add( "Content-Type", "application/json" );
+            //status, response.length() are must for the sendResponseHeaders, so that
+            //we can send the actual status and response *Yes, I do stupid mistakes*
+            httpExchange.sendResponseHeaders( status, response.length() );
+            //Spit it out.
+            try ( OutputStream os = httpExchange.getResponseBody() ) {
+                os.write( response.getBytes() );
+            }
         }
     }
 }
