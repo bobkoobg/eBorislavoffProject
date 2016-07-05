@@ -194,17 +194,17 @@ public class Tester {
 //        for ( int i = 0; i < specificTicketType.size(); i++ ) {
 //            System.out.println( specificTicketType.get( i ).toString() );
 //        }
-        List<FlexibleSection> flexibleSections = controller.getAbstract( "flexiblesections", 0, "" );
+        List<User> users = controller.getAbstract( "users", 0, "" );
 
-        for ( int i = 0; i < flexibleSections.size(); i++ ) {
-            System.out.println( flexibleSections.get( i ).toString() );
+        for ( int i = 0; i < users.size(); i++ ) {
+            System.out.println( users.get( i ).toString() );
         }
 
-        List<FlexibleSectionGallery> flexibleSectionsGallery = controller.getAbstract( "flexiblesectionsgallery", 0, "" );
-
-        for ( int i = 0; i < flexibleSectionsGallery.size(); i++ ) {
-            System.out.println( flexibleSectionsGallery.get( i ).toString() );
-        }
+//        List<FlexibleSectionGallery> flexibleSectionsGallery = controller.getAbstract( "flexiblesectionsgallery", 0, "" );
+//
+//        for ( int i = 0; i < flexibleSectionsGallery.size(); i++ ) {
+//            System.out.println( flexibleSectionsGallery.get( i ).toString() );
+//        }
 
     }
 

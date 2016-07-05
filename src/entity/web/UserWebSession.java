@@ -19,4 +19,10 @@ public class UserWebSession extends User {
         this.sessionId = sessionId;
     }
 
+    @Override
+    public String toString() {
+        return "UserWebSession{" + "sessionId=" + sessionId + '}' + "> User{"
+                + "username=" + username + '}';
+    }
+
 }

@@ -28,38 +28,56 @@ function setCookie(cname, cvalue, minutes) {
     $loginStatus.html("BETA TESTING - SUCCESS LOGIN.");
 }
 
-function evaluateLoginServerResponse(object, status) {
-    if (status === "success" && object != null) {
-        setCookie(cookieName, object.sessionId, 30);
+function deleteCookie(name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function evaluateLoginServerResponse(data, status) {
+    if (status === "success" && data != null) {
+        setCookie(cookieName, data.sessionId, 30);
     } else {
         $loginStatus.html(status + " - Incorrect login information.");
     }
 }
+function sendLoginInformation(data, status) {
+    clientRN = data.message;
+    if (status == "success" && data.responseCode == 200) {
+        var password = (serverRN + "").concat(hashedPassword.concat((clientRN + "")));
 
-function sendLoginInformation(ignore) {
-    var password = (serverRN + "").concat(hashedPassword.concat((clientRN + "")));
-
-    $.ajax({
-        "url": "/emkobaronaAPI/login",
-        "type": "POST",
-        "headers": {"Content-Type": "application/json"},
-        "data": JSON.stringify({'username': $username.val(), 'password': password}),
-        "success": evaluateLoginServerResponse,
-        "error": evaluateLoginServerResponse
-    });
+        $.ajax({
+            "url": "/emkobaronaAPI/login",
+            "type": "POST",
+            "headers": {"Content-Type": "application/json"},
+            "data": JSON.stringify({
+                'username': $username.val(),
+                'password': password
+            }),
+            "success": evaluateLoginServerResponse,
+            "error": evaluateLoginServerResponse
+        });
+    } else {
+        console.log("Display error where you provide status and responseCode");
+    }
 }
 
-function sendClientIdentifier(dataServerID) {
-    serverRN = dataServerID;
-    clientRN = Math.floor((Math.random() * 10) + 1);
+function sendClientIdentifier(data, status) {
+    serverRN = data.message;
 
-    $.ajax({
-        "url": "/emkobaronaAPI/clientId",
-        "type": "POST",
-        "headers": {"Content-Type": "application/json"},
-        "data": JSON.stringify(clientRN),
-        "success": sendLoginInformation
-    });
+    if (status == "success" && data.responseCode == 201) {
+        clientRN = Math.floor((Math.random() * 10) + 1);
+
+        $.ajax({
+            "url": "/emkobaronaAPI/clientId",
+            "type": "POST",
+            "headers": {"Content-Type": "application/json"},
+            "data": JSON.stringify({
+                "message": clientRN
+            }),
+            "success": sendLoginInformation
+        });
+    } else {
+        console.log("Display error where you provide status and responseCode");
+    }
 }
 
 function requestServerIdentifier() {
@@ -67,14 +85,15 @@ function requestServerIdentifier() {
 
     $.ajax({
         "url": "/emkobaronaAPI/loginServerId",
-        "type": "GET",
-        "headers": {},
+        "type": "PUT",
+        "headers": {"Content-Type": "application/json"},
         "data": {},
         "success": sendClientIdentifier
     });
 }
 
-function basicCheck() {
+function basicCheck(e) {
+    e.preventDefault();
     var username = $username.val();
     var password = $password.val();
 
@@ -96,32 +115,22 @@ function basicCheck() {
     requestServerIdentifier();
 }
 
-function breakSubmitRedirect() {
-    basicCheck();
-    return false;
-}
-
 function loadComponents() {
     $username = $("#login-form").find("input[name='username']");
     $password = $("#login-form").find("input[name='password']");
     $loginStatus = $(".login-status");
 
     $("#login-form-button").removeAttr("disabled");
-    $('#login-form').submit(breakSubmitRedirect);
+    $('#login-form').submit(basicCheck);
 }
 
-function deleteCookie(name) {
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
-
-function evaluateServerCookieResponse(object, status) {
+function evaluateServerCookieResponse(data, status) {
     $loginStatus = $(".login-status");
-    if (status === "success" && object != true) {
+    if (status == "success" && data.responseCode == 200) {
         //window.location = "/musicLadder";
         $loginStatus.html("BETA TESTING - SUCCESS LOGIN.");
     } else {
-
-        $loginStatus.html(status + " - Incorrect session id, please relog.");
+        $loginStatus.html(status + " : " + data.responseJSON.message);
         deleteCookie(cookieName);
         loadComponents();
     }

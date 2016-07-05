@@ -3,12 +3,28 @@ var $password;
 var $passwordRepeated;
 var $email;
 var $emailRepeated;
-
 var $registrationStatus;
 var hashedPassword;
 var clientRN;
 var serverRN;
 var cookieName = "eborislavoff-user-sessionid";
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ')
+            c = c.substring(1);
+        if (c.indexOf(name) == 0)
+            return c.substring(name.length, c.length);
+    }
+    return "";
+}
+
+function deleteCookie(name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
 
 function evaluateRegistrationServerResponse(object, status) {
     if (status === "success" && object != null) {
@@ -18,42 +34,52 @@ function evaluateRegistrationServerResponse(object, status) {
     }
 }
 
-function sendRegistrationInformation(data) {
-    var password = (serverRN + "").concat(hashedPassword.concat((clientRN + "")));
-    $.ajax({
-        "url": "/emkobaronaAPI/register",
-        "type": "POST",
-        "headers": {"Content-Type": "application/json"},
-        "data": JSON.stringify({
-            'username': $username.val(),
-            'password': password,
-            'email': $email.val(),
-        }),
-        "success": evaluateRegistrationServerResponse,
-        "error": evaluateRegistrationServerResponse
-    });
+function sendRegistrationInformation(data, status) {
+
+    if (status == "success" && data.responseCode == 200) {
+        var password = (serverRN + "").concat(hashedPassword.concat((clientRN + "")));
+        $.ajax({
+            "url": "/emkobaronaAPI/register",
+            "type": "PUT",
+            "headers": {"Content-Type": "application/json"},
+            "data": JSON.stringify({
+                'username': $username.val(),
+                'password': password,
+                'email': $email.val(),
+            }),
+            "success": evaluateRegistrationServerResponse,
+            "error": evaluateRegistrationServerResponse
+        });
+    } else {
+        console.log("Display error where you provide status and responseCode");
+    }
 }
 
-function sendClientIdentifier(data) {
-    serverRN = data;
-    clientRN = Math.floor((Math.random() * 10) + 1);
+function sendClientIdentifier(data, status) {
+    serverRN = data.message;
+    if (status == "success" && data.responseCode == 201) {
+        clientRN = Math.floor((Math.random() * 10) + 1);
+        $.ajax({
+            "url": "/emkobaronaAPI/clientId",
+            "type": "POST",
+            "headers": {"Content-Type": "application/json"},
+            "data": JSON.stringify({
+                "message": clientRN
+            }),
+            "success": sendRegistrationInformation
+        });
+    } else {
+        console.log("Display error where you provide status and responseCode");
+    }
 
-    $.ajax({
-        "url": "/emkobaronaAPI/clientId",
-        "type": "POST",
-        "headers": {"Content-Type": "application/json"},
-        "data": JSON.stringify(clientRN),
-        "success": sendRegistrationInformation
-    });
 }
 
 function requestServerIdentifier() {
     hashedPassword = sha256($password.val());
-
     $.ajax({
         "url": "/emkobaronaAPI/registerServerId",
-        "type": "GET",
-        "headers": {},
+        "type": "PUT",
+        "headers": {"Content-Type": "application/json"},
         "data": {},
         "success": sendClientIdentifier
     });
@@ -64,13 +90,14 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-function basicCheck() {
+function basicCheck(e) {
+    e.preventDefault();
+
     var username = $username.val();
     var password = $password.val();
     var passwordRepeated = $passwordRepeated.val();
     var email = $email.val();
     var emailRepeated = $emailRepeated.val();
-
     if (username.length <= 5) {
         alert("username.length <= 5 : " + username.length);
         return false;
@@ -93,7 +120,6 @@ function basicCheck() {
     }
     var matches = password.match(/\d+/g);
     var matchesRepeated = passwordRepeated.match(/\d+/g);
-
     if (matches === null || matchesRepeated === null) {
         alert('password does not contain number(s)');
         return false;
@@ -102,10 +128,6 @@ function basicCheck() {
     requestServerIdentifier();
 }
 
-function breakSubmitRedirect() {
-    basicCheck();
-    return false;
-}
 
 function loadComponents() {
     $username = $("#register-form").find("input[name='username']");
@@ -114,35 +136,17 @@ function loadComponents() {
     $email = $("#register-form").find("input[name='email']");
     $emailRepeated = $("#register-form").find("input[name='email-repeated']");
     $registrationStatus = $(".registration-status");
-
     $("#register-form-button").removeAttr("disabled");
-    $('#register-form').submit(breakSubmitRedirect);
+    $("#register-form").submit(basicCheck);
 }
 
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ')
-            c = c.substring(1);
-        if (c.indexOf(name) == 0)
-            return c.substring(name.length, c.length);
-    }
-    return "";
-}
-
-function deleteCookie(name) {
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
-
-function evaluateServerCookieResponse(object, status) {
+function evaluateServerCookieResponse(data, status) {
     $registrationStatus = $(".registration-status");
-    if (status === "success" && object != true) {
+    if (status == "success" && data.responseCode == 200) {
         $registrationStatus.html("You currently have a session.");
         window.location = '/emkobarona';
     } else {
-        $registrationStatus.html(status + " - Incorrect session id, please relog.");
+        $registrationStatus.html(status + " : " + data.responseJSON.message);
         deleteCookie(cookieName);
         loadComponents();
     }
@@ -161,7 +165,6 @@ function evaluateUserCookie(cookie) {
 
 function load() {
     console.log("register.js loaded...");
-
     var cookie = getCookie(cookieName);
     if (cookie) {
         evaluateUserCookie(cookie);
