@@ -26,5 +26,13 @@
         <b>MUST:</b><br>
         <div>Have correct session : <span class="correct-session"></span></div>
         <div>Status : <span class="status"></span></div>
+        <div id="index-nav-wrapper">
+            <div id="index-nav"></div>
+        </div>
+        <script id="index-nav-element-template" type="text/x-handlebars-template">
+            <div class="feedback" data-type{{name}} style="background-color: {{color}};">
+                <a href="{{href}}">{{name}}</a>
+            </div>
+        </script>
     </body>
 </html>
