@@ -5,7 +5,7 @@ var $articlesHolder;
 var $articleTypesHolder;
 var $articleEdit;
 var $articleDelete;
-
+var $articleEditHolder;
 
 function loadArticleTypes(data, status) {
     if (status == "success") {
@@ -61,7 +61,6 @@ function loadArticles(data, status) {
 }
 
 function requestArticles() {
-
     //http://stackoverflow.com/questions/10298899/how-to-send-data-in-request-body-with-a-get-when-using-jquery-ajax
     $.ajax({
         "url": "/emkobaronaAPI/articles/" + getCookie(cookieName),
@@ -71,10 +70,37 @@ function requestArticles() {
         "success": loadArticles,
         "error": loadArticles
     });
+
+}
+
+function loadArticle(data, status) {
+    $articleEditHolder.empty();
+    console.log("data is : ", data, ", status is : ", status);
+
+    var source = $("#article-edit-element-template").html();
+    var template = Handlebars.compile(source);
+    var content = {
+        id: data[0].id,
+        type_id: data[0].type_id,
+        title: data[0].title,
+        text: data[0].text,
+        creationDate: data[0].creationDate,
+        userId: data[0].userId
+    };
+    var html = template(content);
+    $articleEditHolder.append(html);
 }
 
 function editArticleFunc() {
-    console.log("hello!!!");
+    var articleId = $(this).parent().attr("data-articleid");
+    $.ajax({
+        "url": "/emkobaronaAPI/article/" + articleId + "/" + getCookie(cookieName),
+        "type": "GET",
+        "headers": {"Content-Type": "application/json"},
+        "data": {},
+        "success": loadArticle,
+        "error": loadArticle
+    });
 }
 
 function load() {
@@ -83,12 +109,11 @@ function load() {
 
     $articlesHolder = $("#articles-holder");
     $articleTypesHolder = $("#articletypes-holder");
-    $articleEdit = $(".edit-article");
-    $articleDelete = $(".delete-article");
+    $articleEditHolder = $("#article-edit-holder");
 
     requestArticles();
     requestArticleTypes();
-    
+
     $body.on("click", ".edit-article", editArticleFunc);
 }
 

@@ -132,6 +132,27 @@ public class BackendServerAPIHandler implements HttpHandler {
                 }
                 /*
                  * Generate server identifier and send to client
+                 * URL : http://localhost:8084/emkobaronaAPI/article/{{ID}}/{{Cookie}}
+                 */
+                if ( !decisionMade && (parts.length == 5 && parts[ 2 ] != null
+                        && "article".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && utilities.isNumeric( parts[ 3 ] ) && parts[ 4 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 4 ] ) ) {
+                        System.out.println( "YES YOU WORK" );
+                        status = 200;
+                        List<Article> articles = controller.getAbstract( "articles", parts[ 3 ], "id" );
+                        response = gson.toJson( articles );
+                    } else {
+                        System.out.println( "NO" );
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
+                /*
+                 * Generate server identifier and send to client
                  * URL : http://localhost:8084/emkobaronaAPI/nav
                  */
                 if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null
