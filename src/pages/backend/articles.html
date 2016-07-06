@@ -21,8 +21,106 @@
     </head>
     <body>
         <div><h3>Admin Articles Page</h3></div>
+        <hr>
         <b>MUST:</b><br>
         <div>Have correct session : <span class="correct-session"></span></div>
         <div>Status : <span class="status"></span></div>
+        <hr><hr><hr>
+        <div class="description">Това са статии. Под статии "падат" два раздела - Новини и Упражнения.
+            Под този текст ще виждаш таблица съдържаща всички статии. Таблицата е разделена на колони. Колоните,
+            от ляво на дясно, са следните : 
+            <ul>
+                <li><b>Article ID :</b> идентификационен номер на статия. Важен елемент за датабазата, но също така и за 
+                    директните линкове към статии от "клиентската част на сайта (frontend).</li>
+                <li><b>Article Type ID :</b> идентификационен номер за вид на статия, който може да бъде 1 или 2 (Новини или 
+                    Упражнения). Важен елемент за датабазата, но също така и за разпределението на елементите в 
+                    правилните раздели в "клиентската част на сайта (frontend).</li>
+                <li><b>Title :</b> Заглавието на статията.</li>
+                <li><b>Text :</b> Текстът на статията.</li>
+                <li><b>Creation Date :</b> Датата, на която е създадена статията. Може би е логично тази дата да се променя,
+                    когато има актуализация на информацията.</li>
+                <li><b>User ID :</b> идентификационен номер на потребителя, който е създал конкретната статия. Важен елемент
+                    за датабазата, но също така и за frontend-а, защото чрез този номер можем да покажем кой е написал
+                    дадена статия. Важно е да се отбележи, че във frontend-a никои няма да може да види username-а на
+                    администратора, а само неговият user alias, който може да се промени от users меню-то.</li>
+                <li><b>Edit :</b> Бутон, чрез който ще можеш да поправяш информацията на дадена статия. Внимавай да не
+                    прецакаш нещо! :D</li>
+                <li><b>Delete :</b> Бутон, чрез който ще можеш да изтриваш статия. Внимавай да не изтриеш нещо важно,
+                    защото тази информация не може да се върне! :D</li>
+            </ul>
+        </div>
+        <hr>
+        <div id="article-edit-wrapper"></div>
+        <hr>
+        <div id="articles-wrapper">
+            <table id="articles-holder">
+                <thead>
+                <th>Article ID</th>
+                <th>Article Type ID</th>
+                <th>Title</th>
+                <th>Text</th>
+                <th>Creation Date</th>
+                <th>User ID</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                </thead>
+            </table>
+        </div>
+        <hr><hr><hr>
+        <div class="description">Това са типовете за статиите. Те могата да бъдат два типа Новини и Упражнения.
+            Не мога да ти дам да ги поправяш, защото те са пряко свързани с функционалността на frontend-а и 
+            backend-а, включително и това меню. Обаче, мога да ти покажа как изглеждат. Под този текст ще виждаш 
+            таблица съдържаща всички типове за статии. Таблицата е разделена на колони. Колоните, от ляво на дясно, 
+            са следните : 
+            <ul>
+                <li><b>Article Type ID :</b> Идентификационен номер на тип на статия. Важен елемент за датабазата, 
+                    но също така и за много компоненти други на сайта.</li>
+                <li><b>Article Type Name :</b> Името на тип на статия. Важен елемент за датабазата, но също така и 
+                    за много компоненти други на сайта. Чрез името се правят основните query-та към датабазата. 
+                    Може би по-важен елемент от идентификационния номер.</li>
+                <li><b>Edit :</b> N/A.</li>
+                <li><b>Delete :</b> N/A.</li>
+            </ul>
+        </div>
+        <div id="articletypes-wrapper">
+            <table id="articletypes-holder">
+                <thead>
+                <th>Article Type ID</th>
+                <th>Article Type Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                </thead>
+            </table>
+        </div>
+        <script id="article-element-template" type="text/x-handlebars-template">
+            <tr class="article" data-articleid={{id}}>
+            <td class="article-id">{{id}}</td>
+            <td class="type-id">{{type_id}}</td>
+            <td class="title">{{title}}</td>
+            <td class="text">{{text}}</td>
+            <td class="creationdate">{{creationDate}}</td>
+            <td class="user-id">{{userId}}</td>
+            <td class="edit edit-article">Edit</td>
+            <td class="delete delete-article">Delete</td>
+            </tr>
+        </script>
+        <script id="article-edit-element-template" type="text/x-handlebars-template">
+            <div class="article-edit" data-articleid={{id}}>
+            <div class="article-edit-id">Article ID : {{id}}</div>
+            <div class="type-edit-id">{{type_id}}</div>
+            <div class="edit-title">{{title}}</div>
+            <div class="edit-text">{{text}}</div>
+            <div class="edit-creationdate">{{creationDate}}</div>
+            <div class="edit-user-id">User ID : {{userId}} (will change to your user ID)</div>
+            </div>
+        </script>
+        <script id="articletype-element-template" type="text/x-handlebars-template">
+            <tr class="articletype" data-articletypeid={{id}}>
+            <td class="articletypeid">{{id}}</td>
+            <td class="articletypename">{{articletypename}}</td>
+            <td class="edit"><b>X</b></td>
+            <td class="delete"><b>X</b></td>
+            </tr>
+        </script>
     </body>
 </html>

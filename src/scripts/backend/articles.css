@@ -1,3 +1,21 @@
-#stuff {
-    text-align: center;
+#articles-wrapper,
+#articletypes-wrapper,
+.description {
+    margin-top: 15px;
+}
+
+#articles-holder,
+#articletypes-holder {
+    border-collapse: collapse;
+}
+
+#articles-holder tr,
+#articletypes-holder tr,
+.description {
+    border: 1pt solid black;
+}
+
+.edit,
+.delete {
+    cursor: pointer;
 }

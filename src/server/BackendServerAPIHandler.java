@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import controller.Controller;
+import entity.Article;
 import entity.web.HttpResponseObject;
 import entity.web.UserWebSession;
 import java.io.BufferedReader;
@@ -15,6 +16,7 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import utilities.HttpServerGeneralUtils;
 
@@ -29,7 +31,7 @@ public class BackendServerAPIHandler implements HttpHandler {
     private HttpServerGeneralUtils utilities;
     private Gson gson;
     private HttpResponseObject httpResponseObj;
-    
+
     private static String backendPagesDIR = "src/pages/backend/";
 
     public BackendServerAPIHandler( Controller controller ) {
@@ -92,19 +94,50 @@ public class BackendServerAPIHandler implements HttpHandler {
         //Use PUT to create resources, or use POST to update resources.
         switch ( method ) {
             case "GET":
-                httpResponseObj = new HttpResponseObject(
-                        500, "Not supported - Your method : " + method );
-                status = 500;
-                response = gson.toJson( httpResponseObj );
-
                 /*
                  * Generate server identifier and send to client
-                 * URL : http://localhost:8084/api/nav
+                 * URL : http://localhost:8084/emkobaronaAPI/articles
+                 */
+                if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
+                        && "articles".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 3 ] ) ) {
+                        status = 200;
+                        List<Article> articles = controller.getAbstract( "articles", 0, "id" );
+                        response = gson.toJson( articles );
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
+                /*
+                 * Generate server identifier and send to client
+                 * URL : http://localhost:8084/emkobaronaAPI/articletypes
+                 */
+                if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
+                        && "articletypes".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 3 ] ) ) {
+                        status = 200;
+                        List<Article> articles = controller.getAbstract( "articletypes", 0, "id" );
+                        response = gson.toJson( articles );
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
+                /*
+                 * Generate server identifier and send to client
+                 * URL : http://localhost:8084/emkobaronaAPI/nav
                  */
                 if ( !decisionMade && (parts.length == 3 && parts[ 2 ] != null
                         && "nav".equals( parts[ 2 ] )) ) {
-                    //mime = utilities.getMime( ".html" );
                     file = new File( backendPagesDIR + "nav.html" );
+                    status = 200;
                     decisionMade = true;
                 }
 

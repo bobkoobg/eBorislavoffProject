@@ -10,7 +10,7 @@ var $indexNav;
 
 function loadIndexNav() {
     for (i = 0; i < pages.length; i++) {
-        console.log("> ", pages[i]);
+        
         var source = $("#index-nav-element-template").html();
         var template = Handlebars.compile(source);
         var content = {
