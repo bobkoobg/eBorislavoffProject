@@ -46,39 +46,124 @@ public class BackendServerHandler implements HttpHandler {
         System.out.println( "BackendServerHandler DEBUG: # " + dateFormatted + " # #Request method: " + method + ", Request path : " + path + ", path Length: " + parts.length + " / 2nd elem : " + (parts.length > 0 ? parts[ 1 ] : "NO") );
         //Debug END
 
+        boolean decisionMade = false;
+
         switch ( method ) {
             case "GET":
+
                 /*
                  * Startup page
-                 * URL : http://localhost:8084/emkobarona OR http://localhost:8084/emkobarona/index
+                 * URL : http://localhost:8084/emkobarona OR /index OR /index.html
                  */
-                if ( parts.length == 2
-                        || (parts.length == 3 && parts[ 2 ] != null && "index".equals( parts[ 2 ] )) ) {
-
+                boolean isIndex = parts.length == 2 && "emkobarona".equals( parts[ 1 ] ) ? true : false;
+                boolean isIndex2 = parts.length == 3 && parts[ 2 ] != null && "index".equals( parts[ 2 ] ) ? true : false;
+                boolean isIndex3 = parts.length == 3 && parts[ 2 ] != null && "index.html".equals( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && (isIndex || isIndex2 || isIndex3) ) {
                     mime = utilities.getMime( ".html" );
                     file = new File( pagesDirectory + "index.html" );
+                    decisionMade = true;
+                }
 
-                } /*
-                 * Register page
-                 * URL : http://localhost:8084/emkobarona/register
-                 */ else if ( parts.length == 3 && parts[ 2 ] != null && "login".equals( parts[ 2 ] ) ) {
-
+                /*
+                 * Login page
+                 * URL : http://localhost:8084/emkobarona/login OR /login.html
+                 */
+                boolean isLogin = parts.length == 3 && parts[ 2 ] != null && "login".equals( parts[ 2 ] ) ? true : false;
+                boolean isLogin2 = parts.length == 3 && parts[ 2 ] != null && "login.html".equals( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && (isLogin || isLogin2) ) {
                     mime = utilities.getMime( ".html" );
                     file = new File( pagesDirectory + "login.html" );
+                    decisionMade = true;
+                }
 
-                } else if ( parts.length == 3 && parts[ 2 ] != null && "register".equals( parts[ 2 ] ) ) {
-
+                /*
+                 * Register page
+                 * URL : http://localhost:8084/emkobarona/register OR /register.html
+                 */
+                boolean isRegister = parts.length == 3 && parts[ 2 ] != null && "register".equals( parts[ 2 ] ) ? true : false;
+                boolean isRegister2 = parts.length == 3 && parts[ 2 ] != null && "register.html".equals( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && (isRegister || isRegister2) ) {
                     mime = utilities.getMime( ".html" );
                     file = new File( pagesDirectory + "register.html" );
+                    decisionMade = true;
+                }
 
-                } else if ( parts.length == 3 && parts[ 2 ] != null && "articles".equals( parts[ 2 ] ) ) {
-
+                /*
+                 * Articles page
+                 * URL : http://localhost:8084/emkobarona/articles OR /articles.html
+                 */
+                boolean isArticles = parts.length == 3 && parts[ 2 ] != null && "articles".equals( parts[ 2 ] ) ? true : false;
+                boolean isArticles2 = parts.length == 3 && parts[ 2 ] != null && "articles.html".equals( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && (isArticles || isArticles2) ) {
                     mime = utilities.getMime( ".html" );
                     file = new File( pagesDirectory + "articles.html" );
+                    decisionMade = true;
+                }
 
-                }/*
+                /*
+                 * Gallery page
+                 * URL : http://localhost:8084/emkobarona/gallery OR /gallery.html
+                 */
+                boolean isGallery = parts.length == 3 && parts[ 2 ] != null && "gallery".equals( parts[ 2 ] ) ? true : false;
+                boolean isGallery2 = parts.length == 3 && parts[ 2 ] != null && "gallery.html".equals( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && (isGallery || isGallery2) ) {
+                    mime = utilities.getMime( ".html" );
+                    file = new File( pagesDirectory + "gallery.html" );
+                    decisionMade = true;
+                }
+
+                /*
+                 * Tickets page
+                 * URL : http://localhost:8084/emkobarona/tickets OR /tickets.html
+                 */
+                boolean isTickets = parts.length == 3 && parts[ 2 ] != null && "tickets".equals( parts[ 2 ] ) ? true : false;
+                boolean isTickets2 = parts.length == 3 && parts[ 2 ] != null && "tickets.html".equals( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && (isTickets || isTickets2) ) {
+                    mime = utilities.getMime( ".html" );
+                    file = new File( pagesDirectory + "tickets.html" );
+                    decisionMade = true;
+                }
+
+                /*
+                 * Guestbook page
+                 * URL : http://localhost:8084/emkobarona/guestbook OR /guestbook.html
+                 */
+                boolean isGuestbook = parts.length == 3 && parts[ 2 ] != null && "guestbook".equals( parts[ 2 ] ) ? true : false;
+                boolean isGuestbook2 = parts.length == 3 && parts[ 2 ] != null && "guestbook.html".equals( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && (isGuestbook || isGuestbook2) ) {
+                    mime = utilities.getMime( ".html" );
+                    file = new File( pagesDirectory + "guestbook.html" );
+                    decisionMade = true;
+                }
+
+                /*
+                 * FlexibleSections page
+                 * URL : http://localhost:8084/emkobarona/flexibleSections OR /flexibleSections.html
+                 */
+                boolean isFS = parts.length == 3 && parts[ 2 ] != null && "flexibleSections".equals( parts[ 2 ] ) ? true : false;
+                boolean isFS2 = parts.length == 3 && parts[ 2 ] != null && "flexibleSections.html".equals( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && (isFS || isFS2) ) {
+                    mime = utilities.getMime( ".html" );
+                    file = new File( pagesDirectory + "flexibleSections.html" );
+                    decisionMade = true;
+                }
+
+                /*
+                 * Users page
+                 * URL : http://localhost:8084/emkobarona/users OR /users.html
+                 */
+                boolean isUsers = parts.length == 3 && parts[ 2 ] != null && "users".equals( parts[ 2 ] ) ? true : false;
+                boolean isUsers2 = parts.length == 3 && parts[ 2 ] != null && "users.html".equals( parts[ 2 ] ) ? true : false;
+                if ( !decisionMade && (isUsers || isUsers2) ) {
+                    mime = utilities.getMime( ".html" );
+                    file = new File( pagesDirectory + "users.html" );
+                    decisionMade = true;
+                }
+
+                /*
                  * Any other js, html, css, ico file
-                 */ else {
+                 */
+                if ( !decisionMade ) {
                     String lastElemStr = parts[ (parts.length - 1) ];
                     int lastElemIndex = lastElemStr.lastIndexOf( "." );
 

@@ -1,5 +1,5 @@
 function load() {
-    console.log("articles.js loaded...");
+    console.log("guestbook.js loaded...");
 }
 
 $(window).ready(load);

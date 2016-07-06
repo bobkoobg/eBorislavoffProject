@@ -24,8 +24,6 @@ function setCookie(cname, cvalue, minutes) {
     d.setTime(d.getTime() + (minutes * 60 * 1000)); //days*24*60*60*1000
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
-    //window.location = "/musicLadder";
-    $loginStatus.html("BETA TESTING - SUCCESS LOGIN.");
 }
 
 function deleteCookie(name) {

@@ -1,5 +1,5 @@
 function load() {
-    console.log("articles.js loaded...");
+    console.log("tickets.js loaded...");
 }
 
 $(window).ready(load);

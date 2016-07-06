@@ -1,5 +1,5 @@
 function load() {
-    console.log("articles.js loaded...");
+    console.log("users.js loaded...");
 }
 
 $(window).ready(load);
