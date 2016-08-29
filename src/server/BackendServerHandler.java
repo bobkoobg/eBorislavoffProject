@@ -101,6 +101,19 @@ public class BackendServerHandler implements HttpHandler {
                 }
 
                 /*
+                 * Specific Articles page
+                 * URL : http://localhost:8084/emkobarona/articles/1 OR /articles.html
+                 */
+                boolean isSpecificArticle = parts.length == 5 && parts[ 2 ] != null
+                        && "articles".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "edit".equals( parts[ 3 ] ) && utilities.isNumeric( parts[ 4 ] ) ? true : false;
+                if ( !decisionMade && isSpecificArticle ) {
+                    mime = utilities.getMime( ".html" );
+                    file = new File( pagesDirectory + "articlesSpecific.html" );
+                    decisionMade = true;
+                }
+
+                /*
                  * Gallery page
                  * URL : http://localhost:8084/emkobarona/gallery OR /gallery.html
                  */

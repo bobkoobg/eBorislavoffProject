@@ -1,0 +1,9 @@
+.save-article,
+.back-to-articles {
+    cursor: pointer;
+}
+
+.article-title,
+.article-id {
+    width: 620px;
+}

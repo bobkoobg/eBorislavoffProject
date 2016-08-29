@@ -50,10 +50,6 @@
             </ul>
         </div>
         <hr>
-        <div id="article-edit-wrapper">
-            <div id="article-edit-holder"></div>
-        </div>
-        <hr>
         <div id="articles-wrapper">
             <table id="articles-holder">
                 <thead>
@@ -102,19 +98,9 @@
             <td class="text">{{text}}</td>
             <td class="creationdate">{{creationDate}}</td>
             <td class="user-id">{{userId}}</td>
-            <td class="edit edit-article">Edit</td>
+            <td class="edit edit-article"><a href="{{path}}">Edit</a></td>
             <td class="delete delete-article">Delete</td>
             </tr>
-        </script>
-        <script id="article-edit-element-template" type="text/x-handlebars-template">
-            <div class="article-edit" data-articleid={{id}}>
-            <div class="article-edit-id">Article ID : {{id}} (not changeable)</div>
-            <div class="type-edit-id">Article Type ID : <input type="text" value={{type_id}}></div>
-            <div class="edit-title">Title : <input type="text" value={{title}}></div>
-            <div class="edit-text">Text : <input type="text" value={{text}}></div>
-            <div class="edit-creationdate">Creation Date : {{creationDate}} (will change to the current date)</div>
-            <div class="edit-user-id">User ID : {{userId}} (will change to your user ID)</div>
-            </div>
         </script>
         <script id="articletype-element-template" type="text/x-handlebars-template">
             <tr class="articletype" data-articletypeid={{id}}>

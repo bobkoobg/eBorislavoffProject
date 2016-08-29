@@ -42,6 +42,14 @@ public class Article extends AbstractEntity {
         return type_id;
     }
 
+    public void setUserId( int userId ) {
+        this.userId = userId;
+    }
+
+    public void setCreationDate( Date creationDate ) {
+        this.creationDate = creationDate;
+    }
+
     @Override
     public String toString() {
         return "id: " + this.id + "> Article{" + "userId=" + userId + ", title=" + title + ", type_id="

@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <title>Emilian Borislavoff</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- IE -->
+        <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
+        <!-- other browsers -->
+        <link rel="icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+        <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
+        <script type="text/javascript" src="page.js"></script>
+        <link rel="stylesheet" type="text/css" href="page.css" />
+        <link rel="stylesheet" type="text/css" href="emkobarona/articlesSpecific.css" />
+        <script type="text/javascript" src="emkobarona/articlesSpecific.js"></script>
+    </head>
+    <body>
+        <div id="article-edit-wrapper">
+            <div id="article-edit-holder"></div>
+        </div>
+        <script id="article-edit-element-template" type="text/x-handlebars-template">
+            <table>
+                <thead>
+                    <th>Item</th>
+                    <th>Value</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Article ID :</td>
+                        <td class="article-id">{{id}}</td>
+                    </tr>
+                    <tr>
+                        <td>Article Type ID :</td>
+                        <td><input class="article-type-id" type="text" value={{type_id}}></td>
+                    </tr>
+                    <tr>
+                        <td>Title :</td>
+                        <td><input class="article-title" type="text" value="{{title}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Text :</td>
+                        <td><textarea class="article-text" rows="10" cols="75">{{text}}</textarea></td>
+                    </tr>
+                    <tr>
+                        <td>Date :</td>
+                        <td class="article-creation-date">{{creationDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>User ID :</td>
+                        <td class="article-user-id">{{userId}}</td>
+                    </tr>
+                    <tr>
+                        <th><a class="save-article">Save</a></th>
+                        <th><a class="back-to-articles">Back</a></th>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </script>
+    </body>
+</html>

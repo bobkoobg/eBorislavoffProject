@@ -151,7 +151,7 @@ public class Controller {
 
     public <T> User loginUser( String clientReqIP, String jQueryObject ) {
         User jsonObject = gson.fromJson( jQueryObject, User.class );
-        
+
         long MAX_DURATION = MILLISECONDS.convert( 1, MINUTES );
         Date now = new Date();
 
@@ -160,7 +160,7 @@ public class Controller {
         if ( clientSHA256PlusIdsPW.length() != (64 + 2) ) {
             return null;
         }
-        
+
         //decompose password
         for ( int i = 0; i < userIdentifiers.size(); i++ ) {
             if ( userIdentifiers.get( i ).getClientReqIP().equals( clientReqIP )
@@ -184,7 +184,7 @@ public class Controller {
         if ( !isCorrectPassword ) {
             return null;
         }
-        
+
         UserWebSession uws = null;
         if ( currUser.get( 0 ) != null ) {
             uws = new UserWebSession( currUser.get( 0 ).getUsername(),
@@ -199,6 +199,10 @@ public class Controller {
     public boolean authenticateSession( String address, String sessionId ) {
         sessionId = sessionId.replaceAll( "^\"|\"$", "" );
         return sessionIdsGen.checkSession( sessionId, address );
+    }
+
+    public String findUserBySessionAndIP( String sessionId, String ipAddress ) {
+        return sessionIdsGen.findUserBySession( sessionId, ipAddress );
     }
 
     /*

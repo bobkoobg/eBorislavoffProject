@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import controller.Controller;
 import entity.Article;
+import entity.User;
 import entity.web.HttpResponseObject;
 import entity.web.UserWebSession;
 import java.io.BufferedReader;
@@ -15,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -138,7 +140,6 @@ public class BackendServerAPIHandler implements HttpHandler {
                         && "article".equals( parts[ 2 ] ) && parts[ 3 ] != null
                         && utilities.isNumeric( parts[ 3 ] ) && parts[ 4 ] != null) ) {
                     if ( controller.authenticateSession( address, parts[ 4 ] ) ) {
-                        System.out.println( "YES YOU WORK" );
                         status = 200;
                         List<Article> articles = controller.getAbstract( "articles", parts[ 3 ], "id" );
                         response = gson.toJson( articles );
@@ -230,6 +231,47 @@ public class BackendServerAPIHandler implements HttpHandler {
                                 status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
                         response = gson.toJson( httpResponseObj );
                     }
+                }
+
+                /*
+                 * Save an update of an article
+                 * URL : http://localhost:8084/emkobaronaAPI/articles/save/#ID#/#session#
+                 */
+                if ( !decisionMade && (parts.length == 6 && parts[ 2 ] != null
+                        && "articles".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "save".equals( parts[ 3 ] ) && parts[ 4 ] != null
+                        && utilities.isNumeric( parts[ 4 ] ) && parts[ 5 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 5 ] ) ) {
+
+                        Article article = gson.fromJson( jsonQuery, Article.class );
+                        article.setCreationDate( new Date() );
+
+                        String username = controller.findUserBySessionAndIP( parts[ 5 ], address );
+                        List<User> usersSpecific = controller.getAbstract( "users", username, "username" );
+
+                        article.setUserId( usersSpecific.get( 0 ).getId() );
+
+                        ArrayList<Article> articlesToUpdate = new ArrayList();
+                        articlesToUpdate.add( article );
+                        boolean result = controller.updateAbstract( "articles", articlesToUpdate );
+
+                        if ( result ) {
+                            status = 200;
+                            response = gson.toJson( article );
+                        } else {
+                            status = 500;
+                            httpResponseObj = new HttpResponseObject(
+                                    status, "Internal server error - something went wrong." );
+                            response = gson.toJson( httpResponseObj );
+                        }
+
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
                 }
                 break;
             case "PUT":

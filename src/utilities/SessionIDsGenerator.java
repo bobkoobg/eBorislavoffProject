@@ -77,4 +77,22 @@ public class SessionIDsGenerator {
         }
         return false;
     }
+
+    public String findUserBySession( String sessionId, String ipAddress ) {
+        if ( ipAddress == null || ipAddress.isEmpty() || sessionId == null
+                || sessionId.isEmpty() ) {
+            return "";
+        }
+
+        for ( Map.Entry<String, UserSession> entry : sessionsList.entrySet() ) {
+
+            String key = entry.getKey();
+            UserSession value = entry.getValue();
+
+            if ( key.equals( sessionId ) && value.getIpAddress().equals( ipAddress ) ) {
+                return value.getUsername();
+            }
+        }
+        return "";
+    }
 }
