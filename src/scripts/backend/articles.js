@@ -73,7 +73,29 @@ function requestArticles() {
 
 }
 
+function reloadArticles(data, status) {
+    if (status == "success") {
+        window.location.href = "/emkobarona/articles";
+    } else {
+        console.log("Failure in deleteArticle Backend");
+        console.log("data is : ", data, ", status is : ", status);
+    }
+}
 
+function deleteArticle() {
+    var articleId = $(this).parent().attr("data-articleid");
+    var result = confirm("Do you really want to delete this article? (Article ID : " + articleId + " )");
+    if (result) {
+        $.ajax({
+            "url": "/emkobaronaAPI/articles/delete/" + articleId + "/" + getCookie(cookieName),
+            "type": "DELETE",
+            "headers": {"Content-Type": "application/json"},
+            "data": {},
+            "success": reloadArticles,
+            "error": reloadArticles
+        });
+    }
+}
 
 function load() {
     $body = $(document.body);
@@ -84,6 +106,8 @@ function load() {
 
     requestArticles();
     requestArticleTypes();
+
+    $body.on("click", ".delete-article", deleteArticle);
 }
 
 $(window).ready(load);

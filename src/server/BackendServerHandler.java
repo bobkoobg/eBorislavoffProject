@@ -101,13 +101,18 @@ public class BackendServerHandler implements HttpHandler {
                 }
 
                 /*
-                 * Specific Articles page
-                 * URL : http://localhost:8084/emkobarona/articles/1 OR /articles.html
+                 * Specific Articles page - Edit article
+                 * URL : http://localhost:8084/emkobarona/articles/edit/#ID#
+                 * OR Create article
+                 * URL : http://localhost:8084/emkobarona/articles/create
                  */
-                boolean isSpecificArticle = parts.length == 5 && parts[ 2 ] != null
+                boolean isEditingArticle = parts.length == 5 && parts[ 2 ] != null
                         && "articles".equals( parts[ 2 ] ) && parts[ 3 ] != null
                         && "edit".equals( parts[ 3 ] ) && utilities.isNumeric( parts[ 4 ] ) ? true : false;
-                if ( !decisionMade && isSpecificArticle ) {
+                boolean isCreatingArticle = parts.length == 4 && parts[ 2 ] != null
+                        && "articles".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "create".equals( parts[ 3 ] ) ? true : false;
+                if ( !decisionMade && (isEditingArticle || isCreatingArticle) ) {
                     mime = utilities.getMime( ".html" );
                     file = new File( pagesDirectory + "articlesSpecific.html" );
                     decisionMade = true;

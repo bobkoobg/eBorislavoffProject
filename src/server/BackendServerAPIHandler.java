@@ -318,12 +318,77 @@ public class BackendServerAPIHandler implements HttpHandler {
                     }
                     httpResponseObj = null;
                 }
+
+                /*
+                 * Create an article
+                 * URL : http://localhost:8084/emkobaronaAPI/articles/create/#Cookie#
+                 */
+                if ( !decisionMade && (parts.length == 5 && parts[ 2 ] != null
+                        && "articles".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "create".equals( parts[ 3 ] ) && parts[ 4 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 4 ] ) ) {
+
+                        Article article = gson.fromJson( jsonQuery, Article.class );
+                        System.out.println( "I entered " + article.toString() );
+                        article.setCreationDate( new Date() );
+
+                        String username = controller.findUserBySessionAndIP( parts[ 4 ], address );
+                        List<User> usersSpecific = controller.getAbstract( "users", username, "username" );
+
+                        article.setUserId( usersSpecific.get( 0 ).getId() );
+
+                        System.out.println( "Finally the article is : " + article.toString() );
+                        ArrayList<Article> articlesToAdd = new ArrayList();
+                        articlesToAdd.add( article );
+                        boolean result = controller.insertAbstract( "articles", articlesToAdd );
+                        System.out.println( "Hey the result is " + result );
+                        if ( result ) {
+                            status = 201;
+                            response = gson.toJson( article );
+                        } else {
+                            status = 500;
+                            httpResponseObj = new HttpResponseObject(
+                                    status, "Internal server error - something went wrong." );
+                            response = gson.toJson( httpResponseObj );
+                        }
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
                 break;
             case "DELETE":
-                httpResponseObj = new HttpResponseObject(
-                        500, "Not supported - Your method : " + method );
-                status = 500;
-                response = gson.toJson( httpResponseObj );
+                /*
+                 * Delete an article
+                 * URL : http://localhost:8084/emkobaronaAPI/articles/delete/#ID#/#Cookie#
+                 */
+                if ( !decisionMade && (parts.length == 6 && parts[ 2 ] != null
+                        && "articles".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "delete".equals( parts[ 3 ] ) && parts[ 4 ] != null
+                        && utilities.isNumeric( parts[ 4 ] ) && parts[ 5 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 5 ] ) ) {
+                        boolean result = controller.deleteAbstract( "articles", Integer.parseInt( parts[ 4 ] ), "id" );
+
+                        if ( result ) {
+                            status = 200;
+                            response = gson.toJson( result );
+                        } else {
+                            status = 500;
+                            httpResponseObj = new HttpResponseObject(
+                                    status, "Internal server error - something went wrong." );
+                            response = gson.toJson( httpResponseObj );
+                        }
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
                 break;
             default:
                 httpResponseObj = new HttpResponseObject(
