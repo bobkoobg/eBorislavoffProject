@@ -1,5 +1,5 @@
 <html>
-        <head>
+    <head>
         <title>Emilian Borislavoff</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,5 +26,33 @@
         <b>MUST:</b><br>
         <div>Have correct session : <span class="correct-session"></span></div>
         <div>Status : <span class="status"></span></div>
+        <table class="guestbook-table">
+            <thead>
+                <tr>
+                    <th colspan="8"><a href="guestbook/create">Create new guestbook entry</a></th>
+                </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Guest Name</th>
+                    <th>Message</th>
+                    <th>ImagePath</th>
+                    <th>IP</th>
+                    <th>Creation Date</th>
+                    <th colspan="2">Functionality</th>
+                </tr>
+            </thead>
+            <tbody class="guestbook-table-body"></tbody>
+        </table>
+        <script id="guestbook-element-template" type="text/x-handlebars-template">
+        <tr class="guestbookrow" data-gbid="{{gbid}}">
+        <td>{{gbid}}</td>
+        <td>{{guestName}}</td>
+        <td>{{message}}</td>
+        <td>{{imagePath}}</td>
+        <td>{{ip}}</td>
+        <td>{{creationDate}}</td>
+        <td class="edit-article"><a href="{{path}}">Edit</a></td>
+        <td class="delete-article">Delete</td>
+        </script>
     </body>
 </html>

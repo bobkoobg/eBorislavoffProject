@@ -153,6 +153,25 @@ public class BackendServerHandler implements HttpHandler {
                     file = new File( pagesDirectory + "guestbook.html" );
                     decisionMade = true;
                 }
+                
+                                /*
+                 * TODO : Specific Articles page - Edit guestbook
+                 * URL : http://localhost:8084/emkobarona/articles/edit/#ID#
+                 * OR Create guestbook entry (Added)
+                 * URL : http://localhost:8084/emkobarona/guestbook/create
+                 */
+//                boolean isEditingGuestbook = parts.length == 5 && parts[ 2 ] != null
+//                        && "articles".equals( parts[ 2 ] ) && parts[ 3 ] != null
+//                        && "edit".equals( parts[ 3 ] ) && utilities.isNumeric( parts[ 4 ] ) ? true : false;
+                boolean isCreatingGuestbook = parts.length == 4 && parts[ 2 ] != null
+                        && "guestbook".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "create".equals( parts[ 3 ] ) ? true : false;
+                if ( !decisionMade && isCreatingGuestbook ) {
+                    mime = utilities.getMime( ".html" );
+                    file = new File( pagesDirectory + "guestbookSpecific.html" );
+                    decisionMade = true;
+                }
+
 
                 /*
                  * FlexibleSections page

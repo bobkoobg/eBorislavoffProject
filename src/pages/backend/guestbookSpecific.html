@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <title>Emilian Borislavoff</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- IE -->
+        <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
+        <!-- other browsers -->
+        <link rel="icon" type="image/x-icon" href="http://localhost:8084/favicon.ico">
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+        <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
+        <script type="text/javascript" src="emkobarona/page.js"></script>
+        <link rel="stylesheet" type="text/css" href="emkobarona/page.css" />
+
+        <script type="text/javascript" src="emkobarona/guestbookSpecific.js"></script>
+        <link rel="stylesheet" type="text/css" href="emkobarona/guestbookSpecific.css" />
+    </head>
+    <body>
+        <div id="guestbook-create-edit-wrapper">
+            <div id="guestbook-create-edit-holder"></div>
+        </div>
+        <script id="guestbook-create-edit-element-template" type="text/x-handlebars-template">
+            <table>
+                <thead>
+                    <th>Item</th>
+                    <th>Value</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Guestbook ID :</td>
+                        <td class="guestbook-id">{{gbid}}</td>
+                    </tr>
+                    <tr>
+                        <td>Guest Name :</td>
+                        <td><input class="guestbook-name" type="text" value={{guestName}}></td>
+                    </tr>
+                    <tr>
+                        <td>Message :</td>
+                        <td><input class="guestbook-message" type="text" value="{{message}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Image :</td>
+                        <td><input class="guestbook-image-path" type="text" value="{{imagePath}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Guest IP :</td>
+                        <td class="guestbook-guest-ip">{{ip}}</td>
+                    </tr>
+                    <tr>
+                        <td>Creation date :</td>
+                        <td class="guestbook-creation-date">{{creationDate}}</td>
+                    </tr>
+                    <tr>
+                        <th><a class="save-guestbook">Save</a></th>
+                        <th><a class="back-to-guestbook">Back</a></th>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </script>
+        <script id="guestbook-element-template" type="text/x-handlebars-template">
+            <tr class="guestbookrow" data-gbid="{{gbid}}">
+            <td>{{gbid}}</td>
+            <td>{{guestName}}</td>
+            <td>{{message}}</td>
+            <td>{{imagePath}}</td>
+            <td>{{ip}}</td>
+            <td>{{creationDate}}</td>
+            <td class="edit-article"><a href="{{path}}">Edit</a></td>
+            <td class="delete-article">Delete</td>
+        </script>
+    </body>
+</html>
