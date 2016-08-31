@@ -20,7 +20,8 @@ function loadGuestbook(data, status) {
                 message: dataValue.message,
                 imagePath: dataValue.imagePath == null ? "N/A" : "/api/image/" + dataValue.imagePath,
                 ip: dataValue.ip,
-                creationDate: dataValue.creationDate
+                creationDate: dataValue.creationDate,
+                path: "guestbook/edit/" + dataValue.id
             };
             html = template(content);
 
@@ -34,13 +35,37 @@ function loadGuestbook(data, status) {
 
 function requestGuestbook() {
     $.ajax({
-        "url": "/api/feedback",
+        "url": "/emkobaronaAPI/guestbook/" + getCookie(cookieName),
         "type": "GET",
         "headers": {"Content-Type": "application/json"},
         "data": {},
         "success": loadGuestbook,
         "error": loadGuestbook
     });
+}
+
+function reloadGuestbook(data, status) {
+    if (status == "success") {
+        window.location.href = "/emkobarona/guestbook";
+    } else {
+        console.log("Failure in deleteGuestbook Backend");
+        console.log("data is : ", data, ", status is : ", status);
+    }
+}
+
+function deleteGuestbook() {
+    var guestbookId = $(this).parent().attr("data-gbid");
+    var result = confirm("Do you really want to delete this article? (Article ID : " + guestbookId + " )");
+    if (result) {
+        $.ajax({
+            "url": "/emkobaronaAPI/guestbook/delete/" + guestbookId + "/" + getCookie(cookieName),
+            "type": "DELETE",
+            "headers": {"Content-Type": "application/json"},
+            "data": {},
+            "success": reloadGuestbook,
+            "error": reloadGuestbook
+        });
+    }
 }
 
 function load() {
@@ -50,6 +75,8 @@ function load() {
     $guestbookTable = $(".guestbook-table-body");
 
     requestGuestbook();
+
+    $body.on("click", ".delete-guestbook", deleteGuestbook);
 }
 
 $(window).ready(load);

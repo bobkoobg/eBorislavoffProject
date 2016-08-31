@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import controller.Controller;
 import entity.Article;
+import entity.Guestbook;
 import entity.User;
 import entity.web.HttpResponseObject;
 import entity.web.UserWebSession;
@@ -134,6 +135,24 @@ public class BackendServerAPIHandler implements HttpHandler {
                 }
                 /*
                  * Generate server identifier and send to client
+                 * URL : http://localhost:8084/emkobaronaAPI/guestbook
+                 */
+                if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
+                        && "guestbook".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 3 ] ) ) {
+                        status = 200;
+                        List<Article> articles = controller.getAbstract( "guestbook", 0, "id" );
+                        response = gson.toJson( articles );
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
+                /*
+                 * Generate server identifier and send to client
                  * URL : http://localhost:8084/emkobaronaAPI/article/{{ID}}/{{Cookie}}
                  */
                 if ( !decisionMade && (parts.length == 5 && parts[ 2 ] != null
@@ -144,7 +163,26 @@ public class BackendServerAPIHandler implements HttpHandler {
                         List<Article> articles = controller.getAbstract( "articles", parts[ 3 ], "id" );
                         response = gson.toJson( articles );
                     } else {
-                        System.out.println( "NO" );
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
+
+                /*
+                 * Generate server identifier and send to client
+                 * URL : http://localhost:8084/emkobaronaAPI/guestbook/{{ID}}/{{Cookie}}
+                 */
+                if ( !decisionMade && (parts.length == 5 && parts[ 2 ] != null
+                        && "guestbook".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && utilities.isNumeric( parts[ 3 ] ) && parts[ 4 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 4 ] ) ) {
+                        status = 200;
+                        List<Guestbook> guestbook = controller.getAbstract( "guestbook", parts[ 3 ], "id" );
+                        response = gson.toJson( guestbook );
+                    } else {
                         status = 401;
                         httpResponseObj = new HttpResponseObject(
                                 status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
@@ -234,8 +272,8 @@ public class BackendServerAPIHandler implements HttpHandler {
                 }
 
                 /*
-                 * Save an update of an article
-                 * URL : http://localhost:8084/emkobaronaAPI/articles/save/#ID#/#session#
+                 * Save an update of a article
+                 * URL : http://localhost:8084/emkobaronaAPI/article/save/#ID#/#session#
                  */
                 if ( !decisionMade && (parts.length == 6 && parts[ 2 ] != null
                         && "articles".equals( parts[ 2 ] ) && parts[ 3 ] != null
@@ -258,6 +296,46 @@ public class BackendServerAPIHandler implements HttpHandler {
                         if ( result ) {
                             status = 200;
                             response = gson.toJson( article );
+                        } else {
+                            status = 500;
+                            httpResponseObj = new HttpResponseObject(
+                                    status, "Internal server error - something went wrong." );
+                            response = gson.toJson( httpResponseObj );
+                        }
+
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
+
+                /*
+                 * Save an update of a guestbook
+                 * URL : http://localhost:8084/emkobaronaAPI/guestbook/save/#ID#/#session#
+                 */
+                if ( !decisionMade && (parts.length == 6 && parts[ 2 ] != null
+                        && "guestbook".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "save".equals( parts[ 3 ] ) && parts[ 4 ] != null
+                        && utilities.isNumeric( parts[ 4 ] ) && parts[ 5 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 5 ] ) ) {
+
+                        Guestbook gb = gson.fromJson( jsonQuery, Guestbook.class );
+                        gb.setCreationDate( new Date() );
+                        gb.setIp( address );
+                        gb.setId( Integer.parseInt( parts[ 4 ] ) );
+
+                        System.out.println( "gb to update ? " + gb.toString() );
+                        ArrayList<Guestbook> gbToUpdate = new ArrayList();
+                        gbToUpdate.add( gb );
+                        boolean result = controller.updateAbstract( "guestbook", gbToUpdate );
+
+                        if ( result ) {
+                            System.out.println( "Yes??" );
+                            status = 200;
+                            response = gson.toJson( gb );
                         } else {
                             status = 500;
                             httpResponseObj = new HttpResponseObject(
@@ -329,7 +407,6 @@ public class BackendServerAPIHandler implements HttpHandler {
                     if ( controller.authenticateSession( address, parts[ 4 ] ) ) {
 
                         Article article = gson.fromJson( jsonQuery, Article.class );
-                        System.out.println( "I entered " + article.toString() );
                         article.setCreationDate( new Date() );
 
                         String username = controller.findUserBySessionAndIP( parts[ 4 ], address );
@@ -359,6 +436,41 @@ public class BackendServerAPIHandler implements HttpHandler {
                     }
                     decisionMade = true;
                 }
+
+                /*
+                 * Uplaod new image for a guestbook entry
+                 * URL : http://localhost:8084/emkobaronaAPI/guestbook/create/#Cookie#
+                 */
+                if ( !decisionMade && (parts.length == 5 && parts[ 2 ] != null
+                        && "guestbook".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "create".equals( parts[ 3 ] ) && parts[ 4 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 4 ] ) ) {
+
+                        Guestbook gb = gson.fromJson( jsonQuery, Guestbook.class );
+                        gb.setCreationDate( new Date() );
+                        gb.setIp( address );
+
+                        ArrayList<Guestbook> gbToAdd = new ArrayList();
+                        gbToAdd.add( gb );
+                        boolean result = controller.insertAbstract( "guestbook", gbToAdd );
+                        System.out.println( "Hey the result is " + result );
+                        if ( result ) {
+                            status = 201;
+                            response = gson.toJson( gb );
+                        } else {
+                            status = 500;
+                            httpResponseObj = new HttpResponseObject(
+                                    status, "Internal server error - something went wrong." );
+                            response = gson.toJson( httpResponseObj );
+                        }
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
                 break;
             case "DELETE":
                 /*
@@ -371,6 +483,35 @@ public class BackendServerAPIHandler implements HttpHandler {
                         && utilities.isNumeric( parts[ 4 ] ) && parts[ 5 ] != null) ) {
                     if ( controller.authenticateSession( address, parts[ 5 ] ) ) {
                         boolean result = controller.deleteAbstract( "articles", Integer.parseInt( parts[ 4 ] ), "id" );
+
+                        if ( result ) {
+                            status = 200;
+                            response = gson.toJson( result );
+                        } else {
+                            status = 500;
+                            httpResponseObj = new HttpResponseObject(
+                                    status, "Internal server error - something went wrong." );
+                            response = gson.toJson( httpResponseObj );
+                        }
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
+
+                /*
+                 * Delete an guestbook
+                 * URL : http://localhost:8084/emkobaronaAPI/guestbook/delete/#ID#/#Cookie#
+                 */
+                if ( !decisionMade && (parts.length == 6 && parts[ 2 ] != null
+                        && "guestbook".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "delete".equals( parts[ 3 ] ) && parts[ 4 ] != null
+                        && utilities.isNumeric( parts[ 4 ] ) && parts[ 5 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 5 ] ) ) {
+                        boolean result = controller.deleteAbstract( "guestbook", Integer.parseInt( parts[ 4 ] ), "id" );
 
                         if ( result ) {
                             status = 200;

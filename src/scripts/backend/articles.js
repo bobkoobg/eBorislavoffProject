@@ -70,7 +70,6 @@ function requestArticles() {
         "success": loadArticles,
         "error": loadArticles
     });
-
 }
 
 function reloadArticles(data, status) {
