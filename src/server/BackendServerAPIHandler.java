@@ -5,6 +5,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import controller.Controller;
 import entity.Article;
+import entity.ArticleType;
+import entity.FlexibleSection;
 import entity.Guestbook;
 import entity.User;
 import entity.web.HttpResponseObject;
@@ -99,7 +101,7 @@ public class BackendServerAPIHandler implements HttpHandler {
             case "GET":
                 /*
                  * Generate server identifier and send to client
-                 * URL : http://localhost:8084/emkobaronaAPI/articles
+                 * URL : http://localhost:8084/emkobaronaAPI/articles/#cookie#
                  */
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "articles".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
@@ -117,14 +119,14 @@ public class BackendServerAPIHandler implements HttpHandler {
                 }
                 /*
                  * Generate server identifier and send to client
-                 * URL : http://localhost:8084/emkobaronaAPI/articletypes
+                 * URL : http://localhost:8084/emkobaronaAPI/articletypes/#cookie#
                  */
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "articletypes".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
                     if ( controller.authenticateSession( address, parts[ 3 ] ) ) {
                         status = 200;
-                        List<Article> articles = controller.getAbstract( "articletypes", 0, "id" );
-                        response = gson.toJson( articles );
+                        List<ArticleType> atList = controller.getAbstract( "articletypes", 0, "id" );
+                        response = gson.toJson( atList );
                     } else {
                         status = 401;
                         httpResponseObj = new HttpResponseObject(
@@ -135,14 +137,14 @@ public class BackendServerAPIHandler implements HttpHandler {
                 }
                 /*
                  * Generate server identifier and send to client
-                 * URL : http://localhost:8084/emkobaronaAPI/guestbook
+                 * URL : http://localhost:8084/emkobaronaAPI/guestbook/#cookie#
                  */
                 if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
                         && "guestbook".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
                     if ( controller.authenticateSession( address, parts[ 3 ] ) ) {
                         status = 200;
-                        List<Article> articles = controller.getAbstract( "guestbook", 0, "id" );
-                        response = gson.toJson( articles );
+                        List<Guestbook> gbList = controller.getAbstract( "guestbook", 0, "id" );
+                        response = gson.toJson( gbList );
                     } else {
                         status = 401;
                         httpResponseObj = new HttpResponseObject(
@@ -153,6 +155,23 @@ public class BackendServerAPIHandler implements HttpHandler {
                 }
                 /*
                  * Generate server identifier and send to client
+                 * URL : http://localhost:8084/emkobaronaAPI/flexibleSections/#cookie#
+                 */
+                if ( !decisionMade && (parts.length == 4 && parts[ 2 ] != null
+                        && "flexibleSections".equals( parts[ 2 ] ) && parts[ 3 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 3 ] ) ) {
+                        status = 200;
+                        List<FlexibleSection> fsList = controller.getAbstract( "flexiblesections", 0, "id" );
+                        response = gson.toJson( fsList );
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
+                /*
                  * URL : http://localhost:8084/emkobaronaAPI/article/{{ID}}/{{Cookie}}
                  */
                 if ( !decisionMade && (parts.length == 5 && parts[ 2 ] != null
@@ -172,7 +191,6 @@ public class BackendServerAPIHandler implements HttpHandler {
                 }
 
                 /*
-                 * Generate server identifier and send to client
                  * URL : http://localhost:8084/emkobaronaAPI/guestbook/{{ID}}/{{Cookie}}
                  */
                 if ( !decisionMade && (parts.length == 5 && parts[ 2 ] != null
@@ -182,6 +200,25 @@ public class BackendServerAPIHandler implements HttpHandler {
                         status = 200;
                         List<Guestbook> guestbook = controller.getAbstract( "guestbook", parts[ 3 ], "id" );
                         response = gson.toJson( guestbook );
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
+
+                /*
+                 * URL : http://localhost:8084/emkobaronaAPI/flexibleSections/{{ID}}/{{Cookie}}
+                 */
+                if ( !decisionMade && (parts.length == 5 && parts[ 2 ] != null
+                        && "flexibleSections".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && utilities.isNumeric( parts[ 3 ] ) && parts[ 4 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 4 ] ) ) {
+                        status = 200;
+                        List<FlexibleSection> fs = controller.getAbstract( "flexiblesections", parts[ 3 ], "id" );
+                        response = gson.toJson( fs );
                     } else {
                         status = 401;
                         httpResponseObj = new HttpResponseObject(
@@ -336,6 +373,49 @@ public class BackendServerAPIHandler implements HttpHandler {
                             System.out.println( "Yes??" );
                             status = 200;
                             response = gson.toJson( gb );
+                        } else {
+                            status = 500;
+                            httpResponseObj = new HttpResponseObject(
+                                    status, "Internal server error - something went wrong." );
+                            response = gson.toJson( httpResponseObj );
+                        }
+
+                    } else {
+                        status = 401;
+                        httpResponseObj = new HttpResponseObject(
+                                status, "Unauthorized - Expired, incorrect or non-existing session id, please relog." );
+                        response = gson.toJson( httpResponseObj );
+                    }
+                    decisionMade = true;
+                }
+
+                /*
+                 * Save an update of a flexible sections
+                 * URL : http://localhost:8084/emkobaronaAPI/flexibleSections/save/#ID#/#session#
+                 */
+                if ( !decisionMade && (parts.length == 6 && parts[ 2 ] != null
+                        && "flexibleSections".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "save".equals( parts[ 3 ] ) && parts[ 4 ] != null
+                        && utilities.isNumeric( parts[ 4 ] ) && parts[ 5 ] != null) ) {
+                    if ( controller.authenticateSession( address, parts[ 5 ] ) ) {
+
+                        FlexibleSection fs = gson.fromJson( jsonQuery, FlexibleSection.class );
+                        fs.setCreationdate( new Date() );
+                        
+                        String username = controller.findUserBySessionAndIP( parts[ 5 ], address );
+                        List<User> usersSpecific = controller.getAbstract( "users", username, "username" );
+                        fs.setUser_id( usersSpecific.get( 0 ).getId() );
+
+                        List<FlexibleSection> previousFSobj = controller.getAbstract( "flexiblesections", fs.getId(), "id" );
+                        fs.setFs_purpose( previousFSobj.get( 0 ).getFs_purpose() );
+
+                        ArrayList<FlexibleSection> fsToUpdate = new ArrayList();
+                        fsToUpdate.add( fs );
+                        boolean result = controller.updateAbstract( "flexiblesections", fsToUpdate );
+                        
+                        if ( result ) {
+                            status = 200;
+                            response = gson.toJson( fs );
                         } else {
                             status = 500;
                             httpResponseObj = new HttpResponseObject(

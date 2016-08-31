@@ -43,6 +43,18 @@ public class FlexibleSection extends AbstractEntity {
         return user_id;
     }
 
+    public void setFs_purpose( String fs_purpose ) {
+        this.fs_purpose = fs_purpose;
+    }
+
+    public void setUser_id( int user_id ) {
+        this.user_id = user_id;
+    }
+
+    public void setCreationdate( Date creationdate ) {
+        this.creationdate = creationdate;
+    }
+
     @Override
     public String toString() {
         return "id: " + this.id + "> FlexibleSection{" + "fs_purpose=" + fs_purpose

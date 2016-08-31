@@ -14,16 +14,17 @@
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
         <script type="text/javascript" src="handlebars-v4.0.5.js"></script>
-        <script type="text/javascript" src="page.js"></script>
-        <link rel="stylesheet" type="text/css" href="page.css" />
-        <link rel="stylesheet" type="text/css" href="emkobarona/articlesSpecific.css" />
-        <script type="text/javascript" src="emkobarona/articlesSpecific.js"></script>
+        <script type="text/javascript" src="emkobarona/page.js"></script>
+        <link rel="stylesheet" type="text/css" href="emkobarona/page.css" />
+
+        <script type="text/javascript" src="emkobarona/flexibleSectionsSpecific.js"></script>
+        <link rel="stylesheet" type="text/css" href="emkobarona/flexibleSectionsSpecific.css" />
     </head>
     <body>
-        <div id="article-edit-wrapper">
-            <div id="article-edit-holder"></div>
+        <div id="fs-edit-wrapper">
+            <div id="fs-edit-holder"></div>
         </div>
-        <script id="article-edit-element-template" type="text/x-handlebars-template">
+        <script id="flexible-section-element-template" type="text/x-handlebars-template">
             <table>
                 <thead>
                     <th>Item</th>
@@ -31,32 +32,32 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Article ID :</td>
-                        <td class="article-id">{{id}}</td>
+                        <td>Flexible Section ID :</td>
+                        <td class="fs-id">{{id}}</td>
                     </tr>
                     <tr>
-                        <td>Article Type ID :</td>
-                        <td><input class="article-type-id" type="text" value={{type_id}}></td>
+                        <td>Flexible Section Purpose :</td>
+                        <td class="fs-purpose">{{purpose}}</td>
                     </tr>
                     <tr>
                         <td>Title :</td>
-                        <td><input class="article-title" type="text" value="{{title}}"></td>
+                        <td><input class="fs-title" type="text" value="{{title}}"></td>
                     </tr>
                     <tr>
-                        <td>Text :</td>
-                        <td><textarea class="article-text" rows="10" cols="75">{{text}}</textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Date :</td>
-                        <td class="article-creation-date">{{creationDate}}</td>
+                        <td>Message :</td>
+                        <td><textarea class="fs-message" rows="10" cols="75">{{message}}</textarea></td>
                     </tr>
                     <tr>
                         <td>User ID :</td>
-                        <td class="article-user-id">{{userId}}</td>
+                        <td class="fs-user-id">{{userId}}</td>
                     </tr>
                     <tr>
-                        <th><a class="save-article">Save</a></th>
-                        <th><a class="back-to-articles">Back</a></th>
+                        <td>Date :</td>
+                        <td class="fs-creation-date">{{creationDate}}</td>
+                    </tr>
+                    <tr>
+                        <th><a class="save-fs">Save</a></th>
+                        <th><a class="back-to-fss">Back</a></th>
                     </tr>
                 </tbody>
             </table>

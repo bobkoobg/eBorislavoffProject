@@ -1,0 +1,8 @@
+.fs-title {
+    width: 620px;
+}
+
+.save-fs,
+.back-to-fss {
+    cursor: pointer;
+}

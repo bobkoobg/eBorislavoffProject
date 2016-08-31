@@ -155,9 +155,9 @@ public class BackendServerHandler implements HttpHandler {
                 }
 
                 /*
-                 * TODO : Specific Articles page - Edit guestbook
+                 * Specific Articles page - Edit guestbook
                  * URL : http://localhost:8084/emkobarona/articles/edit/#ID#
-                 * OR Create guestbook entry (Added)
+                 * OR Create guestbook entry
                  * URL : http://localhost:8084/emkobarona/guestbook/create
                  */
                 boolean isEditingGuestbook = parts.length == 5 && parts[ 2 ] != null
@@ -182,6 +182,19 @@ public class BackendServerHandler implements HttpHandler {
                 if ( !decisionMade && (isFS || isFS2) ) {
                     mime = utilities.getMime( ".html" );
                     file = new File( pagesDirectory + "flexibleSections.html" );
+                    decisionMade = true;
+                }
+                
+                /*
+                 * TODO : Specific Articles page - Edit guestbook
+                 * URL : http://localhost:8084/emkobarona/flexibleSections/edit/#ID#
+                 */
+                boolean isEditingFlexibleSection = parts.length == 5 && parts[ 2 ] != null
+                        && "flexibleSections".equals( parts[ 2 ] ) && parts[ 3 ] != null
+                        && "edit".equals( parts[ 3 ] ) && utilities.isNumeric( parts[ 4 ] ) ? true : false;
+                if ( !decisionMade && isEditingFlexibleSection ) {
+                    mime = utilities.getMime( ".html" );
+                    file = new File( pagesDirectory + "flexibleSectionsSpecific.html" );
                     decisionMade = true;
                 }
 

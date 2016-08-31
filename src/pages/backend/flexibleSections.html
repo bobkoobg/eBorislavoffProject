@@ -26,5 +26,31 @@
         <b>MUST:</b><br>
         <div>Have correct session : <span class="correct-session"></span></div>
         <div>Status : <span class="status"></span></div>
+        <div id="fs-wrapper">
+            <table id="fs-holder">
+                <thead>
+                    <tr>
+                        <th>Flex.Sect. ID :</th>
+                        <th>Flex.Sect. Purpose :</th>
+                        <th>Title :</th>
+                        <th>Text :</th>
+                        <th>User ID :</th>
+                        <th>Creation Date :</th>
+                        <th>Edit</th>
+                    <tr/>
+                </thead>
+            </table>
+        </div>
+        <script id="flexible-section-element-template" type="text/x-handlebars-template">
+            <tr class="flexible-section" data-fsid={{id}}>
+            <td class="fs-id">{{id}}</td>
+            <td class="fs-purpose">{{purpose}}</td>
+            <td class="title">{{title}}</td>
+            <td class="text">{{message}}</td>
+            <td class="user-id">{{userId}}</td>
+            <td class="creation-date">{{creationDate}}</td>
+            <td class="edit edit-fs"><a href="{{path}}">Edit</a></td>
+            </tr>
+        </script>
     </body>
 </html>
